@@ -1,0 +1,3098 @@
+{
+  "platforms": [
+    {
+      "id": "c2d3e4f5-0000-4000-8000-000000000003",
+      "name": "Lendo",
+      "type": "sukuk",
+      "logoUrl": null
+    },
+    {
+      "id": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "name": "Dinar",
+      "type": "other",
+      "logoUrl": null
+    },
+    {
+      "id": "c2d3e4f5-0000-4000-8000-000000000001",
+      "name": "Sukuk",
+      "type": "sukuk",
+      "logoUrl": null
+    },
+    {
+      "id": "c2d3e4f5-0000-4000-8000-000000000002",
+      "name": "Manfa'a",
+      "type": "manfaa",
+      "logoUrl": null
+    },
+    {
+      "id": "c2d3e4f5-0000-4000-8000-000000000004",
+      "name": "Safqa",
+      "type": "safqa",
+      "logoUrl": null
+    },
+    {
+      "id": "c2d3e4f5-0000-4000-8000-000000000005",
+      "name": "Tarmeem",
+      "type": "tarmeem",
+      "logoUrl": null
+    },
+    {
+      "id": "c2d3e4f5-0000-4000-8000-000000000006",
+      "name": "Ta'meed",
+      "type": "tameed",
+      "logoUrl": null
+    }
+  ],
+  "investments": [
+    {
+      "id": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "name": "ابراج التاج",
+      "investmentNumber": null,
+      "faceValue": "5000.00",
+      "totalExpectedProfit": "585.00",
+      "startDate": "2024-05-28T00:00:00.000Z",
+      "endDate": "2025-02-28T00:00:00.000Z",
+      "durationMonths": 9,
+      "actualEndDate": null,
+      "expectedIrr": "15.60",
+      "actualIrr": null,
+      "status": "completed",
+      "riskScore": 50,
+      "distributionFrequency": "quarterly",
+      "profitPaymentStructure": "periodic",
+      "isReinvestment": 0,
+      "fundedFromCash": 0,
+      "needsReview": 0,
+      "lateDate": "2024-08-28T00:00:00.000Z",
+      "defaultedDate": "2024-09-27T00:00:00.000Z",
+      "createdAt": "2025-11-20T03:31:53.808Z"
+    },
+    {
+      "id": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "name": "الطيران النفاث",
+      "investmentNumber": null,
+      "faceValue": "5000.00",
+      "totalExpectedProfit": "2297.50",
+      "startDate": "2024-06-18T00:00:00.000Z",
+      "endDate": "2026-12-18T00:00:00.000Z",
+      "durationMonths": 30,
+      "actualEndDate": null,
+      "expectedIrr": "18.38",
+      "actualIrr": null,
+      "status": "active",
+      "riskScore": 50,
+      "distributionFrequency": "quarterly",
+      "profitPaymentStructure": "periodic",
+      "isReinvestment": 0,
+      "fundedFromCash": 1,
+      "needsReview": 0,
+      "lateDate": null,
+      "defaultedDate": null,
+      "createdAt": "2025-11-20T03:31:53.808Z"
+    }
+  ],
+  "cashflows": [
+    {
+      "id": "f013d56d-91b7-4b88-880d-fededbb6ca60",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2025-12-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": null,
+      "status": "expected",
+      "type": "profit"
+    },
+    {
+      "id": "ebd5b462-c0c8-41dd-9101-5aae93d439d8",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2026-03-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": null,
+      "status": "expected",
+      "type": "profit"
+    },
+    {
+      "id": "2154de0e-c47c-430a-a8f2-50586d19edd5",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2026-06-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": null,
+      "status": "expected",
+      "type": "profit"
+    },
+    {
+      "id": "a50b8dd9-873f-49f3-9f34-8ca19235a3a8",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2026-09-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": null,
+      "status": "expected",
+      "type": "profit"
+    },
+    {
+      "id": "03f6a12b-da3e-4135-b8c4-9889ba276b85",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2026-12-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": null,
+      "status": "expected",
+      "type": "profit"
+    },
+    {
+      "id": "a153d327-3020-4cf0-9875-80d67f48edce",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2026-12-19T00:00:00.000Z",
+      "amount": "5000.00",
+      "receivedDate": null,
+      "status": "expected",
+      "type": "principal"
+    },
+    {
+      "id": "aecd8bf7-f46f-4a35-81c6-accfd4cfeec4",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "dueDate": "2025-03-01T00:00:00.000Z",
+      "amount": "5000.00",
+      "receivedDate": "2025-11-13T22:38:38.935Z",
+      "status": "received",
+      "type": "principal"
+    },
+    {
+      "id": "df384b31-672a-4e88-ae22-0794b16bed20",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "dueDate": "2025-02-28T00:00:00.000Z",
+      "amount": "195.00",
+      "receivedDate": "2025-11-13T22:38:40.843Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "ba267297-419c-40f4-bb92-c99f0f2d0abe",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "dueDate": "2024-11-28T00:00:00.000Z",
+      "amount": "195.00",
+      "receivedDate": "2025-11-13T22:38:41.756Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "958601ea-2fbd-4847-9554-ec7bc3960d52",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "dueDate": "2024-08-28T00:00:00.000Z",
+      "amount": "195.00",
+      "receivedDate": "2025-11-13T22:38:42.724Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "c4406aca-bcc4-4afb-b20b-99ecf300df28",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2025-09-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": "2025-11-13T22:39:03.109Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "c464a50c-d054-4ee7-842e-6c2facc14b62",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2025-06-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": "2025-11-13T22:39:05.522Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "e392243e-144c-44b3-87a6-bdfaea729f35",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2025-03-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": "2025-11-13T22:39:07.216Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "c8df298e-3f80-4995-a069-7fe1fb8e6620",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2024-12-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": "2025-11-13T22:39:08.171Z",
+      "status": "received",
+      "type": "profit"
+    },
+    {
+      "id": "e6e9de20-1a91-4026-abb6-58b2a51cc9d6",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "dueDate": "2024-09-18T00:00:00.000Z",
+      "amount": "229.75",
+      "receivedDate": "2025-11-13T22:39:09.106Z",
+      "status": "received",
+      "type": "profit"
+    }
+  ],
+  "customDistributions": [],
+  "alerts": [
+    {
+      "id": "f4a4a734-2b7a-4435-b2a9-6670e63cd31a",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-958601ea-2fbd-4847-9554-ec7bc3960d52: profit payment for ابراج التاج is overdue by 443 days",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "createdAt": "2025-11-13T21:33:28.488Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "1815f2ce-09cb-4936-86a6-c9e48afee6a8",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-ba267297-419c-40f4-bb92-c99f0f2d0abe: profit payment for ابراج التاج is overdue by 351 days",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "createdAt": "2025-11-13T21:33:28.517Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "f7f91e06-8785-48fb-bbe0-b3209b94413c",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-df384b31-672a-4e88-ae22-0794b16bed20: profit payment for ابراج التاج is overdue by 259 days",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "createdAt": "2025-11-13T21:33:28.541Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "81ce11a4-4572-492f-91d9-a278a8c3dceb",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-aecd8bf7-f46f-4a35-81c6-accfd4cfeec4: principal payment for ابراج التاج is overdue by 258 days",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "createdAt": "2025-11-13T21:33:28.563Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "d5665b6a-9ba3-4c38-b41c-1a2f38e6b054",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-e6e9de20-1a91-4026-abb6-58b2a51cc9d6: profit payment for الطيران النفاث is overdue by 422 days",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "createdAt": "2025-11-13T21:33:28.587Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "4798549a-5a0a-4999-a099-0247fd29e8ee",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-c8df298e-3f80-4995-a069-7fe1fb8e6620: profit payment for الطيران النفاث is overdue by 331 days",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "createdAt": "2025-11-13T21:33:28.609Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "b3dd9e71-d6de-4e7a-901f-d9695c27212b",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-e392243e-144c-44b3-87a6-bdfaea729f35: profit payment for الطيران النفاث is overdue by 241 days",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "createdAt": "2025-11-13T21:33:28.633Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "e8eadc5d-f56f-4a55-bf06-2d4bf11edcbd",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-c464a50c-d054-4ee7-842e-6c2facc14b62: profit payment for الطيران النفاث is overdue by 149 days",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "createdAt": "2025-11-13T21:33:28.656Z",
+      "read": 0,
+      "severity": "error"
+    },
+    {
+      "id": "baa76e2a-59b8-4c73-ac7a-fea4e4320393",
+      "type": "distribution",
+      "title": "Late Payment Alert",
+      "message": "cashflow-c4406aca-bcc4-4afb-b20b-99ecf300df28: profit payment for الطيران النفاث is overdue by 57 days",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "createdAt": "2025-11-13T21:33:28.680Z",
+      "read": 0,
+      "severity": "error"
+    }
+  ],
+  "userSettings": [
+    {
+      "id": "87c8f145-42e2-42f0-9ad0-9dc74b4fa089",
+      "userId": "5e5ed4ba-b043-41ca-b0d5-6ca6a9908351",
+      "theme": "light",
+      "language": "en",
+      "viewMode": "pro",
+      "fontSize": "medium",
+      "autoReinvest": 0,
+      "targetCapital2040": "10000000.00",
+      "currency": "SAR",
+      "securityEnabled": 0,
+      "pinHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "biometricEnabled": 0,
+      "biometricCredentialId": null,
+      "collapsedSections": "[\"additional-metrics\",\"status-breakdown\",\"status-chart\",\"recent-investments\",\"goal-calculator\",\"vision-2040\",\"platforms-overview\",\"upcoming-cashflows\"]",
+      "alertsEnabled": 1,
+      "dataEntryToken": "ded0177af25650b70168c7bba28f148e65b19162cb9634d4e6afda7a694d4c91",
+      "alertDaysBefore": 1,
+      "latePaymentAlertsEnabled": 1,
+      "dashboardLayout": "[{\"w\":12,\"h\":2,\"x\":0,\"y\":0,\"i\":\"stats-overview\",\"minW\":6,\"minH\":2,\"moved\":false,\"static\":false},{\"w\":12,\"h\":4,\"x\":0,\"y\":2,\"i\":\"platform-cards\",\"minW\":6,\"minH\":3,\"moved\":false,\"static\":false},{\"w\":8,\"h\":5,\"x\":0,\"y\":6,\"i\":\"portfolio-chart\",\"minW\":6,\"minH\":4,\"moved\":false,\"static\":false},{\"w\":4,\"h\":4,\"x\":8,\"y\":6,\"i\":\"upcoming-cashflows\",\"minW\":4,\"minH\":3,\"moved\":false,\"static\":false},{\"w\":12,\"h\":3,\"x\":0,\"y\":11,\"i\":\"recent-investments\",\"minW\":6,\"minH\":2,\"moved\":false,\"static\":false},{\"w\":12,\"h\":2,\"x\":0,\"y\":14,\"i\":\"quick-actions\",\"minW\":4,\"minH\":2,\"moved\":false,\"static\":false}]",
+      "hiddenWidgets": "[\"portfolio-apr\",\"portfolio-roi\",\"total-investments\",\"active-investments\"]"
+    }
+  ],
+  "cashTransactions": [
+    {
+      "id": "e457780a-8e89-4fdb-87b5-47015e39734e",
+      "amount": "229.75",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: الطيران النفاث",
+      "date": "2025-11-13T22:39:08.171Z",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "cashflowId": "c8df298e-3f80-4995-a069-7fe1fb8e6620",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:39:08.304Z"
+    },
+    {
+      "id": "81c07a77-754d-4533-84f4-bc7db9d258b1",
+      "amount": "229.75",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: الطيران النفاث",
+      "date": "2025-11-13T22:39:09.106Z",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "cashflowId": "e6e9de20-1a91-4026-abb6-58b2a51cc9d6",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:39:09.233Z"
+    },
+    {
+      "id": "85f2690c-2eb4-4096-9df5-d810b4005276",
+      "amount": "1000000.00",
+      "type": "deposit",
+      "source": "transfer",
+      "notes": "",
+      "date": "2025-11-13T17:41:43.980Z",
+      "investmentId": null,
+      "cashflowId": null,
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T17:42:30.129Z"
+    },
+    {
+      "id": "758a678a-364d-4f9e-8e7f-bf06e9436cba",
+      "amount": "900000.00",
+      "type": "withdrawal",
+      "source": "transfer",
+      "notes": "",
+      "date": "2025-11-13T17:41:43.984Z",
+      "investmentId": null,
+      "cashflowId": null,
+      "platformId": null,
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T17:43:35.452Z"
+    },
+    {
+      "id": "fef7c634-3a09-4e91-9b8a-4809ece73b4b",
+      "amount": "5000.00",
+      "type": "investment",
+      "source": "investment",
+      "notes": "Investment: الطيران النفاث",
+      "date": "2024-06-18T00:00:00.000Z",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "cashflowId": null,
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T17:47:03.770Z"
+    },
+    {
+      "id": "8df95124-e6c8-4865-88e5-1b48d08f1bc2",
+      "amount": "5000.00",
+      "type": "distribution",
+      "source": "investment_return",
+      "notes": "Principal return from: ابراج التاج",
+      "date": "2025-11-13T22:38:38.935Z",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "cashflowId": "aecd8bf7-f46f-4a35-81c6-accfd4cfeec4",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:38:39.079Z"
+    },
+    {
+      "id": "12b45cd9-7b0a-43c3-b2d3-03c2a7a79331",
+      "amount": "195.00",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: ابراج التاج",
+      "date": "2025-11-13T22:38:40.843Z",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "cashflowId": "df384b31-672a-4e88-ae22-0794b16bed20",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:38:40.970Z"
+    },
+    {
+      "id": "832be568-b22e-47a1-8acb-35e46043c814",
+      "amount": "195.00",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: ابراج التاج",
+      "date": "2025-11-13T22:38:41.756Z",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "cashflowId": "ba267297-419c-40f4-bb92-c99f0f2d0abe",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:38:41.881Z"
+    },
+    {
+      "id": "45fbffff-4966-4ebc-a1c6-409951319606",
+      "amount": "195.00",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: ابراج التاج",
+      "date": "2025-11-13T22:38:42.724Z",
+      "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+      "cashflowId": "958601ea-2fbd-4847-9554-ec7bc3960d52",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:38:42.858Z"
+    },
+    {
+      "id": "c75ec0ce-725b-4c28-b462-6a588a54210e",
+      "amount": "229.75",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: الطيران النفاث",
+      "date": "2025-11-13T22:39:03.109Z",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "cashflowId": "c4406aca-bcc4-4afb-b20b-99ecf300df28",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:39:03.326Z"
+    },
+    {
+      "id": "0e269469-a744-48fd-9a9f-d91926cf6075",
+      "amount": "229.75",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: الطيران النفاث",
+      "date": "2025-11-13T22:39:05.522Z",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "cashflowId": "c464a50c-d054-4ee7-842e-6c2facc14b62",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:39:05.651Z"
+    },
+    {
+      "id": "8676f9a0-5b38-4103-bffa-a465844dd41f",
+      "amount": "229.75",
+      "type": "distribution",
+      "source": "profit",
+      "notes": "Distribution from: الطيران النفاث",
+      "date": "2025-11-13T22:39:07.216Z",
+      "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+      "cashflowId": "e392243e-144c-44b3-87a6-bdfaea729f35",
+      "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+      "balanceAfter": "0.00",
+      "createdAt": "2025-11-13T22:39:07.343Z"
+    }
+  ],
+  "savedScenarios": [
+    {
+      "id": "5c1682b4-1c9c-4a51-afff-d7fe9a89d73d",
+      "userId": null,
+      "name": "Test-0dmWpD",
+      "initialAmount": "236000.00",
+      "monthlyDeposit": "5000.00",
+      "expectedIRR": "12.00",
+      "targetAmount": "10000000.00",
+      "durationYears": 15,
+      "createdAt": "2025-11-11T12:33:26.091Z"
+    },
+    {
+      "id": "a8f3568e-81f2-47ad-a341-ec74adcdc506",
+      "userId": null,
+      "name": "Test-Xlqzwd",
+      "initialAmount": "236000.00",
+      "monthlyDeposit": "5000.00",
+      "expectedIRR": "12.00",
+      "targetAmount": "10000000.00",
+      "durationYears": 15,
+      "createdAt": "2025-11-11T12:34:00.697Z"
+    },
+    {
+      "id": "9577cc44-89a2-4a4e-adb8-09d5cb01a20a",
+      "userId": null,
+      "name": "After-Delete-_ukJy5",
+      "initialAmount": "236000.00",
+      "monthlyDeposit": "5000.00",
+      "expectedIRR": "10.43",
+      "targetAmount": "10000000.00",
+      "durationYears": 15,
+      "createdAt": "2025-11-11T12:46:26.741Z"
+    },
+    {
+      "id": "a137c84c-d326-478e-9cb7-28216562d807",
+      "userId": null,
+      "name": "Fill-1-A43hVn",
+      "initialAmount": "236000.00",
+      "monthlyDeposit": "5000.00",
+      "expectedIRR": "10.43",
+      "targetAmount": "10000000.00",
+      "durationYears": 15,
+      "createdAt": "2025-11-11T12:46:57.037Z"
+    },
+    {
+      "id": "fcc42885-f98b-4d44-9b62-0cd39fd10687",
+      "userId": null,
+      "name": "After-Delete-TmMW",
+      "initialAmount": "236000.00",
+      "monthlyDeposit": "5000.00",
+      "expectedIRR": "10.43",
+      "targetAmount": "10000000.00",
+      "durationYears": 15,
+      "createdAt": "2025-11-11T12:57:26.676Z"
+    }
+  ],
+  "portfolioSnapshots": [
+    {
+      "id": "af0a6997-de8d-4f9c-8bf4-7a61a5332fe4",
+      "name": "بدون اي معلومات",
+      "snapshotData": {
+        "alerts": [],
+        "cashflows": [],
+        "platforms": [
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000003",
+            "name": "Lendo",
+            "type": "sukuk",
+            "logoUrl": null
+          },
+          {
+            "id": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "name": "Dinar",
+            "type": "other",
+            "logoUrl": null
+          }
+        ],
+        "investments": [],
+        "userSettings": {
+          "id": "87c8f145-42e2-42f0-9ad0-9dc74b4fa089",
+          "theme": "dark",
+          "userId": "5e5ed4ba-b043-41ca-b0d5-6ca6a9908351",
+          "pinHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+          "currency": "SAR",
+          "fontSize": "medium",
+          "language": "ar",
+          "viewMode": "pro",
+          "autoReinvest": 0,
+          "alertsEnabled": 1,
+          "hiddenWidgets": "[\"portfolio-apr\",\"portfolio-roi\",\"total-investments\",\"active-investments\"]",
+          "alertDaysBefore": 1,
+          "dashboardLayout": "[{\"w\":12,\"h\":2,\"x\":0,\"y\":0,\"i\":\"stats-overview\",\"minW\":6,\"minH\":2,\"moved\":false,\"static\":false},{\"w\":12,\"h\":4,\"x\":0,\"y\":2,\"i\":\"platform-cards\",\"minW\":6,\"minH\":3,\"moved\":false,\"static\":false},{\"w\":8,\"h\":5,\"x\":0,\"y\":6,\"i\":\"portfolio-chart\",\"minW\":6,\"minH\":4,\"moved\":false,\"static\":false},{\"w\":4,\"h\":4,\"x\":8,\"y\":6,\"i\":\"upcoming-cashflows\",\"minW\":4,\"minH\":3,\"moved\":false,\"static\":false},{\"w\":12,\"h\":3,\"x\":0,\"y\":11,\"i\":\"recent-investments\",\"minW\":6,\"minH\":2,\"moved\":false,\"static\":false},{\"w\":12,\"h\":2,\"x\":0,\"y\":14,\"i\":\"quick-actions\",\"minW\":4,\"minH\":2,\"moved\":false,\"static\":false}]",
+          "securityEnabled": 0,
+          "biometricEnabled": 0,
+          "collapsedSections": "[\"additional-metrics\",\"status-breakdown\",\"status-chart\",\"portfolio-performance\",\"upcoming-cashflows\",\"recent-investments\",\"goal-calculator\",\"vision-2040\"]",
+          "targetCapital2040": "10000000.00",
+          "biometricCredentialId": null,
+          "latePaymentAlertsEnabled": 1
+        },
+        "savedScenarios": [
+          {
+            "id": "5c1682b4-1c9c-4a51-afff-d7fe9a89d73d",
+            "name": "Test-0dmWpD",
+            "userId": null,
+            "createdAt": "2025-11-11T12:33:26.091Z",
+            "expectedIRR": "12.00",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "a8f3568e-81f2-47ad-a341-ec74adcdc506",
+            "name": "Test-Xlqzwd",
+            "userId": null,
+            "createdAt": "2025-11-11T12:34:00.697Z",
+            "expectedIRR": "12.00",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "9577cc44-89a2-4a4e-adb8-09d5cb01a20a",
+            "name": "After-Delete-_ukJy5",
+            "userId": null,
+            "createdAt": "2025-11-11T12:46:26.741Z",
+            "expectedIRR": "10.43",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "a137c84c-d326-478e-9cb7-28216562d807",
+            "name": "Fill-1-A43hVn",
+            "userId": null,
+            "createdAt": "2025-11-11T12:46:57.037Z",
+            "expectedIRR": "10.43",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "fcc42885-f98b-4d44-9b62-0cd39fd10687",
+            "name": "After-Delete-TmMW",
+            "userId": null,
+            "createdAt": "2025-11-11T12:57:26.676Z",
+            "expectedIRR": "10.43",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          }
+        ],
+        "cashTransactions": [
+          {
+            "id": "2bd82452-b959-438f-b3dc-87c0656c5861",
+            "date": "2025-11-12T06:41:24.241Z",
+            "type": "deposit",
+            "notes": "",
+            "amount": "100000.00",
+            "source": "transfer",
+            "createdAt": "2025-11-12T06:41:32.476Z",
+            "cashflowId": null,
+            "balanceAfter": "0.00",
+            "investmentId": null
+          }
+        ],
+        "customDistributions": []
+      },
+      "entityCounts": {
+        "alerts": 0,
+        "cashflows": 0,
+        "platforms": 2,
+        "investments": 0,
+        "savedScenarios": 5,
+        "cashTransactions": 1,
+        "customDistributions": 0
+      },
+      "byteSize": 3268,
+      "createdAt": "2025-11-12T06:43:42.113Z"
+    },
+    {
+      "id": "2f1d5625-a985-4842-8cfd-4a48d7c558c9",
+      "name": "قبل تجارب ادخال الفرص",
+      "snapshotData": {
+        "alerts": [
+          {
+            "id": "f4a4a734-2b7a-4435-b2a9-6670e63cd31a",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-958601ea-2fbd-4847-9554-ec7bc3960d52: profit payment for ابراج التاج is overdue by 443 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.488Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "1815f2ce-09cb-4936-86a6-c9e48afee6a8",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-ba267297-419c-40f4-bb92-c99f0f2d0abe: profit payment for ابراج التاج is overdue by 351 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.517Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "f7f91e06-8785-48fb-bbe0-b3209b94413c",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-df384b31-672a-4e88-ae22-0794b16bed20: profit payment for ابراج التاج is overdue by 259 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.541Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "81ce11a4-4572-492f-91d9-a278a8c3dceb",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-aecd8bf7-f46f-4a35-81c6-accfd4cfeec4: principal payment for ابراج التاج is overdue by 258 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.563Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "d5665b6a-9ba3-4c38-b41c-1a2f38e6b054",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-e6e9de20-1a91-4026-abb6-58b2a51cc9d6: profit payment for الطيران النفاث is overdue by 422 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.587Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "4798549a-5a0a-4999-a099-0247fd29e8ee",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-c8df298e-3f80-4995-a069-7fe1fb8e6620: profit payment for الطيران النفاث is overdue by 331 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.609Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "b3dd9e71-d6de-4e7a-901f-d9695c27212b",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-e392243e-144c-44b3-87a6-bdfaea729f35: profit payment for الطيران النفاث is overdue by 241 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.633Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "e8eadc5d-f56f-4a55-bf06-2d4bf11edcbd",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-c464a50c-d054-4ee7-842e-6c2facc14b62: profit payment for الطيران النفاث is overdue by 149 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.656Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "baa76e2a-59b8-4c73-ac7a-fea4e4320393",
+            "read": 0,
+            "type": "distribution",
+            "title": "Late Payment Alert",
+            "message": "cashflow-c4406aca-bcc4-4afb-b20b-99ecf300df28: profit payment for الطيران النفاث is overdue by 57 days",
+            "severity": "error",
+            "createdAt": "2025-11-13T21:33:28.680Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          }
+        ],
+        "cashflows": [
+          {
+            "id": "f013d56d-91b7-4b88-880d-fededbb6ca60",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "expected",
+            "dueDate": "2025-12-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": null
+          },
+          {
+            "id": "ebd5b462-c0c8-41dd-9101-5aae93d439d8",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "expected",
+            "dueDate": "2026-03-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": null
+          },
+          {
+            "id": "2154de0e-c47c-430a-a8f2-50586d19edd5",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "expected",
+            "dueDate": "2026-06-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": null
+          },
+          {
+            "id": "a50b8dd9-873f-49f3-9f34-8ca19235a3a8",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "expected",
+            "dueDate": "2026-09-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": null
+          },
+          {
+            "id": "03f6a12b-da3e-4135-b8c4-9889ba276b85",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "expected",
+            "dueDate": "2026-12-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": null
+          },
+          {
+            "id": "a153d327-3020-4cf0-9875-80d67f48edce",
+            "type": "principal",
+            "amount": "5000.00",
+            "status": "expected",
+            "dueDate": "2026-12-19T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": null
+          },
+          {
+            "id": "aecd8bf7-f46f-4a35-81c6-accfd4cfeec4",
+            "type": "principal",
+            "amount": "5000.00",
+            "status": "received",
+            "dueDate": "2025-03-01T00:00:00.000Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+            "receivedDate": "2025-11-13T22:38:38.935Z"
+          },
+          {
+            "id": "df384b31-672a-4e88-ae22-0794b16bed20",
+            "type": "profit",
+            "amount": "195.00",
+            "status": "received",
+            "dueDate": "2025-02-28T00:00:00.000Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+            "receivedDate": "2025-11-13T22:38:40.843Z"
+          },
+          {
+            "id": "ba267297-419c-40f4-bb92-c99f0f2d0abe",
+            "type": "profit",
+            "amount": "195.00",
+            "status": "received",
+            "dueDate": "2024-11-28T00:00:00.000Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+            "receivedDate": "2025-11-13T22:38:41.756Z"
+          },
+          {
+            "id": "958601ea-2fbd-4847-9554-ec7bc3960d52",
+            "type": "profit",
+            "amount": "195.00",
+            "status": "received",
+            "dueDate": "2024-08-28T00:00:00.000Z",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868",
+            "receivedDate": "2025-11-13T22:38:42.724Z"
+          },
+          {
+            "id": "c4406aca-bcc4-4afb-b20b-99ecf300df28",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "received",
+            "dueDate": "2025-09-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": "2025-11-13T22:39:03.109Z"
+          },
+          {
+            "id": "c464a50c-d054-4ee7-842e-6c2facc14b62",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "received",
+            "dueDate": "2025-06-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": "2025-11-13T22:39:05.522Z"
+          },
+          {
+            "id": "e392243e-144c-44b3-87a6-bdfaea729f35",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "received",
+            "dueDate": "2025-03-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": "2025-11-13T22:39:07.216Z"
+          },
+          {
+            "id": "c8df298e-3f80-4995-a069-7fe1fb8e6620",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "received",
+            "dueDate": "2024-12-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": "2025-11-13T22:39:08.171Z"
+          },
+          {
+            "id": "e6e9de20-1a91-4026-abb6-58b2a51cc9d6",
+            "type": "profit",
+            "amount": "229.75",
+            "status": "received",
+            "dueDate": "2024-09-18T00:00:00.000Z",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "receivedDate": "2025-11-13T22:39:09.106Z"
+          }
+        ],
+        "platforms": [
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000003",
+            "name": "Lendo",
+            "type": "sukuk",
+            "logoUrl": null
+          },
+          {
+            "id": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "name": "Dinar",
+            "type": "other",
+            "logoUrl": null
+          },
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000001",
+            "name": "Sukuk",
+            "type": "sukuk",
+            "logoUrl": null
+          },
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000002",
+            "name": "Manfa'a",
+            "type": "manfaa",
+            "logoUrl": null
+          },
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000004",
+            "name": "Safqa",
+            "type": "safqa",
+            "logoUrl": null
+          },
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000005",
+            "name": "Tarmeem",
+            "type": "tarmeem",
+            "logoUrl": null
+          },
+          {
+            "id": "c2d3e4f5-0000-4000-8000-000000000006",
+            "name": "Ta'meed",
+            "type": "tameed",
+            "logoUrl": null
+          }
+        ],
+        "investments": [
+          {
+            "id": "ff49bade-13a2-45a3-8f02-4f256881f868",
+            "name": "ابراج التاج",
+            "status": "completed",
+            "endDate": "2025-02-28T00:00:00.000Z",
+            "lateDate": "2024-08-28T00:00:00.000Z",
+            "actualIrr": null,
+            "faceValue": "5000.00",
+            "riskScore": 50,
+            "startDate": "2024-05-28T00:00:00.000Z",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "expectedIrr": "15.60",
+            "actualEndDate": null,
+            "defaultedDate": "2024-09-27T00:00:00.000Z",
+            "durationMonths": 9,
+            "fundedFromCash": 0,
+            "isReinvestment": 0,
+            "totalExpectedProfit": "585.00",
+            "distributionFrequency": "quarterly",
+            "profitPaymentStructure": "periodic"
+          },
+          {
+            "id": "f4299bc5-b5df-47d9-a525-7ea8f1a37077",
+            "name": "الطيران النفاث",
+            "status": "active",
+            "endDate": "2026-12-18T00:00:00.000Z",
+            "lateDate": null,
+            "actualIrr": null,
+            "faceValue": "5000.00",
+            "riskScore": 50,
+            "startDate": "2024-06-18T00:00:00.000Z",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "expectedIrr": "18.38",
+            "actualEndDate": null,
+            "defaultedDate": null,
+            "durationMonths": 30,
+            "fundedFromCash": 1,
+            "isReinvestment": 0,
+            "totalExpectedProfit": "2297.50",
+            "distributionFrequency": "quarterly",
+            "profitPaymentStructure": "periodic"
+          }
+        ],
+        "userSettings": {
+          "id": "87c8f145-42e2-42f0-9ad0-9dc74b4fa089",
+          "theme": "light",
+          "userId": "5e5ed4ba-b043-41ca-b0d5-6ca6a9908351",
+          "pinHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+          "currency": "SAR",
+          "fontSize": "medium",
+          "language": "en",
+          "viewMode": "pro",
+          "autoReinvest": 0,
+          "alertsEnabled": 1,
+          "hiddenWidgets": "[\"portfolio-apr\",\"portfolio-roi\",\"total-investments\",\"active-investments\"]",
+          "alertDaysBefore": 1,
+          "dashboardLayout": "[{\"w\":12,\"h\":2,\"x\":0,\"y\":0,\"i\":\"stats-overview\",\"minW\":6,\"minH\":2,\"moved\":false,\"static\":false},{\"w\":12,\"h\":4,\"x\":0,\"y\":2,\"i\":\"platform-cards\",\"minW\":6,\"minH\":3,\"moved\":false,\"static\":false},{\"w\":8,\"h\":5,\"x\":0,\"y\":6,\"i\":\"portfolio-chart\",\"minW\":6,\"minH\":4,\"moved\":false,\"static\":false},{\"w\":4,\"h\":4,\"x\":8,\"y\":6,\"i\":\"upcoming-cashflows\",\"minW\":4,\"minH\":3,\"moved\":false,\"static\":false},{\"w\":12,\"h\":3,\"x\":0,\"y\":11,\"i\":\"recent-investments\",\"minW\":6,\"minH\":2,\"moved\":false,\"static\":false},{\"w\":12,\"h\":2,\"x\":0,\"y\":14,\"i\":\"quick-actions\",\"minW\":4,\"minH\":2,\"moved\":false,\"static\":false}]",
+          "securityEnabled": 0,
+          "biometricEnabled": 0,
+          "collapsedSections": "[\"additional-metrics\",\"status-breakdown\",\"status-chart\",\"recent-investments\",\"goal-calculator\",\"vision-2040\",\"platforms-overview\",\"upcoming-cashflows\"]",
+          "targetCapital2040": "10000000.00",
+          "biometricCredentialId": null,
+          "latePaymentAlertsEnabled": 1
+        },
+        "savedScenarios": [
+          {
+            "id": "5c1682b4-1c9c-4a51-afff-d7fe9a89d73d",
+            "name": "Test-0dmWpD",
+            "userId": null,
+            "createdAt": "2025-11-11T12:33:26.091Z",
+            "expectedIRR": "12.00",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "a8f3568e-81f2-47ad-a341-ec74adcdc506",
+            "name": "Test-Xlqzwd",
+            "userId": null,
+            "createdAt": "2025-11-11T12:34:00.697Z",
+            "expectedIRR": "12.00",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "9577cc44-89a2-4a4e-adb8-09d5cb01a20a",
+            "name": "After-Delete-_ukJy5",
+            "userId": null,
+            "createdAt": "2025-11-11T12:46:26.741Z",
+            "expectedIRR": "10.43",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "a137c84c-d326-478e-9cb7-28216562d807",
+            "name": "Fill-1-A43hVn",
+            "userId": null,
+            "createdAt": "2025-11-11T12:46:57.037Z",
+            "expectedIRR": "10.43",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          },
+          {
+            "id": "fcc42885-f98b-4d44-9b62-0cd39fd10687",
+            "name": "After-Delete-TmMW",
+            "userId": null,
+            "createdAt": "2025-11-11T12:57:26.676Z",
+            "expectedIRR": "10.43",
+            "targetAmount": "10000000.00",
+            "durationYears": 15,
+            "initialAmount": "236000.00",
+            "monthlyDeposit": "5000.00"
+          }
+        ],
+        "cashTransactions": [
+          {
+            "id": "e457780a-8e89-4fdb-87b5-47015e39734e",
+            "date": "2025-11-13T22:39:08.171Z",
+            "type": "distribution",
+            "notes": "Distribution from: الطيران النفاث",
+            "amount": "229.75",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:39:08.304Z",
+            "cashflowId": "c8df298e-3f80-4995-a069-7fe1fb8e6620",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "81c07a77-754d-4533-84f4-bc7db9d258b1",
+            "date": "2025-11-13T22:39:09.106Z",
+            "type": "distribution",
+            "notes": "Distribution from: الطيران النفاث",
+            "amount": "229.75",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:39:09.233Z",
+            "cashflowId": "e6e9de20-1a91-4026-abb6-58b2a51cc9d6",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "85f2690c-2eb4-4096-9df5-d810b4005276",
+            "date": "2025-11-13T17:41:43.980Z",
+            "type": "deposit",
+            "notes": "",
+            "amount": "1000000.00",
+            "source": "transfer",
+            "createdAt": "2025-11-13T17:42:30.129Z",
+            "cashflowId": null,
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": null
+          },
+          {
+            "id": "758a678a-364d-4f9e-8e7f-bf06e9436cba",
+            "date": "2025-11-13T17:41:43.984Z",
+            "type": "withdrawal",
+            "notes": "",
+            "amount": "900000.00",
+            "source": "transfer",
+            "createdAt": "2025-11-13T17:43:35.452Z",
+            "cashflowId": null,
+            "platformId": null,
+            "balanceAfter": "0.00",
+            "investmentId": null
+          },
+          {
+            "id": "fef7c634-3a09-4e91-9b8a-4809ece73b4b",
+            "date": "2024-06-18T00:00:00.000Z",
+            "type": "investment",
+            "notes": "Investment: الطيران النفاث",
+            "amount": "5000.00",
+            "source": "investment",
+            "createdAt": "2025-11-13T17:47:03.770Z",
+            "cashflowId": null,
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "8df95124-e6c8-4865-88e5-1b48d08f1bc2",
+            "date": "2025-11-13T22:38:38.935Z",
+            "type": "distribution",
+            "notes": "Principal return from: ابراج التاج",
+            "amount": "5000.00",
+            "source": "investment_return",
+            "createdAt": "2025-11-13T22:38:39.079Z",
+            "cashflowId": "aecd8bf7-f46f-4a35-81c6-accfd4cfeec4",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "12b45cd9-7b0a-43c3-b2d3-03c2a7a79331",
+            "date": "2025-11-13T22:38:40.843Z",
+            "type": "distribution",
+            "notes": "Distribution from: ابراج التاج",
+            "amount": "195.00",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:38:40.970Z",
+            "cashflowId": "df384b31-672a-4e88-ae22-0794b16bed20",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "832be568-b22e-47a1-8acb-35e46043c814",
+            "date": "2025-11-13T22:38:41.756Z",
+            "type": "distribution",
+            "notes": "Distribution from: ابراج التاج",
+            "amount": "195.00",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:38:41.881Z",
+            "cashflowId": "ba267297-419c-40f4-bb92-c99f0f2d0abe",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "45fbffff-4966-4ebc-a1c6-409951319606",
+            "date": "2025-11-13T22:38:42.724Z",
+            "type": "distribution",
+            "notes": "Distribution from: ابراج التاج",
+            "amount": "195.00",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:38:42.858Z",
+            "cashflowId": "958601ea-2fbd-4847-9554-ec7bc3960d52",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "ff49bade-13a2-45a3-8f02-4f256881f868"
+          },
+          {
+            "id": "c75ec0ce-725b-4c28-b462-6a588a54210e",
+            "date": "2025-11-13T22:39:03.109Z",
+            "type": "distribution",
+            "notes": "Distribution from: الطيران النفاث",
+            "amount": "229.75",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:39:03.326Z",
+            "cashflowId": "c4406aca-bcc4-4afb-b20b-99ecf300df28",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "0e269469-a744-48fd-9a9f-d91926cf6075",
+            "date": "2025-11-13T22:39:05.522Z",
+            "type": "distribution",
+            "notes": "Distribution from: الطيران النفاث",
+            "amount": "229.75",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:39:05.651Z",
+            "cashflowId": "c464a50c-d054-4ee7-842e-6c2facc14b62",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          },
+          {
+            "id": "8676f9a0-5b38-4103-bffa-a465844dd41f",
+            "date": "2025-11-13T22:39:07.216Z",
+            "type": "distribution",
+            "notes": "Distribution from: الطيران النفاث",
+            "amount": "229.75",
+            "source": "profit",
+            "createdAt": "2025-11-13T22:39:07.343Z",
+            "cashflowId": "e392243e-144c-44b3-87a6-bdfaea729f35",
+            "platformId": "260bae8d-dee6-4b71-8fa0-ace07117d960",
+            "balanceAfter": "0.00",
+            "investmentId": "f4299bc5-b5df-47d9-a525-7ea8f1a37077"
+          }
+        ],
+        "customDistributions": []
+      },
+      "entityCounts": {
+        "alerts": 9,
+        "cashflows": 15,
+        "platforms": 7,
+        "investments": 2,
+        "savedScenarios": 5,
+        "cashTransactions": 12,
+        "customDistributions": 0
+      },
+      "byteSize": 15705,
+      "createdAt": "2025-11-14T06:00:24.830Z"
+    }
+  ],
+  "portfolioHistory": [
+    {
+      "id": "be0a937d-307d-4cfa-9564-4f0d92ffdfa8",
+      "month": "2025-10-01T00:00:00.000Z",
+      "totalValue": "240000.00",
+      "source": "manual",
+      "notes": "",
+      "createdAt": "2025-11-14T10:18:58.896Z",
+      "updatedAt": "2025-11-14T10:18:58.896Z"
+    }
+  ],
+  "visionTargets": [
+    {
+      "id": "cbe4821a-c6cd-4931-b79e-9d1afbf05042",
+      "month": "2026-08-01T00:00:00.000Z",
+      "targetValue": "338107.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.160Z",
+      "updatedAt": "2025-11-14T19:16:00.271Z"
+    },
+    {
+      "id": "2422985d-5b54-4ec8-a64d-ae4cd43cb6b0",
+      "month": "2026-09-01T00:00:00.000Z",
+      "targetValue": "346821.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.207Z",
+      "updatedAt": "2025-11-14T19:16:00.334Z"
+    },
+    {
+      "id": "c4340523-d083-4df2-bbb9-e71118200ebb",
+      "month": "2026-10-01T00:00:00.000Z",
+      "targetValue": "355630.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.253Z",
+      "updatedAt": "2025-11-14T19:16:00.411Z"
+    },
+    {
+      "id": "de02576a-74f4-4f94-828b-f32964cc206e",
+      "month": "2026-11-01T00:00:00.000Z",
+      "targetValue": "364536.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.299Z",
+      "updatedAt": "2025-11-14T19:16:00.478Z"
+    },
+    {
+      "id": "f6b5e648-3ad5-41ca-9e5a-4b5019159929",
+      "month": "2027-01-01T00:00:00.000Z",
+      "targetValue": "382643.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.393Z",
+      "updatedAt": "2025-11-14T19:16:00.607Z"
+    },
+    {
+      "id": "9278864f-6899-4503-827f-f7a51754e2e2",
+      "month": "2027-02-01T00:00:00.000Z",
+      "targetValue": "391846.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.439Z",
+      "updatedAt": "2025-11-14T19:16:00.673Z"
+    },
+    {
+      "id": "97f65054-ebc6-444f-a7a7-c9aa494e3b43",
+      "month": "2027-03-01T00:00:00.000Z",
+      "targetValue": "401149.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.486Z",
+      "updatedAt": "2025-11-14T19:16:00.738Z"
+    },
+    {
+      "id": "0b71a04b-381a-458b-aac3-2ad89cbf4f31",
+      "month": "2027-04-01T00:00:00.000Z",
+      "targetValue": "410555.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.534Z",
+      "updatedAt": "2025-11-14T19:16:00.803Z"
+    },
+    {
+      "id": "a2a761f1-154e-494a-a81d-896f71562ef4",
+      "month": "2027-05-01T00:00:00.000Z",
+      "targetValue": "420065.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.581Z",
+      "updatedAt": "2025-11-14T19:16:00.866Z"
+    },
+    {
+      "id": "2594726c-a8ce-496a-96ec-c46e9cd2a223",
+      "month": "2027-06-01T00:00:00.000Z",
+      "targetValue": "429679.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.630Z",
+      "updatedAt": "2025-11-14T19:16:00.945Z"
+    },
+    {
+      "id": "5bbdd712-f331-4330-8c86-7bd9f24c4b11",
+      "month": "2027-07-01T00:00:00.000Z",
+      "targetValue": "439398.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.681Z",
+      "updatedAt": "2025-11-14T19:16:01.008Z"
+    },
+    {
+      "id": "7caaaf6d-26f9-4439-9d38-cb0d7167d0ec",
+      "month": "2027-08-01T00:00:00.000Z",
+      "targetValue": "449224.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.731Z",
+      "updatedAt": "2025-11-14T19:16:01.073Z"
+    },
+    {
+      "id": "d3e70923-ee87-45a6-97bd-6ac1b4885cb2",
+      "month": "2027-09-01T00:00:00.000Z",
+      "targetValue": "459158.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.783Z",
+      "updatedAt": "2025-11-14T19:16:01.138Z"
+    },
+    {
+      "id": "1d2873a1-b845-4015-9ecb-b3a102c3c386",
+      "month": "2027-10-01T00:00:00.000Z",
+      "targetValue": "469202.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.834Z",
+      "updatedAt": "2025-11-14T19:16:01.209Z"
+    },
+    {
+      "id": "fc8b2ddb-f477-4121-af58-bafc537f72c7",
+      "month": "2027-11-01T00:00:00.000Z",
+      "targetValue": "479355.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.885Z",
+      "updatedAt": "2025-11-14T19:16:01.275Z"
+    },
+    {
+      "id": "552f7d99-258f-429b-93d7-0bd9ba11b0a0",
+      "month": "2027-12-01T00:00:00.000Z",
+      "targetValue": "489620.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.935Z",
+      "updatedAt": "2025-11-14T19:16:01.340Z"
+    },
+    {
+      "id": "9a819d63-bfc1-4f7d-bb8d-3c8d9eef55a4",
+      "month": "2028-01-01T00:00:00.000Z",
+      "targetValue": "499998.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.985Z",
+      "updatedAt": "2025-11-14T19:16:01.405Z"
+    },
+    {
+      "id": "f2c875d4-5979-4ca2-bdd6-e318ced55a34",
+      "month": "2028-02-01T00:00:00.000Z",
+      "targetValue": "510490.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.034Z",
+      "updatedAt": "2025-11-14T19:16:01.469Z"
+    },
+    {
+      "id": "131042d2-e311-4e4d-8bfb-80d948c326ed",
+      "month": "2028-03-01T00:00:00.000Z",
+      "targetValue": "521097.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.086Z",
+      "updatedAt": "2025-11-14T19:16:01.534Z"
+    },
+    {
+      "id": "d59838fa-b56e-4ebd-a134-674d3241a755",
+      "month": "2028-04-01T00:00:00.000Z",
+      "targetValue": "531820.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.135Z",
+      "updatedAt": "2025-11-14T19:16:01.601Z"
+    },
+    {
+      "id": "480736ad-634c-43d3-9441-7fbbb55d700a",
+      "month": "2028-05-01T00:00:00.000Z",
+      "targetValue": "542661.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.187Z",
+      "updatedAt": "2025-11-14T19:16:01.665Z"
+    },
+    {
+      "id": "f7afaffa-7564-460d-a8bf-720ca28c257f",
+      "month": "2028-06-01T00:00:00.000Z",
+      "targetValue": "553622.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.249Z",
+      "updatedAt": "2025-11-14T19:16:01.731Z"
+    },
+    {
+      "id": "8cf33b9f-c882-4742-bbda-be4a8eec9291",
+      "month": "2028-07-01T00:00:00.000Z",
+      "targetValue": "564702.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.314Z",
+      "updatedAt": "2025-11-14T19:16:01.796Z"
+    },
+    {
+      "id": "c4f46c27-a1d8-4f93-acef-c846e95f61b8",
+      "month": "2028-08-01T00:00:00.000Z",
+      "targetValue": "575905.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.390Z",
+      "updatedAt": "2025-11-14T19:16:01.860Z"
+    },
+    {
+      "id": "8630a93c-3ae3-4c66-b5aa-a1321b567cb7",
+      "month": "2028-09-01T00:00:00.000Z",
+      "targetValue": "587230.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.441Z",
+      "updatedAt": "2025-11-14T19:16:01.926Z"
+    },
+    {
+      "id": "fa57aaf5-dd36-4086-856f-7644ebfb7c68",
+      "month": "2028-10-01T00:00:00.000Z",
+      "targetValue": "598680.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.489Z",
+      "updatedAt": "2025-11-14T19:16:01.994Z"
+    },
+    {
+      "id": "e281d547-582f-4432-bcc7-93a010da59fa",
+      "month": "2028-11-01T00:00:00.000Z",
+      "targetValue": "610256.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.539Z",
+      "updatedAt": "2025-11-14T19:16:02.058Z"
+    },
+    {
+      "id": "255fd6f1-ca3f-4bd9-8273-7136fa7b179b",
+      "month": "2028-12-01T00:00:00.000Z",
+      "targetValue": "621959.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.586Z",
+      "updatedAt": "2025-11-14T19:16:02.121Z"
+    },
+    {
+      "id": "52db0f44-e9d6-4eb4-90c9-48ff1cb054fb",
+      "month": "2029-01-01T00:00:00.000Z",
+      "targetValue": "633790.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.637Z",
+      "updatedAt": "2025-11-14T19:16:02.189Z"
+    },
+    {
+      "id": "e1a91645-8f53-4d91-8898-c5a3f4b5f8b9",
+      "month": "2029-02-01T00:00:00.000Z",
+      "targetValue": "645751.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.685Z",
+      "updatedAt": "2025-11-14T19:16:02.255Z"
+    },
+    {
+      "id": "7375e6a0-7e80-4bd8-a99c-80489f39b35b",
+      "month": "2029-03-01T00:00:00.000Z",
+      "targetValue": "657844.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.735Z",
+      "updatedAt": "2025-11-14T19:16:02.320Z"
+    },
+    {
+      "id": "3e1a53a0-7367-43db-a28a-d57e02f38420",
+      "month": "2029-04-01T00:00:00.000Z",
+      "targetValue": "670069.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.784Z",
+      "updatedAt": "2025-11-14T19:16:02.386Z"
+    },
+    {
+      "id": "af207f6b-983d-444a-9830-cac72cfa103d",
+      "month": "2029-06-01T00:00:00.000Z",
+      "targetValue": "694925.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.888Z",
+      "updatedAt": "2025-11-14T19:16:02.515Z"
+    },
+    {
+      "id": "72cc4136-f5b7-4e0c-be9a-0c2445964b1e",
+      "month": "2029-07-01T00:00:00.000Z",
+      "targetValue": "707557.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.936Z",
+      "updatedAt": "2025-11-14T19:16:02.580Z"
+    },
+    {
+      "id": "e7221e2f-56e2-45ff-83f5-50dcdb04954b",
+      "month": "2029-08-01T00:00:00.000Z",
+      "targetValue": "720329.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.986Z",
+      "updatedAt": "2025-11-14T19:16:02.647Z"
+    },
+    {
+      "id": "86bca799-8ec4-45df-97ab-9f0c00ea7d7c",
+      "month": "2029-09-01T00:00:00.000Z",
+      "targetValue": "733241.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.037Z",
+      "updatedAt": "2025-11-14T19:16:02.712Z"
+    },
+    {
+      "id": "f38efc3c-3718-4f30-9b80-60319abf0773",
+      "month": "2029-10-01T00:00:00.000Z",
+      "targetValue": "746294.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.091Z",
+      "updatedAt": "2025-11-14T19:16:02.777Z"
+    },
+    {
+      "id": "e81a7f87-bddc-4edd-a701-8abbdbedb5e7",
+      "month": "2029-11-01T00:00:00.000Z",
+      "targetValue": "759491.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.139Z",
+      "updatedAt": "2025-11-14T19:16:02.842Z"
+    },
+    {
+      "id": "ba014566-a859-4313-8920-1c8d8cc8851e",
+      "month": "2029-12-01T00:00:00.000Z",
+      "targetValue": "772833.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.186Z",
+      "updatedAt": "2025-11-14T19:16:02.906Z"
+    },
+    {
+      "id": "bf2e745b-7970-4e16-bf65-10257929517e",
+      "month": "2030-01-01T00:00:00.000Z",
+      "targetValue": "786322.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.233Z",
+      "updatedAt": "2025-11-14T19:16:02.971Z"
+    },
+    {
+      "id": "195bfe35-956f-4fb3-83f9-9ee90095476e",
+      "month": "2030-02-01T00:00:00.000Z",
+      "targetValue": "799958.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.303Z",
+      "updatedAt": "2025-11-14T19:16:03.035Z"
+    },
+    {
+      "id": "348994b6-adb2-4508-b124-01e4af044358",
+      "month": "2030-03-01T00:00:00.000Z",
+      "targetValue": "813745.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.350Z",
+      "updatedAt": "2025-11-14T19:16:03.098Z"
+    },
+    {
+      "id": "5cf08dc2-f147-45da-99f2-033587fd749c",
+      "month": "2030-04-01T00:00:00.000Z",
+      "targetValue": "827683.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.397Z",
+      "updatedAt": "2025-11-14T19:16:03.163Z"
+    },
+    {
+      "id": "d02cf1a1-f844-4118-b075-aee709cac3f8",
+      "month": "2030-05-01T00:00:00.000Z",
+      "targetValue": "841773.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.451Z",
+      "updatedAt": "2025-11-14T19:16:03.232Z"
+    },
+    {
+      "id": "3180fe8c-21c8-4f83-93f8-4fada03f67bc",
+      "month": "2030-06-01T00:00:00.000Z",
+      "targetValue": "856019.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.497Z",
+      "updatedAt": "2025-11-14T19:16:03.296Z"
+    },
+    {
+      "id": "16b2a20b-547f-4cb7-842e-e8fe1abfe6e0",
+      "month": "2030-07-01T00:00:00.000Z",
+      "targetValue": "870421.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.544Z",
+      "updatedAt": "2025-11-14T19:16:03.361Z"
+    },
+    {
+      "id": "e50ea437-9762-4315-86e5-e1bd773421a0",
+      "month": "2030-08-01T00:00:00.000Z",
+      "targetValue": "884982.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.591Z",
+      "updatedAt": "2025-11-14T19:16:03.430Z"
+    },
+    {
+      "id": "5aa5a743-771b-4e0d-9b54-28e8a5034225",
+      "month": "2030-09-01T00:00:00.000Z",
+      "targetValue": "899702.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.637Z",
+      "updatedAt": "2025-11-14T19:16:03.494Z"
+    },
+    {
+      "id": "f3c87b0b-ac26-4c51-829c-5f7191c962e2",
+      "month": "2030-10-01T00:00:00.000Z",
+      "targetValue": "914584.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.684Z",
+      "updatedAt": "2025-11-14T19:16:03.562Z"
+    },
+    {
+      "id": "e35d059e-d0d5-415e-b0e0-99a7682a673f",
+      "month": "2030-11-01T00:00:00.000Z",
+      "targetValue": "929629.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.733Z",
+      "updatedAt": "2025-11-14T19:16:03.628Z"
+    },
+    {
+      "id": "25626dd1-31eb-4b18-b345-af0514ee57ef",
+      "month": "2030-12-01T00:00:00.000Z",
+      "targetValue": "944840.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.779Z",
+      "updatedAt": "2025-11-14T19:16:03.694Z"
+    },
+    {
+      "id": "0fd37590-4d7b-4731-a2d3-571c9cfbd6db",
+      "month": "2031-01-01T00:00:00.000Z",
+      "targetValue": "960218.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.826Z",
+      "updatedAt": "2025-11-14T19:16:03.764Z"
+    },
+    {
+      "id": "3a259723-0890-4cbe-ac0e-04f45bf9a493",
+      "month": "2031-02-01T00:00:00.000Z",
+      "targetValue": "975764.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.876Z",
+      "updatedAt": "2025-11-14T19:16:03.830Z"
+    },
+    {
+      "id": "174a6299-260e-4722-af55-ad36b9671f48",
+      "month": "2031-03-01T00:00:00.000Z",
+      "targetValue": "991482.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.924Z",
+      "updatedAt": "2025-11-14T19:16:03.894Z"
+    },
+    {
+      "id": "a5815cc2-4bb3-471e-bec6-5ff887d3eb07",
+      "month": "2031-04-01T00:00:00.000Z",
+      "targetValue": "1007372.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:17.972Z",
+      "updatedAt": "2025-11-14T19:16:03.958Z"
+    },
+    {
+      "id": "fcd4889f-c6e0-4e74-a6b0-4ec7eb744719",
+      "month": "2031-05-01T00:00:00.000Z",
+      "targetValue": "1023436.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.018Z",
+      "updatedAt": "2025-11-14T19:16:04.023Z"
+    },
+    {
+      "id": "b4399a73-c6d3-49e5-b6fa-b1ffcde2c6cc",
+      "month": "2031-06-01T00:00:00.000Z",
+      "targetValue": "1039677.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.066Z",
+      "updatedAt": "2025-11-14T19:16:04.088Z"
+    },
+    {
+      "id": "732094e8-a6fe-4a6b-8e53-6d78e6bc7b9b",
+      "month": "2031-07-01T00:00:00.000Z",
+      "targetValue": "1056096.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.112Z",
+      "updatedAt": "2025-11-14T19:16:04.152Z"
+    },
+    {
+      "id": "2a765e27-e25b-41ee-b7bb-789a509f36a7",
+      "month": "2031-08-01T00:00:00.000Z",
+      "targetValue": "1072696.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.159Z",
+      "updatedAt": "2025-11-14T19:16:04.217Z"
+    },
+    {
+      "id": "7c6cca14-3f08-431e-a372-314ba1cf35ad",
+      "month": "2025-12-01T00:00:00.000Z",
+      "targetValue": "271721.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:14.783Z",
+      "updatedAt": "2025-11-14T19:15:59.744Z"
+    },
+    {
+      "id": "45b79b40-5c86-458a-86d5-51cb2e4eecfa",
+      "month": "2026-02-01T00:00:00.000Z",
+      "targetValue": "287778.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:14.877Z",
+      "updatedAt": "2025-11-14T19:15:59.876Z"
+    },
+    {
+      "id": "432f9adb-d628-4aa4-b49b-76c82d3ef010",
+      "month": "2026-03-01T00:00:00.000Z",
+      "targetValue": "295939.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:14.924Z",
+      "updatedAt": "2025-11-14T19:15:59.940Z"
+    },
+    {
+      "id": "e87caf0e-e89c-4cc7-af17-53711fea6fd4",
+      "month": "2026-04-01T00:00:00.000Z",
+      "targetValue": "304189.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:14.972Z",
+      "updatedAt": "2025-11-14T19:16:00.005Z"
+    },
+    {
+      "id": "b03b7220-6f78-41d3-a575-946d2b5b4c42",
+      "month": "2026-05-01T00:00:00.000Z",
+      "targetValue": "312530.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.018Z",
+      "updatedAt": "2025-11-14T19:16:00.071Z"
+    },
+    {
+      "id": "289dac94-a1d2-4e8e-b91a-181bb534ae93",
+      "month": "2026-06-01T00:00:00.000Z",
+      "targetValue": "320963.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.064Z",
+      "updatedAt": "2025-11-14T19:16:00.136Z"
+    },
+    {
+      "id": "b3f8e451-69d4-456e-90ab-890aef802aae",
+      "month": "2026-07-01T00:00:00.000Z",
+      "targetValue": "329488.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.112Z",
+      "updatedAt": "2025-11-14T19:16:00.202Z"
+    },
+    {
+      "id": "d5e8af73-509f-4736-822a-a350b2032d8b",
+      "month": "2032-06-01T00:00:00.000Z",
+      "targetValue": "1249059.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.626Z",
+      "updatedAt": "2025-11-14T19:16:04.871Z"
+    },
+    {
+      "id": "244bdf6e-53a8-4e1c-b7c8-95c34da5cd2e",
+      "month": "2032-07-01T00:00:00.000Z",
+      "targetValue": "1267778.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.673Z",
+      "updatedAt": "2025-11-14T19:16:04.937Z"
+    },
+    {
+      "id": "dd34fea4-d9dc-4ad0-82e0-b66d15303cc1",
+      "month": "2032-08-01T00:00:00.000Z",
+      "targetValue": "1286703.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.720Z",
+      "updatedAt": "2025-11-14T19:16:05.002Z"
+    },
+    {
+      "id": "7194ef7d-9ffa-469d-9ac4-bea3b0cb205d",
+      "month": "2032-09-01T00:00:00.000Z",
+      "targetValue": "1305835.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.766Z",
+      "updatedAt": "2025-11-14T19:16:05.067Z"
+    },
+    {
+      "id": "5218654b-d99f-4adf-b215-04e2112b3ec0",
+      "month": "2032-11-01T00:00:00.000Z",
+      "targetValue": "1344733.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.863Z",
+      "updatedAt": "2025-11-14T19:16:05.199Z"
+    },
+    {
+      "id": "70db7e15-458d-4ff5-b2e5-cabb63acf7a2",
+      "month": "2032-12-01T00:00:00.000Z",
+      "targetValue": "1364503.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.911Z",
+      "updatedAt": "2025-11-14T19:16:05.262Z"
+    },
+    {
+      "id": "404ec3b5-0a80-4cc2-9836-f30f16f60d46",
+      "month": "2033-01-01T00:00:00.000Z",
+      "targetValue": "1384490.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.959Z",
+      "updatedAt": "2025-11-14T19:16:05.329Z"
+    },
+    {
+      "id": "d508ba46-2e0e-4c9a-baff-0662214779c9",
+      "month": "2033-02-01T00:00:00.000Z",
+      "targetValue": "1404697.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.017Z",
+      "updatedAt": "2025-11-14T19:16:05.394Z"
+    },
+    {
+      "id": "aa26bc58-28a8-4e3c-87aa-e926ce5b2f7e",
+      "month": "2033-03-01T00:00:00.000Z",
+      "targetValue": "1425125.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.063Z",
+      "updatedAt": "2025-11-14T19:16:05.460Z"
+    },
+    {
+      "id": "1e6e324a-2edf-46b2-bc3f-888cc104db9e",
+      "month": "2033-04-01T00:00:00.000Z",
+      "targetValue": "1445778.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.111Z",
+      "updatedAt": "2025-11-14T19:16:05.525Z"
+    },
+    {
+      "id": "4c8512fd-f6b9-4796-942a-db7f15d3448f",
+      "month": "2033-05-01T00:00:00.000Z",
+      "targetValue": "1466658.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.159Z",
+      "updatedAt": "2025-11-14T19:16:05.590Z"
+    },
+    {
+      "id": "43b04233-c045-4cc9-924e-8e4556ef5067",
+      "month": "2033-06-01T00:00:00.000Z",
+      "targetValue": "1487767.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.211Z",
+      "updatedAt": "2025-11-14T19:16:05.654Z"
+    },
+    {
+      "id": "bec27f59-4846-412d-9eec-180a1edd6961",
+      "month": "2033-07-01T00:00:00.000Z",
+      "targetValue": "1509108.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.261Z",
+      "updatedAt": "2025-11-14T19:16:05.719Z"
+    },
+    {
+      "id": "52d46485-616d-4aaf-8493-44cc28fef0e4",
+      "month": "2033-08-01T00:00:00.000Z",
+      "targetValue": "1530684.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.307Z",
+      "updatedAt": "2025-11-14T19:16:05.783Z"
+    },
+    {
+      "id": "307ebc30-8943-4159-900f-8a5c8f35f218",
+      "month": "2033-09-01T00:00:00.000Z",
+      "targetValue": "1552496.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.353Z",
+      "updatedAt": "2025-11-14T19:16:05.848Z"
+    },
+    {
+      "id": "59ac7749-6018-4804-928d-030b9d4e63a0",
+      "month": "2033-10-01T00:00:00.000Z",
+      "targetValue": "1574548.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.400Z",
+      "updatedAt": "2025-11-14T19:16:05.913Z"
+    },
+    {
+      "id": "e431aec9-1ebe-43b9-b16f-3d09f3cc9062",
+      "month": "2033-11-01T00:00:00.000Z",
+      "targetValue": "1596842.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.453Z",
+      "updatedAt": "2025-11-14T19:16:05.982Z"
+    },
+    {
+      "id": "f5259c59-309e-49d8-9a02-1106dbcc8dc2",
+      "month": "2033-12-01T00:00:00.000Z",
+      "targetValue": "1619381.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.509Z",
+      "updatedAt": "2025-11-14T19:16:06.048Z"
+    },
+    {
+      "id": "da50df39-b907-438e-bfb1-1aa513eef92c",
+      "month": "2034-01-01T00:00:00.000Z",
+      "targetValue": "1642168.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.555Z",
+      "updatedAt": "2025-11-14T19:16:06.113Z"
+    },
+    {
+      "id": "32f5ce7f-f430-4361-81f7-548847b1d061",
+      "month": "2034-02-01T00:00:00.000Z",
+      "targetValue": "1665205.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.603Z",
+      "updatedAt": "2025-11-14T19:16:06.182Z"
+    },
+    {
+      "id": "71c2e18e-02f6-482d-97d4-968bd1182cc9",
+      "month": "2034-03-01T00:00:00.000Z",
+      "targetValue": "1688495.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.648Z",
+      "updatedAt": "2025-11-14T19:16:06.247Z"
+    },
+    {
+      "id": "24ec75ef-f6e2-4f6f-984d-1ffd9fa1a3f9",
+      "month": "2034-04-01T00:00:00.000Z",
+      "targetValue": "1712040.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.694Z",
+      "updatedAt": "2025-11-14T19:16:06.311Z"
+    },
+    {
+      "id": "f7e07c6a-7907-4640-83ef-46c3daf39e78",
+      "month": "2034-05-01T00:00:00.000Z",
+      "targetValue": "1735845.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.741Z",
+      "updatedAt": "2025-11-14T19:16:06.376Z"
+    },
+    {
+      "id": "7de2acb6-9cb0-4c75-9e30-bd8cda91a6ac",
+      "month": "2034-06-01T00:00:00.000Z",
+      "targetValue": "1759910.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.787Z",
+      "updatedAt": "2025-11-14T19:16:06.444Z"
+    },
+    {
+      "id": "9b5870a2-b06c-47bf-84f3-4dd649076879",
+      "month": "2034-07-01T00:00:00.000Z",
+      "targetValue": "1784240.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.832Z",
+      "updatedAt": "2025-11-14T19:16:06.509Z"
+    },
+    {
+      "id": "d9d5ba2b-154a-4367-af75-4c30c31509c6",
+      "month": "2034-08-01T00:00:00.000Z",
+      "targetValue": "1808838.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.880Z",
+      "updatedAt": "2025-11-14T19:16:06.576Z"
+    },
+    {
+      "id": "fe87a082-2f75-41eb-920d-a4978e55a68b",
+      "month": "2034-09-01T00:00:00.000Z",
+      "targetValue": "1833705.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.926Z",
+      "updatedAt": "2025-11-14T19:16:06.643Z"
+    },
+    {
+      "id": "bb135aad-0ad8-4108-bff0-9f6c33d3096b",
+      "month": "2034-10-01T00:00:00.000Z",
+      "targetValue": "1858846.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:19.973Z",
+      "updatedAt": "2025-11-14T19:16:06.707Z"
+    },
+    {
+      "id": "7ee55894-e1fb-49e0-a383-acde22810652",
+      "month": "2034-11-01T00:00:00.000Z",
+      "targetValue": "1884263.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.019Z",
+      "updatedAt": "2025-11-14T19:16:06.772Z"
+    },
+    {
+      "id": "ce9a2e11-ac8a-4538-abca-f8aea1b0d771",
+      "month": "2034-12-01T00:00:00.000Z",
+      "targetValue": "1909959.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.067Z",
+      "updatedAt": "2025-11-14T19:16:06.841Z"
+    },
+    {
+      "id": "778638c9-a4fb-4469-8df9-c0fc7761f000",
+      "month": "2035-01-01T00:00:00.000Z",
+      "targetValue": "1935937.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.113Z",
+      "updatedAt": "2025-11-14T19:16:06.908Z"
+    },
+    {
+      "id": "b4d1b15f-acb8-46f5-bb7e-9b86164e5924",
+      "month": "2035-02-01T00:00:00.000Z",
+      "targetValue": "1962200.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.159Z",
+      "updatedAt": "2025-11-14T19:16:06.974Z"
+    },
+    {
+      "id": "9dcd064a-b435-4038-baac-23ffb073e4db",
+      "month": "2035-04-01T00:00:00.000Z",
+      "targetValue": "2015596.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.253Z",
+      "updatedAt": "2025-11-14T19:16:07.104Z"
+    },
+    {
+      "id": "95983b77-ee45-486b-88a2-61e5d189352d",
+      "month": "2035-05-01T00:00:00.000Z",
+      "targetValue": "2042734.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.326Z",
+      "updatedAt": "2025-11-14T19:16:07.168Z"
+    },
+    {
+      "id": "c6385343-ccef-4666-9aa0-2dcc09fc0002",
+      "month": "2035-06-01T00:00:00.000Z",
+      "targetValue": "2070171.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.375Z",
+      "updatedAt": "2025-11-14T19:16:07.233Z"
+    },
+    {
+      "id": "07c3e6ae-d2db-4175-8f10-5d2114305dce",
+      "month": "2035-07-01T00:00:00.000Z",
+      "targetValue": "2097909.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.421Z",
+      "updatedAt": "2025-11-14T19:16:07.298Z"
+    },
+    {
+      "id": "e5a65cc3-a553-4a3f-bca1-14c53aea59e9",
+      "month": "2035-08-01T00:00:00.000Z",
+      "targetValue": "2125951.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.468Z",
+      "updatedAt": "2025-11-14T19:16:07.364Z"
+    },
+    {
+      "id": "54933956-1da9-47a7-a96b-ee04134587f6",
+      "month": "2035-09-01T00:00:00.000Z",
+      "targetValue": "2154302.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.514Z",
+      "updatedAt": "2025-11-14T19:16:07.428Z"
+    },
+    {
+      "id": "021a9304-5871-4134-85ad-b6a7a11f175f",
+      "month": "2035-10-01T00:00:00.000Z",
+      "targetValue": "2182964.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.561Z",
+      "updatedAt": "2025-11-14T19:16:07.495Z"
+    },
+    {
+      "id": "22d67d28-ab7e-4617-8361-6fa6824048b7",
+      "month": "2035-11-01T00:00:00.000Z",
+      "targetValue": "2211940.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.607Z",
+      "updatedAt": "2025-11-14T19:16:07.560Z"
+    },
+    {
+      "id": "bfd900a8-1a28-454e-a001-04181f545af7",
+      "month": "2035-12-01T00:00:00.000Z",
+      "targetValue": "2241235.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.657Z",
+      "updatedAt": "2025-11-14T19:16:07.625Z"
+    },
+    {
+      "id": "6aa9ebe1-5258-444a-adfc-0c640673514b",
+      "month": "2036-01-01T00:00:00.000Z",
+      "targetValue": "2270852.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.703Z",
+      "updatedAt": "2025-11-14T19:16:07.692Z"
+    },
+    {
+      "id": "1cf6534c-a641-4e39-9339-17e19626055b",
+      "month": "2036-02-01T00:00:00.000Z",
+      "targetValue": "2300794.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.750Z",
+      "updatedAt": "2025-11-14T19:16:07.757Z"
+    },
+    {
+      "id": "34174276-ef5d-40d2-938a-4ada0624f6de",
+      "month": "2036-03-01T00:00:00.000Z",
+      "targetValue": "2331065.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.796Z",
+      "updatedAt": "2025-11-14T19:16:07.820Z"
+    },
+    {
+      "id": "adc27778-bdf9-47a6-9aaa-188cb1f25319",
+      "month": "2036-04-01T00:00:00.000Z",
+      "targetValue": "2361668.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.843Z",
+      "updatedAt": "2025-11-14T19:16:07.885Z"
+    },
+    {
+      "id": "9f177514-0ada-4345-b07a-13a5bbbefd27",
+      "month": "2036-05-01T00:00:00.000Z",
+      "targetValue": "2392608.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.890Z",
+      "updatedAt": "2025-11-14T19:16:07.951Z"
+    },
+    {
+      "id": "ec7ddff9-cfc7-4c79-8cf2-a4d7c4a23869",
+      "month": "2036-06-01T00:00:00.000Z",
+      "targetValue": "2423887.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.937Z",
+      "updatedAt": "2025-11-14T19:16:08.017Z"
+    },
+    {
+      "id": "2f7b6f9a-6346-4eeb-bd3b-d15b8279bc04",
+      "month": "2036-07-01T00:00:00.000Z",
+      "targetValue": "2455510.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.983Z",
+      "updatedAt": "2025-11-14T19:16:08.082Z"
+    },
+    {
+      "id": "beb1ff23-ba04-4ea0-8eeb-603bae406533",
+      "month": "2036-08-01T00:00:00.000Z",
+      "targetValue": "2487481.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.035Z",
+      "updatedAt": "2025-11-14T19:16:08.145Z"
+    },
+    {
+      "id": "07377fcf-47e9-4b97-96d5-8a4ba08baa8d",
+      "month": "2036-09-01T00:00:00.000Z",
+      "targetValue": "2519802.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.081Z",
+      "updatedAt": "2025-11-14T19:16:08.209Z"
+    },
+    {
+      "id": "59feffba-65f6-43ea-8449-15d7118df31e",
+      "month": "2036-10-01T00:00:00.000Z",
+      "targetValue": "2552478.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.129Z",
+      "updatedAt": "2025-11-14T19:16:08.274Z"
+    },
+    {
+      "id": "7748c81c-4b64-4400-bc5f-47f69c151dc8",
+      "month": "2036-11-01T00:00:00.000Z",
+      "targetValue": "2585514.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.175Z",
+      "updatedAt": "2025-11-14T19:16:08.339Z"
+    },
+    {
+      "id": "75b4462c-b2c2-486c-8000-4da568c1f6ab",
+      "month": "2036-12-01T00:00:00.000Z",
+      "targetValue": "2618912.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.223Z",
+      "updatedAt": "2025-11-14T19:16:08.403Z"
+    },
+    {
+      "id": "931e5a98-62bb-46a2-82ec-3a8ab7e17990",
+      "month": "2037-01-01T00:00:00.000Z",
+      "targetValue": "2652677.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.269Z",
+      "updatedAt": "2025-11-14T19:16:08.467Z"
+    },
+    {
+      "id": "a5fce759-8e10-495e-b541-e90753edc592",
+      "month": "2037-02-01T00:00:00.000Z",
+      "targetValue": "2686813.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.316Z",
+      "updatedAt": "2025-11-14T19:16:08.532Z"
+    },
+    {
+      "id": "ca420217-5afd-4c2f-ae37-87d8959dac60",
+      "month": "2037-03-01T00:00:00.000Z",
+      "targetValue": "2721324.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.363Z",
+      "updatedAt": "2025-11-14T19:16:08.597Z"
+    },
+    {
+      "id": "ff794c74-7305-43aa-a8e8-b7d9357b42ef",
+      "month": "2037-04-01T00:00:00.000Z",
+      "targetValue": "2756213.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.410Z",
+      "updatedAt": "2025-11-14T19:16:08.662Z"
+    },
+    {
+      "id": "66d1640c-c213-4683-9a04-7255d5462bef",
+      "month": "2037-05-01T00:00:00.000Z",
+      "targetValue": "2791486.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.456Z",
+      "updatedAt": "2025-11-14T19:16:08.727Z"
+    },
+    {
+      "id": "225aa069-5b33-4ebf-ba92-d51680861d0e",
+      "month": "2037-06-01T00:00:00.000Z",
+      "targetValue": "2827147.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.501Z",
+      "updatedAt": "2025-11-14T19:16:08.792Z"
+    },
+    {
+      "id": "e05aa172-e103-4f89-b725-48535f7bdd59",
+      "month": "2031-10-01T00:00:00.000Z",
+      "targetValue": "1106445.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.253Z",
+      "updatedAt": "2025-11-14T19:16:04.346Z"
+    },
+    {
+      "id": "2207cf7a-52fa-4ece-8d98-4c1a79a9ff5b",
+      "month": "2031-12-01T00:00:00.000Z",
+      "targetValue": "1140938.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.346Z",
+      "updatedAt": "2025-11-14T19:16:04.480Z"
+    },
+    {
+      "id": "cf0fae65-f16b-437b-a214-473427a1c124",
+      "month": "2032-01-01T00:00:00.000Z",
+      "targetValue": "1158470.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.392Z",
+      "updatedAt": "2025-11-14T19:16:04.544Z"
+    },
+    {
+      "id": "5d1508cf-7469-43aa-9e03-3889aa4d2fa7",
+      "month": "2032-02-01T00:00:00.000Z",
+      "targetValue": "1176194.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.439Z",
+      "updatedAt": "2025-11-14T19:16:04.609Z"
+    },
+    {
+      "id": "0156e0d1-2e37-457f-afc4-d9d96362874a",
+      "month": "2032-03-01T00:00:00.000Z",
+      "targetValue": "1194113.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.486Z",
+      "updatedAt": "2025-11-14T19:16:04.675Z"
+    },
+    {
+      "id": "88e1409e-1447-4795-80a1-416d40f76e24",
+      "month": "2032-04-01T00:00:00.000Z",
+      "targetValue": "1212228.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.533Z",
+      "updatedAt": "2025-11-14T19:16:04.742Z"
+    },
+    {
+      "id": "5c5cf3db-7861-4220-ad99-e1b2d15f2967",
+      "month": "2032-05-01T00:00:00.000Z",
+      "targetValue": "1230543.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.580Z",
+      "updatedAt": "2025-11-14T19:16:04.806Z"
+    },
+    {
+      "id": "9919d30a-04ce-4ac8-836d-056b38b6fb31",
+      "month": "2038-04-01T00:00:00.000Z",
+      "targetValue": "3206020.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.969Z",
+      "updatedAt": "2025-11-14T19:16:09.452Z"
+    },
+    {
+      "id": "e6b1521f-59a7-4b0e-b73e-37549f110f9d",
+      "month": "2038-05-01T00:00:00.000Z",
+      "targetValue": "3246233.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.015Z",
+      "updatedAt": "2025-11-14T19:16:09.517Z"
+    },
+    {
+      "id": "e3f18eb9-3b60-4f9b-b2a5-1fb3ab887a27",
+      "month": "2038-06-01T00:00:00.000Z",
+      "targetValue": "3286889.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.061Z",
+      "updatedAt": "2025-11-14T19:16:09.582Z"
+    },
+    {
+      "id": "78f6c8d0-a56a-4872-9287-f360cf40ab06",
+      "month": "2038-07-01T00:00:00.000Z",
+      "targetValue": "3327990.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.108Z",
+      "updatedAt": "2025-11-14T19:16:09.647Z"
+    },
+    {
+      "id": "5dba5c75-0cff-46ed-8232-052f665a9a30",
+      "month": "2038-08-01T00:00:00.000Z",
+      "targetValue": "3369544.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.154Z",
+      "updatedAt": "2025-11-14T19:16:09.713Z"
+    },
+    {
+      "id": "21a75072-021e-43fe-989e-dda3f2d75aaf",
+      "month": "2038-09-01T00:00:00.000Z",
+      "targetValue": "3411553.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.201Z",
+      "updatedAt": "2025-11-14T19:16:09.779Z"
+    },
+    {
+      "id": "52e42ece-b36d-417e-b0e9-af7ade3cf796",
+      "month": "2038-10-01T00:00:00.000Z",
+      "targetValue": "3454024.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.247Z",
+      "updatedAt": "2025-11-14T19:16:09.844Z"
+    },
+    {
+      "id": "fda2258a-2dd2-4f5b-9219-ad0db4f60ad8",
+      "month": "2039-04-01T00:00:00.000Z",
+      "targetValue": "3718828.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.528Z",
+      "updatedAt": "2025-11-14T19:16:10.234Z"
+    },
+    {
+      "id": "252a444b-c1da-4a65-8ddd-10cbd88b74d8",
+      "month": "2039-05-01T00:00:00.000Z",
+      "targetValue": "3764674.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.574Z",
+      "updatedAt": "2025-11-14T19:16:10.298Z"
+    },
+    {
+      "id": "91fda83e-4152-44c1-927f-e35be571f147",
+      "month": "2040-11-01T00:00:00.000Z",
+      "targetValue": "5120360.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.413Z",
+      "updatedAt": "2025-11-14T11:46:53.680Z"
+    },
+    {
+      "id": "6e3cc200-0c57-41cc-a442-d382b20fde99",
+      "month": "2039-06-01T00:00:00.000Z",
+      "targetValue": "3811023.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.620Z",
+      "updatedAt": "2025-11-14T19:16:10.363Z"
+    },
+    {
+      "id": "3d7d5448-0892-414b-8563-e2a0f2fadf27",
+      "month": "2039-07-01T00:00:00.000Z",
+      "targetValue": "3857882.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.666Z",
+      "updatedAt": "2025-11-14T19:16:10.430Z"
+    },
+    {
+      "id": "890ff206-d32a-4e5b-a156-43d3c54d5fb8",
+      "month": "2039-08-01T00:00:00.000Z",
+      "targetValue": "3905255.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.712Z",
+      "updatedAt": "2025-11-14T19:16:10.494Z"
+    },
+    {
+      "id": "73b98593-f61d-4d87-842f-70e24e0fef66",
+      "month": "2039-09-01T00:00:00.000Z",
+      "targetValue": "3953149.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.758Z",
+      "updatedAt": "2025-11-14T19:16:10.557Z"
+    },
+    {
+      "id": "d0c50dc0-7d92-4110-a089-5f257c625200",
+      "month": "2039-10-01T00:00:00.000Z",
+      "targetValue": "4001569.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.805Z",
+      "updatedAt": "2025-11-14T19:16:10.621Z"
+    },
+    {
+      "id": "62d20f24-37df-42d5-97e0-38fe0fc46eac",
+      "month": "2039-11-01T00:00:00.000Z",
+      "targetValue": "4050520.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.852Z",
+      "updatedAt": "2025-11-14T19:16:10.688Z"
+    },
+    {
+      "id": "6c853163-7b88-4883-b93a-ca45da37681a",
+      "month": "2040-04-01T00:00:00.000Z",
+      "targetValue": "4303462.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.085Z",
+      "updatedAt": "2025-11-14T19:16:11.011Z"
+    },
+    {
+      "id": "3143fccb-02db-4476-aebf-c8e1754152fa",
+      "month": "2040-05-01T00:00:00.000Z",
+      "targetValue": "4355729.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.132Z",
+      "updatedAt": "2025-11-14T19:16:11.077Z"
+    },
+    {
+      "id": "a1c23a0c-c828-40ed-a09b-43a1b401be55",
+      "month": "2040-06-01T00:00:00.000Z",
+      "targetValue": "4408570.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.181Z",
+      "updatedAt": "2025-11-14T19:16:11.142Z"
+    },
+    {
+      "id": "3af19d77-b1e4-4dd3-8a3c-b128b53748a2",
+      "month": "2040-07-01T00:00:00.000Z",
+      "targetValue": "4461992.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.229Z",
+      "updatedAt": "2025-11-14T19:16:11.207Z"
+    },
+    {
+      "id": "c867b010-9aea-4989-9795-ad8fe4a86b8f",
+      "month": "2040-08-01T00:00:00.000Z",
+      "targetValue": "4516001.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.274Z",
+      "updatedAt": "2025-11-14T19:16:11.272Z"
+    },
+    {
+      "id": "46ca983e-0c00-45be-8553-9217bd47d9d2",
+      "month": "2040-09-01T00:00:00.000Z",
+      "targetValue": "4570603.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.320Z",
+      "updatedAt": "2025-11-14T19:16:11.336Z"
+    },
+    {
+      "id": "74a21db2-4f84-4a25-9a80-b57fba9fafe2",
+      "month": "2040-10-01T00:00:00.000Z",
+      "targetValue": "4625804.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.367Z",
+      "updatedAt": "2025-11-14T19:16:11.400Z"
+    },
+    {
+      "id": "2961cef0-188c-44d5-b34c-f2fab22a60de",
+      "month": "2025-10-01T00:00:00.000Z",
+      "targetValue": "256011.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:16:18.571Z",
+      "updatedAt": "2025-11-14T19:15:59.613Z"
+    },
+    {
+      "id": "a0e6a839-d615-451a-81f7-5a61b8ed63c7",
+      "month": "2025-11-01T00:00:00.000Z",
+      "targetValue": "263823.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:14.732Z",
+      "updatedAt": "2025-11-14T19:15:59.680Z"
+    },
+    {
+      "id": "5ae2e0a5-c385-454b-bdc1-6b17418dd66c",
+      "month": "2026-01-01T00:00:00.000Z",
+      "targetValue": "279706.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:14.830Z",
+      "updatedAt": "2025-11-14T19:15:59.811Z"
+    },
+    {
+      "id": "4c3fd3ac-b746-4eac-bae7-3eb65ed3c32a",
+      "month": "2026-12-01T00:00:00.000Z",
+      "targetValue": "373540.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:15.346Z",
+      "updatedAt": "2025-11-14T19:16:00.543Z"
+    },
+    {
+      "id": "97be342f-3fec-41bd-9c08-d95f32d8744a",
+      "month": "2029-05-01T00:00:00.000Z",
+      "targetValue": "682429.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:16.832Z",
+      "updatedAt": "2025-11-14T19:16:02.450Z"
+    },
+    {
+      "id": "deabbc14-97a3-4be8-ad78-179bea0f5e40",
+      "month": "2031-11-01T00:00:00.000Z",
+      "targetValue": "1123597.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.299Z",
+      "updatedAt": "2025-11-14T19:16:04.415Z"
+    },
+    {
+      "id": "b099dd31-e6a1-49c1-928d-d806e4ce93aa",
+      "month": "2032-10-01T00:00:00.000Z",
+      "targetValue": "1325178.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.813Z",
+      "updatedAt": "2025-11-14T19:16:05.135Z"
+    },
+    {
+      "id": "6f257a98-525f-4cd1-9d90-ea2f85e62bbf",
+      "month": "2035-03-01T00:00:00.000Z",
+      "targetValue": "1988752.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:20.206Z",
+      "updatedAt": "2025-11-14T19:16:07.040Z"
+    },
+    {
+      "id": "ca4f0f19-01bc-4e30-bb85-2b2f1bc381fd",
+      "month": "2037-07-01T00:00:00.000Z",
+      "targetValue": "2863199.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.547Z",
+      "updatedAt": "2025-11-14T19:16:08.857Z"
+    },
+    {
+      "id": "55caa902-7c3e-43cb-a72a-65e5e7e6447a",
+      "month": "2037-08-01T00:00:00.000Z",
+      "targetValue": "2899647.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.594Z",
+      "updatedAt": "2025-11-14T19:16:08.922Z"
+    },
+    {
+      "id": "f4d10291-94d2-4264-ad19-2162f31542a4",
+      "month": "2037-09-01T00:00:00.000Z",
+      "targetValue": "2936496.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.640Z",
+      "updatedAt": "2025-11-14T19:16:08.988Z"
+    },
+    {
+      "id": "05fce8dc-05cc-4751-910b-944bab565bf8",
+      "month": "2037-10-01T00:00:00.000Z",
+      "targetValue": "2973749.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.689Z",
+      "updatedAt": "2025-11-14T19:16:09.054Z"
+    },
+    {
+      "id": "0b0e3d35-7228-449f-bb57-eb39f1062b5e",
+      "month": "2037-11-01T00:00:00.000Z",
+      "targetValue": "3011411.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.736Z",
+      "updatedAt": "2025-11-14T19:16:09.120Z"
+    },
+    {
+      "id": "62625595-833f-460f-87f0-236a1fc9573f",
+      "month": "2037-12-01T00:00:00.000Z",
+      "targetValue": "3049487.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.784Z",
+      "updatedAt": "2025-11-14T19:16:09.184Z"
+    },
+    {
+      "id": "dbb45ed1-a891-44e0-8f46-530dbf496293",
+      "month": "2038-01-01T00:00:00.000Z",
+      "targetValue": "3087982.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.830Z",
+      "updatedAt": "2025-11-14T19:16:09.250Z"
+    },
+    {
+      "id": "185e8311-c35f-4563-be11-b1ab9bd888a4",
+      "month": "2038-02-01T00:00:00.000Z",
+      "targetValue": "3126899.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.876Z",
+      "updatedAt": "2025-11-14T19:16:09.316Z"
+    },
+    {
+      "id": "295193b9-8241-46a7-a990-ca4964f0bdd0",
+      "month": "2038-11-01T00:00:00.000Z",
+      "targetValue": "3496962.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.293Z",
+      "updatedAt": "2025-11-14T19:16:09.907Z"
+    },
+    {
+      "id": "2a4c50f3-606d-45b5-b0da-5d67aa855c84",
+      "month": "2038-12-01T00:00:00.000Z",
+      "targetValue": "3540371.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.339Z",
+      "updatedAt": "2025-11-14T19:16:09.972Z"
+    },
+    {
+      "id": "32c75414-0f07-4911-b92a-c81bf12a5a2f",
+      "month": "2039-01-01T00:00:00.000Z",
+      "targetValue": "3584257.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.388Z",
+      "updatedAt": "2025-11-14T19:16:10.038Z"
+    },
+    {
+      "id": "51197fe9-6be2-41d8-89b9-f5972c8f906f",
+      "month": "2039-02-01T00:00:00.000Z",
+      "targetValue": "3628625.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.434Z",
+      "updatedAt": "2025-11-14T19:16:10.102Z"
+    },
+    {
+      "id": "ef1b6bd6-8979-479b-b15d-5d8630b392bc",
+      "month": "2039-12-01T00:00:00.000Z",
+      "targetValue": "4100009.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.899Z",
+      "updatedAt": "2025-11-14T19:16:10.754Z"
+    },
+    {
+      "id": "b5158f03-df46-41a6-a6ba-aaae0750df67",
+      "month": "2040-01-01T00:00:00.000Z",
+      "targetValue": "4150042.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.945Z",
+      "updatedAt": "2025-11-14T19:16:10.817Z"
+    },
+    {
+      "id": "ca52bc03-2097-41c8-b367-e24331af4e62",
+      "month": "2040-02-01T00:00:00.000Z",
+      "targetValue": "4200624.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.992Z",
+      "updatedAt": "2025-11-14T19:16:10.883Z"
+    },
+    {
+      "id": "06f408fd-8c09-4204-9734-06126f32844d",
+      "month": "2031-09-01T00:00:00.000Z",
+      "targetValue": "1089478.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:18.205Z",
+      "updatedAt": "2025-11-14T19:16:04.282Z"
+    },
+    {
+      "id": "c665bcaf-c285-40ae-a05e-18ddfd88a8d6",
+      "month": "2038-03-01T00:00:00.000Z",
+      "targetValue": "3166243.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:21.922Z",
+      "updatedAt": "2025-11-14T19:16:09.382Z"
+    },
+    {
+      "id": "959dc4ba-a7b7-4a4b-9bcb-797ece7a97df",
+      "month": "2039-03-01T00:00:00.000Z",
+      "targetValue": "3673480.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:22.481Z",
+      "updatedAt": "2025-11-14T19:16:10.168Z"
+    },
+    {
+      "id": "9fd2c114-1110-4caf-8351-156f582f206f",
+      "month": "2040-03-01T00:00:00.000Z",
+      "targetValue": "4251762.00",
+      "scenarioId": "Vision 2040",
+      "generated": 1,
+      "notes": null,
+      "createdAt": "2025-11-14T11:11:23.038Z",
+      "updatedAt": "2025-11-14T19:16:10.947Z"
+    }
+  ]
+}

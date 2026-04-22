@@ -1,0 +1,18 @@
+{
+  "name": "A.Z Finance Hub",
+  "short_name": "A.Z Hub",
+  "description": "Personal Sukuk & Fixed-Income Portfolio Management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1c",
+  "theme_color": "#0a0f1c",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

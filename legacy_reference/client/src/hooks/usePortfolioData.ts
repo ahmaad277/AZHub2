@@ -1,0 +1,117 @@
+import { Investment } from '../utils/portfolioCalculations';
+
+const mockInvestments: Investment[] = [
+  {
+    id: '1',
+    principal: 30000,
+    expectedProfit: 2298,
+    actualProfitDistributed: 2000,
+    platformName: 'Manafa',
+    status: 'active',
+    startDate: '2024-01-01T00:00:00.000Z',
+    maturityDate: '2026-11-06T00:00:00.000Z', // approx 200 days from April 20, 2026
+    expectedPaymentDate: '2026-11-06T00:00:00.000Z',
+    type: 'Sukuk',
+  },
+  {
+    id: '2',
+    principal: 40000,
+    expectedProfit: 3064,
+    actualProfitDistributed: 3000,
+    platformName: 'Lendo',
+    status: 'active',
+    startDate: '2024-02-01T00:00:00.000Z',
+    maturityDate: '2026-11-06T00:00:00.000Z',
+    expectedPaymentDate: '2026-11-06T00:00:00.000Z',
+    type: 'Murabaha',
+  },
+  {
+    id: '3',
+    principal: 20000,
+    expectedProfit: 1532,
+    actualProfitDistributed: 1500,
+    platformName: 'Manafa',
+    status: 'active',
+    startDate: '2024-03-01T00:00:00.000Z',
+    maturityDate: '2026-11-06T00:00:00.000Z',
+    expectedPaymentDate: '2026-11-06T00:00:00.000Z',
+    type: 'Sukuk',
+  },
+  {
+    id: '4',
+    principal: 20000,
+    expectedProfit: 4000,
+    actualProfitDistributed: 4000,
+    platformName: 'Manafa',
+    status: 'completed',
+    startDate: '2023-01-01T00:00:00.000Z',
+    maturityDate: '2025-01-01T00:00:00.000Z',
+    type: 'Sukuk',
+  },
+  {
+    id: '5',
+    principal: 30000,
+    expectedProfit: 6000,
+    actualProfitDistributed: 6000,
+    platformName: 'Lendo',
+    status: 'completed',
+    startDate: '2023-02-01T00:00:00.000Z',
+    maturityDate: '2025-02-01T00:00:00.000Z',
+    type: 'Murabaha',
+  },
+  {
+    id: '6',
+    principal: 25000,
+    expectedProfit: 5000,
+    actualProfitDistributed: 5000,
+    platformName: 'Sukuk',
+    status: 'completed',
+    startDate: '2023-03-01T00:00:00.000Z',
+    maturityDate: '2025-03-01T00:00:00.000Z',
+    type: 'Sukuk',
+  },
+  {
+    id: '7',
+    principal: 15000,
+    expectedProfit: 3000,
+    actualProfitDistributed: 3000,
+    platformName: 'Manafa',
+    status: 'completed',
+    startDate: '2023-04-01T00:00:00.000Z',
+    maturityDate: '2025-04-01T00:00:00.000Z',
+    type: 'Sukuk',
+  },
+  {
+    id: '8',
+    principal: 5000,
+    expectedProfit: 1000,
+    actualProfitDistributed: 1000,
+    platformName: 'Lendo',
+    status: 'completed',
+    startDate: '2023-05-01T00:00:00.000Z',
+    maturityDate: '2025-05-01T00:00:00.000Z',
+    type: 'Murabaha',
+  },
+  {
+    id: '9',
+    principal: 2375,
+    expectedProfit: 475,
+    actualProfitDistributed: 475,
+    platformName: 'Sukuk',
+    status: 'completed',
+    startDate: '2023-06-01T00:00:00.000Z',
+    maturityDate: '2025-06-01T00:00:00.000Z',
+    type: 'Sukuk',
+  },
+];
+
+const cashBalance = 32490;
+const totalPrincipalEverInvested = mockInvestments.reduce((sum, inv) => sum + inv.principal, 0);
+
+export default function usePortfolioData() {
+  return {
+    cashBalance,
+    investments: mockInvestments,
+    totalPrincipalEverInvested,
+  };
+}

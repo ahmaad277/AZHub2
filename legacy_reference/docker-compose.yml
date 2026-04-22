@@ -1,0 +1,9 @@
+services:
+  cursor-proxy:
+    image: ghcr.io/pezzos/cursor-openrouter-proxy:latest
+    ports:
+      - "9000:9000"
+    environment:
+      - OPENROUTER_API_KEY=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
+      - OPENROUTER_MODEL=deepseek/deepseek-chat-v3-0324
+    restart: unless-stopped

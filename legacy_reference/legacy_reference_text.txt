@@ -1,0 +1,90 @@
+إليك **"The Master Build Prompt"** (موجه البناء الشامل). لقد قمت بهندسة هذا الموجه (Prompt) باللغة الإنجليزية (لأن نماذج الذكاء الاصطناعي البرمجية تفهم المصطلحات الهندسية والمالية بدقة مطلقة باللغة الإنجليزية) ليكون جاهزاً للنسخ واللصق مباشرة في أي نموذج ذكاء اصطناعي (مثل Claude 3.5 Sonnet أو GPT-4o أو Cursor) لبناء النسخة 2.0 من الصفر.
+
+هذا الموجه يعالج كل الأخطاء السابقة، يدمج الميزات المكررة، يضع معمارية مالية صارمة (Single Source of Truth)، ويحفظ كل التفاصيل الدقيقة لتجربة المستخدم (مثل إدخال المدة بالأشهر مقابل تاريخ الانتهاء).
+
+---
+
+### انسخ المربع التالي بالكامل وقدمه للذكاء الاصطناعي الذي سيبني النظام:
+
+```markdown
+# ROLE & CONTEXT
+You are a Senior Financial Systems Architect and an Expert Full-Stack Developer. Your task is to build "Version 2.0" of a Personal Sukuk & Fixed-Income Portfolio Management System. 
+This is a strict financial system: Data integrity, mathematical accuracy, and a "Single Source of Truth" architecture are non-negotiable. No redundant states, no scattered calculation logic.
+
+# 1. PRODUCT DEFINITION
+A comprehensive web application to manage personal investments in Sukuk and fixed-income platforms (e.g., Lendo, Manafa, Sukuk.com). It tracks invested capital, expected profits, cashflow schedules (distributions), cash wallet balances, and measures performance against a long-term financial goal ("Vision 2040").
+
+# 2. SYSTEM ARCHITECTURE & CORE PRINCIPLES
+- **Single Source of Truth (SSOT):** The backend database is the ONLY source of truth. The frontend MUST NOT perform complex financial aggregations or state derivations. The backend provides pre-calculated, ready-to-display metrics via specific analytics endpoints.
+- **Double-Entry Ledger Concept:** Cash balance is strictly the sum of `CashTransactions`. When a profit is received, it MUST be an atomic database transaction: Update Cashflow to 'received' AND insert a 'cashflow_receipt' into CashTransactions.
+- **Computed Statuses:** Investment status (Active, Completed, Delayed, Defaulted) MUST NOT be manually toggled if it can be computed. It should be dynamically derived based on the current date vs. cashflow due dates and end dates.
+
+# 3. STRICT DATA MODEL (Relational Database)
+Implement the following schema (use an ORM like Drizzle or Prisma):
+
+1. **Platforms:**
+   - `id`, `name`, `type` (sukuk, manfaa, lendo), `fee_percentage`, `deduct_fees` (boolean).
+2. **Investments:**
+   - `id`, `platform_id`, `principal_amount` (numeric, replaces old 'faceValue'), `expected_profit` (numeric), `start_date` (timestamp), `duration_months` (int), `end_date` (timestamp).
+   - `distribution_frequency` (monthly, quarterly, semi_annually, annually, at_maturity, custom).
+   - `is_reinvestment` (boolean).
+   - *Note:* Remove manual `status` field. Status is a computed view/property.
+3. **Cashflows (Merged with Custom Distributions):**
+   - `id`, `investment_id`, `due_date` (timestamp), `amount` (numeric), `type` (profit, principal).
+   - `status` (pending, received).
+   - `is_custom_schedule` (boolean) -> Replaces the old redundant 'custom_distributions' table.
+4. **Cash_Transactions (The Ledger):**
+   - `id`, `date`, `amount` (numeric, positive for deposits/receipts, negative for withdrawals/investments), `type` (deposit, withdrawal, investment_funding, cashflow_receipt).
+   - `reference_id` (nullable, links to investment_id or cashflow_id).
+   - *Constraint:* If type is `cashflow_receipt`, `reference_id` MUST be a valid cashflow_id.
+5. **Vision_Targets:**
+   - `month` (timestamp), `target_value` (numeric).
+6. **User_Settings:**
+   - `view_mode` (pro/lite), `theme`, `target_capital_2040`.
+
+# 4. FEATURES & UI/UX SPECIFICATIONS
+
+## A. Investment Entry Flow (Smart UX)
+- **Date Handling:** Provide a smart input toggle. The user can EITHER enter `duration_months` (and the system auto-calculates `end_date` based on `start_date`), OR enter the `end_date` (and the system auto-calculates `duration_months`).
+- **Auto-Schedule Generation:** Upon saving an investment, the backend automatically generates the child `Cashflows` records based on the `distribution_frequency`, dividing the `expected_profit` equally across the periods, and placing the `principal` return at the `end_date`.
+- **Custom Schedules:** If frequency is 'custom', allow the user to manually add rows of dates and amounts in the same UI, saving them directly to `Cashflows` with `is_custom_schedule = true`.
+
+## B. Cash Management (Wallet)
+- Dedicated UI to add Deposits or Withdrawals.
+- When funding a new investment, ask the user: "Fund from external bank or internal wallet?". If internal, auto-create a negative `CashTransaction`.
+
+## C. View Modes & UI Behaviors
+- **Pro vs. Lite Mode:** 'Lite' hides complex metrics (WAM, Cash Drag, Default Rate) and shows only NAV, Total Profit, and Next Payment. 'Pro' shows all analytics.
+- **Collapsible Sections:** Dashboard sections (Vision 2040, Platform Overview, Recent Investments) must be collapsible, saving their state to local storage or user settings.
+- **Platform Filtering:** A global dropdown to filter the entire dashboard (metrics, charts) by a specific Platform or "All Platforms".
+
+# 5. DASHBOARD LOGIC & FINANCIAL RULES (Backend Aggregation)
+The backend must expose a `/api/dashboard/metrics` endpoint returning these exact calculations:
+
+1. **Total Cash Balance:** `SUM(amount)` from `Cash_Transactions`.
+2. **Active Principal:** `SUM(principal_amount)` from `Investments` where `end_date >= NOW` OR having `Cashflows` with `status = 'pending'`.
+3. **NAV (Net Asset Value):** `Active Principal + Total Cash Balance`.
+4. **Cash Drag:** `(Total Cash Balance / NAV) * 100`.
+5. **Realized Gains (Strict):** `SUM(amount)` from `Cashflows` where `type = 'profit'` AND `status = 'received'`. *(CRITICAL: DO NOT use fallback logic assuming completed investments paid out if not recorded).*
+6. **Expected Inflow (30 Days):** `SUM(amount)` from `Cashflows` where `status = 'pending'` AND `due_date <= NOW + 30 days`.
+7. **WAM (Weighted Average Maturity):** For active investments: `SUM(principal_amount * days_to_maturity) / SUM(principal_amount)`.
+8. **Default Rate:** `SUM(principal_amount of investments with cashflows overdue by > 90 days) / NAV * 100`.
+9. **Active Annual Yield:** `(SUM(expected_profit) / Active Principal) * (365 / WAM_in_days)`.
+
+# 6. AI & FUTURE-PROOFING LAYER
+- Expose a structured JSON export of the user's anonymized portfolio.
+- Build the API layer using strict REST or tRPC so a future "AI Advisor Agent" can read the `/metrics` and `/cashflows` endpoints to generate natural language advice (e.g., "You have 50,000 SAR in cash drag, consider reinvesting in upcoming Manafa opportunities").
+- Ensure all database schemas have comprehensive comments/descriptions so LLMs can easily write SQL queries against them in the future.
+
+# EXECUTION INSTRUCTIONS
+1. Start by initializing the project with React (Vite/Next.js), TailwindCSS, shadcn/ui, and a Node.js/TypeScript backend.
+2. Implement the Database Schema exactly as specified.
+3. Build the Backend API routes for the Dashboard Aggregations first.
+4. Build the Frontend UI, ensuring the "Smart UX" rules are strictly followed.
+```
+
+### لماذا هذا الـ Prompt مثالي (Self-Correction & Reverse Engineering)؟
+1. **قضى على التكرار:** دمجنا `custom_distributions` في `cashflows` عبر حقل `is_custom_schedule`.
+2. **قضى على أخطاء الحسابات:** ألغينا التخمين (Fallback) في الأرباح المحققة، وألزمنا النظام بـ Double-Entry Ledger للكاش.
+3. **حفظ التفاصيل الدقيقة:** ذكرنا بوضوح آلية إدخال التواريخ (المدة بالأشهر مقابل تاريخ الانتهاء) وتوليد الجداول التلقائي.
+4. **منع تشتت المنطق:** وضعنا قاعدة صارمة بأن الـ Frontend للعرض فقط، وكل الحسابات المعقدة تتم في الـ Backend API.
