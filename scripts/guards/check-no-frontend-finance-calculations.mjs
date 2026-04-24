@@ -3,6 +3,7 @@ import {
   findLineFindings,
   isGuardCliEntry,
   printReport,
+  relativePath,
   walkFiles,
 } from "./_shared.mjs";
 
@@ -42,8 +43,7 @@ export async function runCheck() {
   );
 
   for (const fullPath of getUiFiles()) {
-    const relPath = fullPath.replace(/\\/g, "/").split("/A.Z Hub 2/").pop();
-    const normalized = relPath ?? fullPath.replace(/\\/g, "/");
+    const normalized = relativePath(fullPath);
 
     findings.push(
       ...findLineFindings(normalized, (line) => {

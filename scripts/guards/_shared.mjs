@@ -21,11 +21,17 @@ export function toPosix(filePath) {
 }
 
 export function relativePath(filePath) {
+  if (!path.isAbsolute(filePath)) {
+    return toPosix(filePath);
+  }
   return toPosix(path.relative(ROOT_DIR, filePath));
 }
 
-export function readText(relativeFilePath) {
-  return fs.readFileSync(path.join(ROOT_DIR, relativeFilePath), "utf8");
+export function readText(filePath) {
+  const resolvedPath = path.isAbsolute(filePath)
+    ? filePath
+    : path.join(ROOT_DIR, filePath);
+  return fs.readFileSync(resolvedPath, "utf8");
 }
 
 export function readJson(relativeFilePath) {
@@ -33,7 +39,9 @@ export function readJson(relativeFilePath) {
 }
 
 export function walkFiles(startRelativeDir, extensions, options = {}) {
-  const startDir = path.join(ROOT_DIR, startRelativeDir);
+  const startDir = path.isAbsolute(startRelativeDir)
+    ? startRelativeDir
+    : path.join(ROOT_DIR, startRelativeDir);
   const files = [];
   const ignores = new Set([
     ...DEFAULT_IGNORES,

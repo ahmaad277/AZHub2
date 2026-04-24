@@ -3,6 +3,7 @@ import {
   findLineFindings,
   isGuardCliEntry,
   printReport,
+  relativePath,
   walkFiles,
 } from "./_shared.mjs";
 
@@ -26,7 +27,7 @@ export async function runCheck() {
   ];
 
   for (const file of files) {
-    const relPath = file.replace(/\\/g, "/").split("/A.Z Hub 2/").pop() ?? file.replace(/\\/g, "/");
+    const relPath = relativePath(file);
     findings.push(
       ...findLineFindings(relPath, (line) => {
         if (!line.includes(".toFixed(")) return null;
