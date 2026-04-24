@@ -55,7 +55,14 @@ export default function VisionPage() {
   const generateMonthlyTargets = async () => {
     const start = Number(startAmount || 0);
     const end = Number(targetCapital || 0);
-    if (start <= 0 || end <= start || months <= 0) {
+    const validInputs =
+      Number.isFinite(start) &&
+      Number.isFinite(end) &&
+      Number.isFinite(months) &&
+      start > 0 &&
+      end > start &&
+      months > 0;
+    if (!validInputs) {
       toast.error("Invalid inputs");
       return;
     }
