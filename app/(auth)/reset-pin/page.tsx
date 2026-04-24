@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Sparkles } from "lucide-react";
@@ -12,7 +13,7 @@ import { getLoginErrorMessage } from "@/lib/auth/login-flow-shared";
 import { toast } from "sonner";
 import packageJson from "@/package.json";
 
-export default function ResetPinPage() {
+function ResetPinForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [pin, setPin] = React.useState("");
@@ -131,5 +132,34 @@ export default function ResetPinPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function ResetPinFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-4 text-center">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
+            <Sparkles className="h-6 w-6" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-primary/80">
+              WELCOME
+            </p>
+            <CardTitle className="text-2xl">A.Z Finance Hub</CardTitle>
+            <CardDescription>v{packageJson.version} · Set a new owner PIN</CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
+    </div>
+  );
+}
+
+export default function ResetPinPage() {
+  return (
+    <Suspense fallback={<ResetPinFallback />}>
+      <ResetPinForm />
+    </Suspense>
   );
 }

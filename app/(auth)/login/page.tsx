@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -13,7 +14,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getLoginErrorMessage, sanitizeNextPath } from "@/lib/auth/login-flow-shared";
 import packageJson from "@/package.json";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [pin, setPin] = React.useState("");
@@ -204,5 +205,36 @@ export default function LoginPage() {
       </Card>
       </motion.div>
     </div>
+  );
+}
+
+function LoginFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <Card className="w-full max-w-lg border-primary/15 shadow-sm">
+        <CardHeader>
+          <div className="mb-3 grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
+            <KeyRound className="h-6 w-6" />
+          </div>
+          <div className="space-y-2 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-primary/80">
+              WELCOME
+            </p>
+            <CardTitle className="text-2xl">A.Z Finance Hub</CardTitle>
+            <CardDescription>
+              v{packageJson.version} · Enter the owner PIN to open the dashboard.
+            </CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFallback />}>
+      <LoginForm />
+    </Suspense>
   );
 }
