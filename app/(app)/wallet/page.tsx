@@ -49,13 +49,15 @@ interface CashTransactionsResponse {
   summary: CashTransactionsSummary;
 }
 
+const NO_PLATFORM = "__none__";
+
 export default function WalletPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
   const [open, setOpen] = React.useState(false);
   const [txType, setTxType] = React.useState<"deposit" | "withdrawal">("deposit");
   const [amount, setAmount] = React.useState("");
-  const [platformId, setPlatformId] = React.useState("");
+  const [platformId, setPlatformId] = React.useState(NO_PLATFORM);
   const [date, setDate] = React.useState(String(new Date().toISOString()).slice(0, 10));
   const [notes, setNotes] = React.useState("");
 
@@ -101,7 +103,7 @@ export default function WalletPage() {
         amount: Number(amount),
         date,
         notes: notes || null,
-        platformId: platformId || null,
+        platformId: platformId === NO_PLATFORM ? null : platformId,
       });
       toast.success(t("form.save"));
       setOpen(false);
@@ -226,7 +228,7 @@ export default function WalletPage() {
                   <SelectValue placeholder="—" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">—</SelectItem>
+                  <SelectItem value={NO_PLATFORM}>—</SelectItem>
                   {platforms.map((p) => (
                     <SelectItem key={p.id} value={p.id}>
                       {p.name}
