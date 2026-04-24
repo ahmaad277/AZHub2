@@ -56,7 +56,7 @@ export default function WalletPage() {
   const [txType, setTxType] = React.useState<"deposit" | "withdrawal">("deposit");
   const [amount, setAmount] = React.useState("");
   const [platformId, setPlatformId] = React.useState("");
-  const [date, setDate] = React.useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = React.useState(String(new Date().toISOString()).slice(0, 10));
   const [notes, setNotes] = React.useState("");
 
   const { data: platforms = [] } = useQuery<Platform[]>({
