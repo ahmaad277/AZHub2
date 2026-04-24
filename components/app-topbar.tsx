@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
 import { Moon, Sun, Languages, Gauge, Menu, LogOut } from "lucide-react";
@@ -139,19 +140,27 @@ export function AppTopbar() {
         </DropdownMenu>
       </div>
 
-      {mobileNavOpen ? (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          <div className="relative z-10 h-full shrink-0">
-            <AppSidebar mobile onNavigate={() => setMobileNavOpen(false)} />
-          </div>
-          <button
-            type="button"
-            className="h-full min-w-0 flex-1 bg-black/60"
-            aria-label={t("form.cancel")}
-            onClick={() => setMobileNavOpen(false)}
-          />
-        </div>
-      ) : null}
+      {mobileNavOpen
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-[100] flex md:hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-label={t("app.name")}
+            >
+              <div className="relative z-10 h-full shrink-0">
+                <AppSidebar mobile onNavigate={() => setMobileNavOpen(false)} />
+              </div>
+              <button
+                type="button"
+                className="h-full min-w-0 flex-1 bg-black/60"
+                aria-label={t("form.cancel")}
+                onClick={() => setMobileNavOpen(false)}
+              />
+            </div>,
+            document.body,
+          )
+        : null}
     </header>
   );
 }
