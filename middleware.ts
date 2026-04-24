@@ -5,7 +5,8 @@ import { createServerClient } from "@supabase/ssr";
  * Refreshes the Supabase auth session on every request so Server Components
  * and Route Handlers always see the latest state.
  *
- * Public routes (/share/:token, /login, /auth/callback) are not gated here —
+ * Public routes (/share/:token, /login, /reset-pin, /auth/callback, /api/auth/*)
+ * are not gated here —
  * individual route handlers enforce the owner-only rule via `requireOwner()`.
  */
 export async function middleware(request: NextRequest) {
