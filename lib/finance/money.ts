@@ -55,6 +55,7 @@ export function formatMoney(
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
+    numberingSystem: "latn",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(n);
@@ -68,6 +69,7 @@ export function formatNumber(
   const n = typeof value === "string" ? Number(value) : Number(value ?? 0);
   if (!Number.isFinite(n)) return "0";
   return new Intl.NumberFormat(locale, {
+    numberingSystem: "latn",
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
   }).format(n);
@@ -81,6 +83,7 @@ export function formatPercent(
   const n = Number(value ?? 0);
   if (!Number.isFinite(n)) return "0%";
   return `${new Intl.NumberFormat(locale, {
+    numberingSystem: "latn",
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
   }).format(n)}%`;
