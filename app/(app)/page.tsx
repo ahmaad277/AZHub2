@@ -54,6 +54,10 @@ interface CashflowRow {
   investment: { id: string; name: string; platform?: { name: string } | null };
 }
 
+interface RowsResponse<T> {
+  rows?: T[];
+}
+
 export default function DashboardPage() {
   const { t, settings, platformFilter } = useApp();
   const isLite = settings.viewMode === "lite";
@@ -66,24 +70,26 @@ export default function DashboardPage() {
       api.get<MetricsResponse>(`/api/dashboard/metrics?breakdown=true${platformQuery}`),
   });
 
-  const { data: invs = [] } = useQuery<InvestmentRow[]>({
+  const { data: invsData = [] } = useQuery<InvestmentRow[] | RowsResponse<InvestmentRow>>({
     queryKey: ["investments", platformFilter],
     queryFn: () =>
-      api.get<InvestmentRow[]>(
+      api.get<InvestmentRow[] | RowsResponse<InvestmentRow>>(
         `/api/investments${platformFilter !== "all" ? `?platformId=${platformFilter}` : ""}`,
       ),
   });
 
-  const { data: cfs = [] } = useQuery<CashflowRow[]>({
+  const { data: cfsData = [] } = useQuery<CashflowRow[] | RowsResponse<CashflowRow>>({
     queryKey: ["cashflows-upcoming", platformFilter],
     queryFn: () =>
-      api.get<CashflowRow[]>(
+      api.get<CashflowRow[] | RowsResponse<CashflowRow>>(
         `/api/cashflows?status=pending${platformQuery}`,
       ),
   });
 
   const m = data?.metrics;
   const breakdown = data?.breakdown ?? [];
+  const invs = Array.isArray(invsData) ? invsData : (invsData.rows ?? []);
+  const cfs = Array.isArray(cfsData) ? cfsData : (cfsData.rows ?? []);
 
   return (
     <div className="space-y-6">
