@@ -91,6 +91,7 @@ export function SmartDateInput({
         <div className="space-y-2">
           <Label>{t("form.startDate")}</Label>
           <Input
+            lang="en"
             type="date"
             value={startDate}
             onChange={(e) => handleStart(e.target.value)}
@@ -129,7 +130,7 @@ export function SmartDateInput({
             <Label className="text-muted-foreground">
               {t("form.endDate")} · auto
             </Label>
-            <Input type="date" value={endDate} disabled />
+            <Input lang="en" type="date" value={endDate} disabled />
           </div>
         </div>
       ) : (
@@ -137,6 +138,7 @@ export function SmartDateInput({
           <div className="space-y-2">
             <Label>{t("form.endDate")}</Label>
             <Input
+              lang="en"
               type="date"
               value={endDate}
               onChange={(e) => handleEnd(e.target.value)}

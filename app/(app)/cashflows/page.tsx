@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
-import { formatMoney } from "@/lib/finance/money";
+import { formatDate, formatMoney } from "@/lib/finance/money";
 import { cn } from "@/lib/utils";
 
 interface Row {
@@ -37,6 +37,7 @@ interface CashflowsResponse {
 export default function CashflowsPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [status, setStatus] = React.useState<"all" | "pending" | "received">("pending");
 
   const { data } = useQuery<Row[] | CashflowsResponse>({
@@ -110,7 +111,7 @@ export default function CashflowsPage() {
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t hover:bg-muted/30">
-                <td className="p-3">{new Date(r.dueDate).toLocaleDateString()}</td>
+                <td className="p-3">{formatDate(r.dueDate, dateLocale)}</td>
                 <td className="p-3">
                   <div>{r.investment.name}</div>
                   <div className="text-xs text-muted-foreground">

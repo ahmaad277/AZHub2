@@ -15,7 +15,7 @@ import {
 import { InvestmentWizard } from "@/components/investment-wizard";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
-import { formatMoney } from "@/lib/finance/money";
+import { formatDate, formatMoney } from "@/lib/finance/money";
 import { cn } from "@/lib/utils";
 
 interface Row {
@@ -44,6 +44,7 @@ const STATUS_VARIANTS: Record<string, "default" | "warning" | "destructive" | "s
 export default function InvestmentsPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string>("all");
@@ -130,7 +131,7 @@ export default function InvestmentsPage() {
                 <td className="p-3 text-end tabular-nums text-[hsl(var(--success))]">
                   {formatMoney(r.realizedProfit, settings.currency)}
                 </td>
-                <td className="p-3">{new Date(r.endDate).toLocaleDateString()}</td>
+                <td className="p-3">{formatDate(r.endDate, dateLocale)}</td>
                 <td className="p-3">
                   <Badge variant={STATUS_VARIANTS[r.derivedStatus]}>
                     {t(`status.${r.derivedStatus}`)}

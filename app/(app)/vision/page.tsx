@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
-import { formatMoney, formatPercent } from "@/lib/finance/money";
+import { formatDate, formatMoney, formatPercent } from "@/lib/finance/money";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
 
 interface VisionTargetRow {
@@ -21,6 +21,7 @@ interface VisionTargetRow {
 export default function VisionPage() {
   const { t, settings, setSettings } = useApp();
   const qc = useQueryClient();
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [targetCapital, setTargetCapital] = React.useState(
     settings.targetCapital2040 ?? "",
   );
@@ -172,7 +173,7 @@ export default function VisionPage() {
           <tbody>
             {targets.map((r) => (
               <tr key={r.id} className="border-t">
-                <td className="p-3">{new Date(r.month).toLocaleDateString(undefined, { year: "numeric", month: "short" })}</td>
+                <td className="p-3">{formatDate(r.month, dateLocale, { year: "numeric", month: "short" })}</td>
                 <td className="p-3 text-end tabular-nums">
                   {formatMoney(r.targetValue, settings.currency)}
                 </td>

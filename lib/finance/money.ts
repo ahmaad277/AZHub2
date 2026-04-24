@@ -88,3 +88,17 @@ export function formatPercent(
     maximumFractionDigits: fractionDigits,
   }).format(n)}%`;
 }
+
+export function formatDate(
+  value: string | number | Date | null | undefined,
+  locale = "en-US",
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  if (value === null || value === undefined || value === "") return "";
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  return new Intl.DateTimeFormat(locale, {
+    numberingSystem: "latn",
+    ...(options ?? {}),
+  }).format(d);
+}

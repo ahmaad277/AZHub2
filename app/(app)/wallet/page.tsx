@@ -25,7 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { MetricTile } from "@/components/metric-tile";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
-import { formatMoney } from "@/lib/finance/money";
+import { formatDate, formatMoney } from "@/lib/finance/money";
 import type { Platform } from "@/db/schema";
 
 interface TxRow {
@@ -54,6 +54,7 @@ const NO_PLATFORM = "__none__";
 export default function WalletPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [open, setOpen] = React.useState(false);
   const [txType, setTxType] = React.useState<"deposit" | "withdrawal">("deposit");
   const [amount, setAmount] = React.useState("");
@@ -145,7 +146,7 @@ export default function WalletPage() {
           <tbody>
             {txs.map((tx) => (
               <tr key={tx.id} className="border-t">
-                <td className="p-3">{new Date(tx.date).toLocaleDateString()}</td>
+                <td className="p-3">{formatDate(tx.date, dateLocale)}</td>
                 <td className="p-3">
                   <Badge
                     variant={
@@ -219,7 +220,7 @@ export default function WalletPage() {
             </div>
             <div className="space-y-2">
               <Label>{t("form.date")}</Label>
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <Input lang="en" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label>{t("form.platform")}</Label>

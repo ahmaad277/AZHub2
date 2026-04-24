@@ -18,7 +18,7 @@ import { CollapsibleSection } from "@/components/collapsible-section";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
-import { formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
+import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -61,6 +61,7 @@ interface RowsResponse<T> {
 export default function DashboardPage() {
   const { t, settings, platformFilter } = useApp();
   const isLite = settings.viewMode === "lite";
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
 
   const platformQuery = platformFilter === "all" ? "" : `&platformId=${platformFilter}`;
 
@@ -130,7 +131,7 @@ export default function DashboardPage() {
           value={m?.nextPayment.amount}
           sublabel={
             m?.nextPayment.dueDate
-              ? new Date(m.nextPayment.dueDate).toLocaleDateString()
+              ? formatDate(m.nextPayment.dueDate, dateLocale)
               : undefined
           }
           icon={<CalendarClock className="h-4 w-4" />}
@@ -312,7 +313,7 @@ export default function DashboardPage() {
                   {cf.investment.name}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {new Date(cf.dueDate).toLocaleDateString()} · {t(`status.${cf.type === "profit" ? "pending" : "pending"}`)} · {cf.type}
+                  {formatDate(cf.dueDate, dateLocale)} · {t(`status.${cf.type === "profit" ? "pending" : "pending"}`)} · {cf.type}
                 </div>
               </div>
               <div className="text-sm font-semibold tabular-nums">
