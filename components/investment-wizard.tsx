@@ -187,11 +187,15 @@ export function InvestmentWizard({
               <SelectValue placeholder="—" />
             </SelectTrigger>
             <SelectContent>
-              {platforms.map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.name}
-                </SelectItem>
-              ))}
+              {platforms.map((p) => {
+                const value = (p.id ?? "").trim();
+                if (!value) return null;
+                return (
+                  <SelectItem key={value} value={value}>
+                    {p.name}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>
