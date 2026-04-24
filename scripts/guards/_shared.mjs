@@ -27,10 +27,13 @@ export function relativePath(filePath) {
   return toPosix(path.relative(ROOT_DIR, filePath));
 }
 
+function normalizeFilePath(filePath) {
+  return relativePath(filePath);
+}
+
 export function readText(filePath) {
-  const resolvedPath = path.isAbsolute(filePath)
-    ? filePath
-    : path.join(ROOT_DIR, filePath);
+  const normalizedPath = normalizeFilePath(filePath);
+  const resolvedPath = path.join(ROOT_DIR, normalizedPath);
   return fs.readFileSync(resolvedPath, "utf8");
 }
 
@@ -61,16 +64,17 @@ export function walkFiles(startRelativeDir, extensions, options = {}) {
       if (!extensions.some((ext) => entry.name.endsWith(ext))) continue;
       if (options.include && !options.include(relPath)) continue;
       if (options.exclude && options.exclude(relPath)) continue;
-      files.push(fullPath);
+      files.push(relPath);
     }
   }
 
   visit(startDir);
-  return files.sort((a, b) => relativePath(a).localeCompare(relativePath(b)));
+  return files.sort((a, b) => a.localeCompare(b));
 }
 
 export function findLineFindings(relativeFilePath, matcher) {
-  const source = readText(relativeFilePath);
+  const normalizedPath = normalizeFilePath(relativeFilePath);
+  const source = readText(normalizedPath);
   const lines = source.split(/\r?\n/);
   const findings = [];
 
@@ -78,7 +82,7 @@ export function findLineFindings(relativeFilePath, matcher) {
     const message = matcher(line, index + 1, lines);
     if (!message) return;
     findings.push({
-      file: relativeFilePath,
+      file: normalizedPath,
       line: index + 1,
       message,
     });
