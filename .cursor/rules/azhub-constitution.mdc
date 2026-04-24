@@ -1,0 +1,33 @@
+---
+description: AZHub default code guard
+alwaysApply: true
+---
+
+# AZHub Code Guardian
+
+Use the short guard first, not the full constitution.
+
+Baseline:
+- Keep the existing v2 UI and navigation.
+- No new UI library or custom replacement for existing `components/ui/*`.
+- No frontend finance aggregation.
+- No dashboard metric, auth, or schema changes without owner approval.
+- No unrelated refactors.
+
+Read constitution sections only when relevant:
+- UI -> §§2, 3, 7
+- Finance / metrics -> §§4, 8, 12
+- Auth -> §§6, 8, 12
+- Schema -> §§5, 9, 12
+- Deploy / CI -> §§8, 9, 12
+
+Before editing guarded paths, stop, cite affected rule IDs, ask approval, and give a test plan:
+- `lib/finance/**`
+- `app/api/**`
+- `db/schema.ts`
+- `db/migrations/**`
+- `db/sql/**`
+- `components/investment-wizard.tsx`
+
+If blocked by a rule, stop and cite the rule ID.
+`AZHUB_V2_CONSTITUTION.md` remains the source of truth.

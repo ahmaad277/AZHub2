@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
-import { formatMoney } from "@/lib/finance/money";
+import { formatMoney, formatPercent } from "@/lib/finance/money";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
 
 interface VisionTargetRow {
@@ -90,7 +90,7 @@ export default function VisionPage() {
           </div>
           {target > 0 ? (
             <div className="text-sm text-muted-foreground">
-              / {formatMoney(target, settings.currency)} · {pct.toFixed(1)}%
+              / {formatMoney(target, settings.currency)} · {formatPercent(pct, 1)}
             </div>
           ) : null}
         </div>

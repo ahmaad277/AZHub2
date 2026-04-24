@@ -5,7 +5,7 @@ import { cashTransactions, platforms } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
 import { z } from "zod";
-import { roundToMoney } from "@/lib/finance/money";
+import { roundToMoney, sumMoney } from "@/lib/finance/money";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +42,29 @@ export async function GET(request: NextRequest) {
       .where(conds.length ? and(...conds) : undefined)
       .orderBy(desc(cashTransactions.date));
 
-    return rows.map((r) => ({ ...r.tx, platform: r.platform }));
+    const normalizedRows = rows.map((r) => ({ ...r.tx, platform: r.platform }));
+
+    return {
+      rows: normalizedRows,
+      summary: {
+        balance: sumMoney(normalizedRows.map((row) => row.amount)),
+        deposits: sumMoney(
+          normalizedRows
+            .filter((row) => row.type === "deposit")
+            .map((row) => row.amount),
+        ),
+        withdrawals: sumMoney(
+          normalizedRows
+            .filter((row) => row.type === "withdrawal")
+            .map((row) => row.amount),
+        ),
+        receipts: sumMoney(
+          normalizedRows
+            .filter((row) => row.type === "cashflow_receipt")
+            .map((row) => row.amount),
+        ),
+      },
+    };
   });
 }
 

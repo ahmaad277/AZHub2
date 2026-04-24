@@ -35,12 +35,23 @@ const NAV_ITEMS = [
   { href: "/settings", key: "nav.settings", icon: Settings },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  mobile?: boolean;
+  onNavigate?: () => void;
+}
+
+export function AppSidebar({ mobile = false, onNavigate }: AppSidebarProps) {
   const pathname = usePathname();
   const { t } = useApp();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-e bg-card/50 backdrop-blur md:flex md:flex-col">
+    <aside
+      className={cn(
+        mobile
+          ? "flex h-full w-60 shrink-0 flex-col border-e bg-card shadow-xl"
+          : "sticky top-0 hidden h-screen w-60 shrink-0 border-e bg-card/50 backdrop-blur md:flex md:flex-col",
+      )}
+    >
       <div className="flex items-center gap-2 p-5">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
           <Sparkles className="h-5 w-5" />
@@ -63,6 +74,7 @@ export function AppSidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={onNavigate}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     active

@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
+      - name: Run guards (report-only)
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run guard 2>&1 | tee guard-report.txt
+
+      - name: Summarize guard findings
+        if: always()
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const reportPath = 'guard-report.txt';
+          if (!fs.existsSync(reportPath)) {
+            const fallback = 'Guard report was not generated.\n';
+            fs.writeFileSync('guard-summary.txt', fallback);
+            console.log(fallback);
+            process.exit(0);
+          }
+
+          const text = fs.readFileSync(reportPath, 'utf8');
+          const lines = text.split(/\r?\n/);
+
+          const summaries = [];
+          let current = null;
+
+          for (const line of lines) {
+            const checkMatch = line.match(/^\[guard\] (check-[\w-]+)/);
+            if (checkMatch) {
+              current = { name: checkMatch[1], count: 0 };
+              summaries.push(current);
+              continue;
+            }
+
+            const foundMatch = line.match(/^Found (\d+) issue\(s\):$/);
+            if (foundMatch && current) {
+              current.count = Number(foundMatch[1]);
+              continue;
+            }
+
+            if (line.trim() === 'No findings.' && current) {
+              current.count = 0;
+            }
+          }
+
+          const total = summaries.reduce((sum, item) => sum + item.count, 0);
+          const output = [
+            'Guard summary (report-only):',
+            ...summaries.map((item) => `- ${item.name}: ${item.count}`),
+            `- total findings: ${total}`,
+          ].join('\n');
+
+          fs.writeFileSync('guard-summary.txt', output + '\n');
+          console.log(output);
+          NODE
+
+          cat guard-summary.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload guard artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: guard-report
+          path: |
+            guard-report.txt
+            guard-summary.txt
+          if-no-files-found: warn
+
+      - name: Enforce partial blocking guards
+        run: npm run guard:enforce:partial

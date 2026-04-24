@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useApp } from "./providers";
+import { AppSidebar } from "./app-sidebar";
 import { api } from "@/lib/fetcher";
 import type { Platform } from "@/db/schema";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -28,6 +29,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 export function AppTopbar() {
   const { t, settings, setSettings, platformFilter, setPlatformFilter } = useApp();
   const { setTheme, theme } = useTheme();
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
 
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
@@ -48,6 +50,7 @@ export function AppTopbar() {
           size="icon"
           className="md:hidden"
           aria-label="menu"
+          onClick={() => setMobileNavOpen(true)}
         >
           <Menu className="h-4 w-4" />
         </Button>
@@ -135,6 +138,20 @@ export function AppTopbar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {mobileNavOpen ? (
+        <div className="fixed inset-0 z-50 flex md:hidden">
+          <div className="relative z-10 h-full shrink-0">
+            <AppSidebar mobile onNavigate={() => setMobileNavOpen(false)} />
+          </div>
+          <button
+            type="button"
+            className="h-full min-w-0 flex-1 bg-black/60"
+            aria-label={t("form.cancel")}
+            onClick={() => setMobileNavOpen(false)}
+          />
+        </div>
+      ) : null}
     </header>
   );
 }

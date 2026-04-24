@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { cashflows, investments, platforms } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
+import { sumMoney } from "@/lib/finance/money";
 
 export const dynamic = "force-dynamic";
 
@@ -36,9 +37,16 @@ export async function GET(request: NextRequest) {
       .where(conds.length ? and(...conds) : undefined)
       .orderBy(asc(cashflows.dueDate));
 
-    return rows.map((r) => ({
+    const normalizedRows = rows.map((r) => ({
       ...r.cashflow,
       investment: { ...r.investment, platform: r.platform },
     }));
+
+    return {
+      rows: normalizedRows,
+      summary: {
+        totalAmount: sumMoney(normalizedRows.map((row) => row.amount)),
+      },
+    };
   });
 }

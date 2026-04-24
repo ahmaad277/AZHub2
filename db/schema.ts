@@ -96,6 +96,22 @@ export const themeEnum = pgEnum("theme", ["dark", "light", "system"]);
 export const viewModeEnum = pgEnum("view_mode", ["pro", "lite"]);
 export const languageEnum = pgEnum("language", ["en", "ar"]);
 export const fontSizeEnum = pgEnum("font_size", ["small", "medium", "large"]);
+export const pendingLoginStatusEnum = pgEnum("pending_login_status", [
+  "pending",
+  "approved",
+  "consumed",
+  "rejected",
+  "expired",
+]);
+export const authLoginEventTypeEnum = pgEnum("auth_login_event_type", [
+  "created",
+  "email_sent",
+  "approved",
+  "completed",
+  "expired",
+  "rejected",
+  "callback_failed",
+]);
 
 /* -------------------------------------------------------------------------- */
 /* Platforms                                                                  */
@@ -445,6 +461,74 @@ export const shareLinks = pgTable(
 );
 
 /* -------------------------------------------------------------------------- */
+/* Pending Login Requests                                                     */
+/* -------------------------------------------------------------------------- */
+
+export const pendingLoginRequests = pgTable(
+  "pending_login_requests",
+  {
+    id: text("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()::text`),
+    ownerEmail: text("owner_email").notNull(),
+    status: pendingLoginStatusEnum("status").notNull().default("pending"),
+    originDeviceId: text("origin_device_id").notNull(),
+    originLabel: text("origin_label"),
+    originUserAgent: text("origin_user_agent"),
+    originIpHash: text("origin_ip_hash"),
+    requestTokenHash: text("request_token_hash").notNull(),
+    completionTokenHash: text("completion_token_hash"),
+    approvedByUserId: text("approved_by_user_id"),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    consumedAt: timestamp("consumed_at", { withTimezone: true }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    lastError: text("last_error"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    ownerStatusIdx: index("pending_login_owner_status_idx").on(t.ownerEmail, t.status),
+    originDeviceIdx: index("pending_login_origin_device_idx").on(t.originDeviceId),
+    expiresAtIdx: index("pending_login_expires_at_idx").on(t.expiresAt),
+    requestTokenUq: uniqueIndex("pending_login_request_token_uq").on(t.requestTokenHash),
+    completionTokenUq: uniqueIndex("pending_login_completion_token_uq").on(t.completionTokenHash),
+  }),
+);
+
+/* -------------------------------------------------------------------------- */
+/* Auth Login Events                                                          */
+/* -------------------------------------------------------------------------- */
+
+export const authLoginEvents = pgTable(
+  "auth_login_events",
+  {
+    id: text("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()::text`),
+    requestId: text("request_id")
+      .notNull()
+      .references(() => pendingLoginRequests.id, { onDelete: "cascade" }),
+    eventType: authLoginEventTypeEnum("event_type").notNull(),
+    actorUserId: text("actor_user_id"),
+    deviceId: text("device_id"),
+    ipHash: text("ip_hash"),
+    userAgent: text("user_agent"),
+    metadata: jsonb("metadata"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    requestIdx: index("auth_login_events_request_idx").on(t.requestId),
+    eventTypeIdx: index("auth_login_events_type_idx").on(t.eventType),
+  }),
+);
+
+/* -------------------------------------------------------------------------- */
 /* Import Jobs                                                                */
 /* -------------------------------------------------------------------------- */
 
@@ -557,6 +641,15 @@ export const insertShareLinkSchema = createInsertSchema(shareLinks).omit({
   usageCount: true,
   lastUsedAt: true,
 });
+export const insertPendingLoginRequestSchema = createInsertSchema(
+  pendingLoginRequests,
+).omit({
+  id: true,
+  approvedAt: true,
+  consumedAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 /* -------------------------------------------------------------------------- */
 /* Type exports                                                               */
@@ -576,6 +669,8 @@ export type Alert = typeof alerts.$inferSelect;
 export type DataQualityIssue = typeof dataQualityIssues.$inferSelect;
 export type PortfolioSnapshot = typeof portfolioSnapshots.$inferSelect;
 export type ShareLink = typeof shareLinks.$inferSelect;
+export type PendingLoginRequest = typeof pendingLoginRequests.$inferSelect;
+export type AuthLoginEvent = typeof authLoginEvents.$inferSelect;
 export type ImportJob = typeof importJobs.$inferSelect;
 
 /** Derived investment status (computed via SQL view, not stored). */

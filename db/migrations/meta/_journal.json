@@ -8,6 +8,13 @@
       "when": 1776878978684,
       "tag": "0000_puzzling_echo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776947535059,
+      "tag": "0001_faulty_scarecrow",
+      "breakpoints": true
     }
   ]
 }

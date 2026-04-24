@@ -25,20 +25,34 @@ interface Row {
   };
 }
 
+interface CashflowsSummary {
+  totalAmount: number;
+}
+
+interface CashflowsResponse {
+  rows: Row[];
+  summary: CashflowsSummary;
+}
+
 export default function CashflowsPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
   const [status, setStatus] = React.useState<"all" | "pending" | "received">("pending");
 
-  const { data = [] } = useQuery<Row[]>({
+  const { data } = useQuery<Row[] | CashflowsResponse>({
     queryKey: ["cashflows", platformFilter, status],
     queryFn: () => {
       const params = new URLSearchParams();
       if (status !== "all") params.set("status", status);
       if (platformFilter !== "all") params.set("platformId", platformFilter);
-      return api.get<Row[]>(`/api/cashflows?${params.toString()}`);
+      return api.get<Row[] | CashflowsResponse>(`/api/cashflows?${params.toString()}`);
     },
   });
+
+  const rows = Array.isArray(data) ? data : (data?.rows ?? []);
+  const total = Array.isArray(data)
+    ? rows.reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
+    : (data?.summary.totalAmount ?? 0);
 
   const markReceived = async (id: string) => {
     try {
@@ -59,8 +73,6 @@ export default function CashflowsPage() {
     }
   };
 
-  const total = data.reduce((a, r) => a + Number(r.amount), 0);
-
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -79,7 +91,7 @@ export default function CashflowsPage() {
           ))}
         </div>
         <div className="text-sm text-muted-foreground">
-          {data.length} · <span className="font-semibold text-foreground tabular-nums">{formatMoney(total, settings.currency)}</span>
+          {rows.length} · <span className="font-semibold text-foreground tabular-nums">{formatMoney(total, settings.currency)}</span>
         </div>
       </div>
 
@@ -96,7 +108,7 @@ export default function CashflowsPage() {
             </tr>
           </thead>
           <tbody>
-            {data.map((r) => (
+            {rows.map((r) => (
               <tr key={r.id} className="border-t hover:bg-muted/30">
                 <td className="p-3">{new Date(r.dueDate).toLocaleDateString()}</td>
                 <td className="p-3">
@@ -133,7 +145,7 @@ export default function CashflowsPage() {
                 </td>
               </tr>
             ))}
-            {data.length === 0 ? (
+            {rows.length === 0 ? (
               <tr>
                 <td colSpan={6} className="p-8 text-center text-sm text-muted-foreground">
                   {t("common.empty")}

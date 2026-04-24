@@ -37,6 +37,18 @@ interface TxRow {
   platform?: { name: string } | null;
 }
 
+interface CashTransactionsSummary {
+  balance: number;
+  deposits: number;
+  withdrawals: number;
+  receipts: number;
+}
+
+interface CashTransactionsResponse {
+  rows: TxRow[];
+  summary: CashTransactionsSummary;
+}
+
 export default function WalletPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
@@ -52,26 +64,35 @@ export default function WalletPage() {
     queryFn: () => api.get<Platform[]>("/api/platforms"),
   });
 
-  const { data: txs = [] } = useQuery<TxRow[]>({
+  const { data } = useQuery<TxRow[] | CashTransactionsResponse>({
     queryKey: ["cashTxs", platformFilter],
     queryFn: () =>
-      api.get<TxRow[]>(
+      api.get<TxRow[] | CashTransactionsResponse>(
         `/api/cash-transactions${
           platformFilter !== "all" ? `?platformId=${platformFilter}` : ""
         }`,
       ),
   });
 
-  const balance = txs.reduce((a, r) => a + Number(r.amount), 0);
-  const deposits = txs
-    .filter((r) => r.type === "deposit")
-    .reduce((a, r) => a + Number(r.amount), 0);
-  const withdrawals = txs
-    .filter((r) => r.type === "withdrawal")
-    .reduce((a, r) => a + Number(r.amount), 0);
-  const receipts = txs
-    .filter((r) => r.type === "cashflow_receipt")
-    .reduce((a, r) => a + Number(r.amount), 0);
+  const txs = Array.isArray(data) ? data : (data?.rows ?? []);
+  const balance = Array.isArray(data)
+    ? txs.reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
+    : (data?.summary.balance ?? 0);
+  const deposits = Array.isArray(data)
+    ? txs
+        .filter((row) => row.type === "deposit")
+        .reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
+    : (data?.summary.deposits ?? 0);
+  const withdrawals = Array.isArray(data)
+    ? txs
+        .filter((row) => row.type === "withdrawal")
+        .reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
+    : (data?.summary.withdrawals ?? 0);
+  const receipts = Array.isArray(data)
+    ? txs
+        .filter((row) => row.type === "cashflow_receipt")
+        .reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
+    : (data?.summary.receipts ?? 0);
 
   const submit = async () => {
     try {

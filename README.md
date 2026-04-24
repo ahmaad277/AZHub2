@@ -6,6 +6,19 @@ Built with **Next.js 15 (App Router) + Supabase (Postgres + Auth) + Drizzle ORM 
 
 ---
 
+## 0. Governance (READ FIRST)
+
+Before any human or AI agent modifies code in this repository:
+
+1. Read [`AZHUB_V2_CONSTITUTION.md`](./AZHUB_V2_CONSTITUTION.md) end-to-end (binding).
+2. Arabic summary of the non-negotiable rules: [`AZHUB_V2_DUSTUR_AR.md`](./AZHUB_V2_DUSTUR_AR.md).
+3. AI agents: see [`AGENTS.md`](./AGENTS.md) and the Cursor rule in `.cursor/rules/azhub-constitution.mdc`.
+4. Current health audit: [`AZHUB_DIAGNOSTIC_REPORT.md`](./AZHUB_DIAGNOSTIC_REPORT.md).
+5. Active foundation work: [`AZHUB_B0_RUNBOOK.md`](./AZHUB_B0_RUNBOOK.md).
+6. Any approved rule exception MUST be recorded in [`EXCEPTIONS.md`](./EXCEPTIONS.md) (per **CHG-R-002**).
+
+---
+
 ## 1. Features
 
 - **Dashboard** with 9 canonical portfolio metrics (NAV, Active Principal, Cash Drag, Realized Gains, WAM, Default Rate, Active Annual Yield, Inflow 30/60/90).
@@ -74,6 +87,7 @@ Notes:
 - `PORT` is optional locally; `next dev` defaults to `3000`.
 - There is no separate backend host in v2. The API is served from the same origin under `/api/*`.
 - `OWNER_EMAIL` is enforced on every protected route — the app is strictly single-user.
+- The login UI can present a PIN-only experience, while Supabase still authenticates the owner account behind the scenes.
 
 ### 4.3. Install & setup
 
@@ -84,7 +98,7 @@ npm run db:seed        # seeds default platforms (Sukuk, Manafa, Lendo)
 npm run dev
 ```
 
-Then open `http://localhost:3000` and sign in via Magic Link (the email you configured as `OWNER_EMAIL`).
+Then open `http://localhost:3000` and sign in with the owner PIN/password configured for `OWNER_EMAIL` inside Supabase Auth.
 
 Useful local checks:
 

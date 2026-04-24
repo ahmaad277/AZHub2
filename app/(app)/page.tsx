@@ -18,7 +18,7 @@ import { CollapsibleSection } from "@/components/collapsible-section";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
-import { formatMoney, formatNumber } from "@/lib/finance/money";
+import { formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -339,7 +339,7 @@ function VisionProgress({ nav }: { nav: number }) {
           {formatMoney(nav, settings.currency)}
           {target > 0 ? (
             <span className="ms-2 text-xs text-muted-foreground">
-              / {formatMoney(target, settings.currency)} · {pct.toFixed(1)}%
+              / {formatMoney(target, settings.currency)} · {formatPercent(pct, 1)}
             </span>
           ) : null}
         </div>

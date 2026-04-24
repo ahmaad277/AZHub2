@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getOwnerSession } from "@/lib/auth";
+import { getOwnerSessionState } from "@/lib/auth";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppTopbar } from "@/components/app-topbar";
 
@@ -8,8 +8,11 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getOwnerSession();
-  if (!user && process.env.NODE_ENV === "production") {
+  const session = await getOwnerSessionState();
+  if (session.status === "owner_mismatch") {
+    redirect("/login?error=auth_unauthorized_email");
+  }
+  if (session.status !== "authenticated") {
     redirect("/login");
   }
   return (
