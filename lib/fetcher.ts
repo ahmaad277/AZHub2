@@ -11,7 +11,19 @@ export async function fetcher<T = unknown>(
     cache: "no-store",
   });
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  const contentType = res.headers.get("content-type") ?? "";
+  let data: any = null;
+  if (text) {
+    if (contentType.includes("application/json")) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
+      }
+    } else {
+      data = { message: text };
+    }
+  }
   if (!res.ok) {
     const err = new Error(
       (data && (data.error || data.message)) || `Request failed (${res.status})`,
