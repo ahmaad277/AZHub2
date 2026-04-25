@@ -25,19 +25,29 @@ import { useApp } from "./providers";
 import { AppSidebar } from "./app-sidebar";
 import { api } from "@/lib/fetcher";
 import type { Platform } from "@/db/schema";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function AppTopbar() {
   const { t, settings, setSettings, platformFilter, setPlatformFilter } = useApp();
   const { setTheme, theme } = useTheme();
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
+  const [showPlatformFilter, setShowPlatformFilter] = React.useState(false);
+
+  React.useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px)");
+    const sync = () => setShowPlatformFilter(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
 
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms"),
+    enabled: showPlatformFilter,
   });
 
   const signOut = async () => {
+    const { createSupabaseBrowserClient } = await import("@/lib/supabase/client");
     const supabase = createSupabaseBrowserClient();
     await supabase.auth.signOut();
     window.location.href = "/login";
