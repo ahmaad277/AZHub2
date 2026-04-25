@@ -56,8 +56,8 @@ export function formatMoney(
     style: "currency",
     currency,
     numberingSystem: "latn",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(n);
 }
 

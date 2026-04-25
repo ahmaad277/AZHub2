@@ -59,7 +59,22 @@ export default function SnapshotsPage() {
     try {
       await api.post(`/api/snapshots/${id}/restore`);
       toast.success(isReset ? t("snapshots.resetSuccess") : t("snapshots.restored"));
-      await qc.invalidateQueries();
+      await Promise.all(
+        [
+          "snapshots",
+          "metrics",
+          "metrics-vision",
+          "investments",
+          "cashflows",
+          "cashflows-upcoming",
+          "cashTxs",
+          "platforms",
+          "alerts",
+          "visionTargets",
+          "dq",
+          "share-links",
+        ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
+      );
     } catch (e) {
       toast.error((e as Error).message);
     }

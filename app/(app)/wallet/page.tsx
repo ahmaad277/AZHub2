@@ -110,7 +110,11 @@ export default function WalletPage() {
       setOpen(false);
       setAmount("");
       setNotes("");
-      await qc.invalidateQueries();
+      await Promise.all(
+        ["cashTxs", "metrics", "investments", "cashflows", "cashflows-upcoming", "alerts"].map(
+          (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
+        ),
+      );
     } catch (e) {
       toast.error((e as Error).message);
     }

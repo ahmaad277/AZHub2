@@ -48,7 +48,7 @@ export default function PlatformsPage() {
       toast.success(t("form.save"));
       setOpen(false);
       setForm({ name: "", type: "sukuk", feePercentage: "0", deductFees: false, notes: "" });
-      await qc.invalidateQueries();
+      await qc.invalidateQueries({ queryKey: ["platforms"] });
     } catch (e) {
       toast.error((e as Error).message);
     }
@@ -58,7 +58,7 @@ export default function PlatformsPage() {
     try {
       await api.del(`/api/platforms/${id}`);
       toast.success(t("form.delete"));
-      await qc.invalidateQueries();
+      await qc.invalidateQueries({ queryKey: ["platforms"] });
     } catch (e) {
       toast.error((e as Error).message);
     }

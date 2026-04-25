@@ -197,7 +197,11 @@ export default function InvestmentsPage() {
           <InvestmentWizard
             onCreated={() => {
               setOpen(false);
-              qc.invalidateQueries();
+              void Promise.all(
+                ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
+                  (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
+                ),
+              );
             }}
             onCancel={() => setOpen(false)}
           />

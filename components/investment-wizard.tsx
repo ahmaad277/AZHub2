@@ -146,7 +146,11 @@ export function InvestmentWizard({
         await publicSubmit(payload);
       } else {
         await api.post("/api/investments", payload);
-        await qc.invalidateQueries();
+        await Promise.all(
+          ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
+            (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
+          ),
+        );
         toast.success(t("form.save"));
       }
       onCreated?.();

@@ -59,7 +59,11 @@ export default function CashflowsPage() {
     try {
       await api.patch(`/api/cashflows/${id}/receive`, {});
       toast.success(t("common.markReceived"));
-      await qc.invalidateQueries();
+      await Promise.all(
+        ["cashflows", "cashflows-upcoming", "metrics", "investments", "cashTxs", "alerts"].map(
+          (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
+        ),
+      );
     } catch (e) {
       toast.error((e as Error).message);
     }
@@ -68,7 +72,11 @@ export default function CashflowsPage() {
   const undoReceived = async (id: string) => {
     try {
       await api.del(`/api/cashflows/${id}/receive`);
-      await qc.invalidateQueries();
+      await Promise.all(
+        ["cashflows", "cashflows-upcoming", "metrics", "investments", "cashTxs", "alerts"].map(
+          (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
+        ),
+      );
     } catch (e) {
       toast.error((e as Error).message);
     }
