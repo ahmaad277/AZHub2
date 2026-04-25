@@ -17,6 +17,8 @@ interface Snapshot {
   createdAt: string;
 }
 
+const RESET_SNAPSHOT_ID = "__reset__";
+
 export default function SnapshotsPage() {
   const { t } = useApp();
   const qc = useQueryClient();
@@ -41,10 +43,18 @@ export default function SnapshotsPage() {
   const restore = async (snapshot?: Snapshot) => {
     if (!snapshot) throw new Error("Invalid snapshot");
     const id = snapshot.id;
-    if (!confirm("This will replace ALL current data with the snapshot. Continue?")) return;
+    const isReset = id === RESET_SNAPSHOT_ID;
+    const confirmed = isReset
+      ? confirm("Reset portfolio to a clean empty state? This will delete ALL current data.")
+      : confirm("This will replace ALL current data with the snapshot. Continue?");
+    if (!confirmed) return;
+    if (isReset) {
+      const ack = prompt("Type RESET to confirm permanent portfolio reset.");
+      if (ack !== "RESET") return;
+    }
     try {
       await api.post(`/api/snapshots/${id}/restore`);
-      toast.success("Restored");
+      toast.success(isReset ? "Portfolio reset" : "Restored");
       await qc.invalidateQueries();
     } catch (e) {
       toast.error((e as Error).message);
@@ -77,24 +87,38 @@ export default function SnapshotsPage() {
       </div>
 
       <div className="space-y-2">
-        {data.map((s) => (
+        {[
+          {
+            id: RESET_SNAPSHOT_ID,
+            name: "محفظة جديدة / Clean Portfolio",
+            entityCounts: null,
+            byteSize: null,
+            createdAt: "",
+          } as Snapshot,
+          ...data,
+        ].map((s) => (
           <div key={s.id} className="flex items-center justify-between rounded-xl border p-4">
             <div>
               <div className="text-sm font-semibold">{s.name}</div>
               <div className="text-xs text-muted-foreground">
-                {new Date(s.createdAt).toLocaleString()} ·{" "}
-                {s.entityCounts
-                  ? Object.entries(s.entityCounts).map(([k, v]) => `${k}:${v}`).join(" · ")
-                  : ""}
+                {s.id === RESET_SNAPSHOT_ID
+                  ? "Restore to an empty portfolio state."
+                  : `${new Date(s.createdAt).toLocaleString()} · ${
+                      s.entityCounts
+                        ? Object.entries(s.entityCounts).map(([k, v]) => `${k}:${v}`).join(" · ")
+                        : ""
+                    }`}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => restore(s)} className="gap-2">
-                <RotateCcw className="h-3.5 w-3.5" /> Restore
+                <RotateCcw className="h-3.5 w-3.5" /> {s.id === RESET_SNAPSHOT_ID ? "Reset" : "Restore"}
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => remove(s.id)} className="text-destructive">
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {s.id !== RESET_SNAPSHOT_ID ? (
+                <Button variant="ghost" size="icon" onClick={() => remove(s.id)} className="text-destructive">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              ) : null}
             </div>
           </div>
         ))}

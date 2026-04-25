@@ -22,6 +22,7 @@ import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
 
 type Ctx = { params: Promise<{ id: string }> };
+const RESET_SNAPSHOT_ID = "__reset__";
 
 const toISO = (v: unknown): string | null => {
   if (!v) return null;
@@ -49,10 +50,27 @@ const normalizeSnapshotRows = (rows: any[], label: string): any[] =>
     return out;
   });
 
+const clearPortfolioData = async (tx: any) => {
+  // Order matters: FK-dependent tables first.
+  await tx.delete(alerts);
+  await tx.delete(dataQualityIssues);
+  await tx.delete(cashTransactions);
+  await tx.delete(cashflows);
+  await tx.delete(investments);
+  await tx.delete(visionTargets);
+  await tx.delete(platforms);
+};
+
 export async function POST(_req: NextRequest, { params }: Ctx) {
   return handleRoute(async () => {
     await requireOwner();
     const { id } = await params;
+    if (id === RESET_SNAPSHOT_ID) {
+      await db.transaction(async (tx) => {
+        await clearPortfolioData(tx);
+      });
+      return { ok: true, reset: true };
+    }
     const [snap] = await db
       .select()
       .from(portfolioSnapshots)
@@ -69,14 +87,7 @@ export async function POST(_req: NextRequest, { params }: Ctx) {
     }
 
     await db.transaction(async (tx) => {
-      // Order matters: FK-dependent tables first.
-      await tx.delete(alerts);
-      await tx.delete(dataQualityIssues);
-      await tx.delete(cashTransactions);
-      await tx.delete(cashflows);
-      await tx.delete(investments);
-      await tx.delete(visionTargets);
-      await tx.delete(platforms);
+      await clearPortfolioData(tx);
 
       if (Array.isArray(data.platforms) && data.platforms.length)
         await tx.insert(platforms).values(normalizeSnapshotRows(data.platforms, "platforms"));
