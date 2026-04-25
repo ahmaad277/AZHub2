@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Search } from "lucide-react";
+import { toast } from "sonner";
+import { Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -63,6 +64,24 @@ export default function InvestmentsPage() {
     return r.name.toLowerCase().includes(search.toLowerCase());
   });
 
+  const removeInvestment = async (id: string) => {
+    if (!confirm("Delete this investment? This will also remove related cashflows and alerts.")) {
+      return;
+    }
+    try {
+      await api.del(`/api/investments/${id}`);
+      toast.success(t("form.delete"));
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["investments"] }),
+        qc.invalidateQueries({ queryKey: ["cashflows"] }),
+        qc.invalidateQueries({ queryKey: ["cashflows-upcoming"] }),
+        qc.invalidateQueries({ queryKey: ["metrics"] }),
+      ]);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
@@ -106,6 +125,7 @@ export default function InvestmentsPage() {
               <th className="p-3 text-end">{t("metric.realizedGains")}</th>
               <th className="p-3 text-start">{t("form.endDate")}</th>
               <th className="p-3 text-start">Status</th>
+              <th className="p-3"></th>
             </tr>
           </thead>
           <tbody>
@@ -137,11 +157,22 @@ export default function InvestmentsPage() {
                     {t(`status.${r.derivedStatus}`)}
                   </Badge>
                 </td>
+                <td className="p-3 text-end">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeInvestment(r.id)}
+                    className="text-destructive"
+                    aria-label={t("form.delete")}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </td>
               </tr>
             ))}
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-8 text-center text-sm text-muted-foreground">
+                <td colSpan={8} className="p-8 text-center text-sm text-muted-foreground">
                   {t("common.empty")}
                 </td>
               </tr>
