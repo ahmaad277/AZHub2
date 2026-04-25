@@ -6,14 +6,24 @@ export function PwaRegister() {
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     if (!("serviceWorker" in navigator)) return;
-    if (process.env.NODE_ENV !== "production") return;
-    const onLoad = () => {
-      navigator.serviceWorker
-        .register("/sw.js", { scope: "/" })
-        .catch((err) => console.warn("SW registration failed", err));
+
+    // SW intentionally disabled for performance; clean up existing registrations.
+    const cleanup = async () => {
+      try {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(
+          regs.map(async (reg) => {
+            if (reg.active?.scriptURL?.includes("/sw.js")) {
+              await reg.unregister();
+            }
+          }),
+        );
+      } catch (err) {
+        console.warn("SW cleanup failed", err);
+      }
     };
-    window.addEventListener("load", onLoad);
-    return () => window.removeEventListener("load", onLoad);
+
+    cleanup();
   }, []);
 
   return null;
