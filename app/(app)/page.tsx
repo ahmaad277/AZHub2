@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import {
   Wallet,
@@ -14,13 +15,20 @@ import {
   ArrowDownCircle,
 } from "lucide-react";
 import { MetricTile } from "@/components/metric-tile";
-import { CollapsibleSection } from "@/components/collapsible-section";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
 import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
+const CollapsibleSection = dynamic(
+  () => import("@/components/collapsible-section").then((mod) => mod.CollapsibleSection),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 interface MetricsResponse {
   metrics: DashboardMetrics;
@@ -95,7 +103,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* KPI Tiles */}
-      <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
         <MetricTile
           label={t("metric.nav")}
           value={m?.nav}

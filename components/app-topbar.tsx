@@ -29,8 +29,13 @@ import type { Platform } from "@/db/schema";
 export function AppTopbar() {
   const { t, settings, setSettings, platformFilter, setPlatformFilter } = useApp();
   const { setTheme, theme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
   const [showPlatformFilter, setShowPlatformFilter] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   React.useEffect(() => {
     const query = window.matchMedia("(min-width: 768px)");
@@ -122,13 +127,13 @@ export function AppTopbar() {
           variant="ghost"
           size="icon"
           onClick={() => {
-            const next = theme === "dark" ? "light" : "dark";
+            const next = (mounted && theme === "dark") ? "light" : "dark";
             setTheme(next);
             setSettings({ theme: next as any });
           }}
-          title={t("settings.theme")}
+          title={mounted ? t("settings.theme") : undefined}
         >
-          {theme === "dark" ? (
+          {mounted && theme === "dark" ? (
             <Sun className="h-4 w-4" />
           ) : (
             <Moon className="h-4 w-4" />

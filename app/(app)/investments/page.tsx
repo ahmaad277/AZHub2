@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus, Search, Trash2 } from "lucide-react";
@@ -13,11 +14,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { InvestmentWizard } from "@/components/investment-wizard";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney } from "@/lib/finance/money";
 import { cn } from "@/lib/utils";
+
+const InvestmentWizard = dynamic(
+  () => import("@/components/investment-wizard").then((mod) => mod.InvestmentWizard),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 interface Row {
   id: string;
