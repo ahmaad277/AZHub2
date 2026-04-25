@@ -62,7 +62,12 @@ export function Providers({
     () =>
       new QueryClient({
         defaultOptions: {
-          queries: { refetchOnWindowFocus: false, staleTime: 30_000, retry: false },
+          queries: {
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+            staleTime: 60_000,
+            retry: false,
+          },
         },
       }),
   );
