@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
+import { formatDate } from "@/lib/finance/money";
 
 interface Snapshot {
   id: string;
@@ -20,8 +21,9 @@ interface Snapshot {
 const RESET_SNAPSHOT_ID = "__reset__";
 
 export default function SnapshotsPage() {
-  const { t } = useApp();
+  const { t, settings } = useApp();
   const qc = useQueryClient();
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [name, setName] = React.useState("");
 
   const { data = [] } = useQuery<Snapshot[]>({
@@ -31,9 +33,11 @@ export default function SnapshotsPage() {
 
   const create = async () => {
     try {
-      await api.post("/api/snapshots", { name: name || `Snapshot ${new Date().toISOString().slice(0, 16)}` });
+      await api.post("/api/snapshots", {
+        name: name || `${t("snapshots.defaultName")} ${new Date().toISOString().slice(0, 16)}`,
+      });
       setName("");
-      toast.success("Snapshot created");
+      toast.success(t("snapshots.created"));
       await qc.invalidateQueries({ queryKey: ["snapshots"] });
     } catch (e) {
       toast.error((e as Error).message);
@@ -45,16 +49,16 @@ export default function SnapshotsPage() {
     const id = snapshot.id;
     const isReset = id === RESET_SNAPSHOT_ID;
     const confirmed = isReset
-      ? confirm("Reset portfolio to a clean empty state? This will delete ALL current data.")
-      : confirm("This will replace ALL current data with the snapshot. Continue?");
+      ? confirm(t("snapshots.resetConfirm"))
+      : confirm(t("snapshots.restoreConfirm"));
     if (!confirmed) return;
     if (isReset) {
-      const ack = prompt("Type RESET to confirm permanent portfolio reset.");
+      const ack = prompt(t("snapshots.resetPrompt"));
       if (ack !== "RESET") return;
     }
     try {
       await api.post(`/api/snapshots/${id}/restore`);
-      toast.success(isReset ? "Portfolio reset" : "Restored");
+      toast.success(isReset ? t("snapshots.resetSuccess") : t("snapshots.restored"));
       await qc.invalidateQueries();
     } catch (e) {
       toast.error((e as Error).message);
@@ -74,11 +78,11 @@ export default function SnapshotsPage() {
     <div className="space-y-4">
       <div className="rounded-xl border p-5">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Archive className="h-4 w-4" /> Create backup
+          <Archive className="h-4 w-4" /> {t("snapshots.createBackup")}
         </div>
         <div className="mt-3 flex gap-2">
           <Input
-            placeholder="My snapshot"
+            placeholder={t("snapshots.namePlaceholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -90,7 +94,7 @@ export default function SnapshotsPage() {
         {[
           {
             id: RESET_SNAPSHOT_ID,
-            name: "محفظة جديدة / Clean Portfolio",
+            name: t("snapshots.cleanPortfolio"),
             entityCounts: null,
             byteSize: null,
             createdAt: "",
@@ -102,8 +106,11 @@ export default function SnapshotsPage() {
               <div className="text-sm font-semibold">{s.name}</div>
               <div className="text-xs text-muted-foreground">
                 {s.id === RESET_SNAPSHOT_ID
-                  ? "Restore to an empty portfolio state."
-                  : `${new Date(s.createdAt).toLocaleString()} · ${
+                  ? t("snapshots.resetDescription")
+                  : `${formatDate(s.createdAt, dateLocale, {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })} · ${
                       s.entityCounts
                         ? Object.entries(s.entityCounts).map(([k, v]) => `${k}:${v}`).join(" · ")
                         : ""
@@ -112,7 +119,7 @@ export default function SnapshotsPage() {
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => restore(s)} className="gap-2">
-                <RotateCcw className="h-3.5 w-3.5" /> {s.id === RESET_SNAPSHOT_ID ? "Reset" : "Restore"}
+                <RotateCcw className="h-3.5 w-3.5" /> {s.id === RESET_SNAPSHOT_ID ? t("snapshots.resetAction") : t("snapshots.restoreAction")}
               </Button>
               {s.id !== RESET_SNAPSHOT_ID ? (
                 <Button variant="ghost" size="icon" onClick={() => remove(s.id)} className="text-destructive">

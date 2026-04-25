@@ -106,9 +106,14 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "common.copy": { en: "Copy", ar: "نسخ" },
   "common.copied": { en: "Copied!", ar: "تم النسخ!" },
   "common.viewAll": { en: "View all", ar: "عرض الكل" },
+  "common.status": { en: "Status", ar: "الحالة" },
+  "common.undo": { en: "Undo", ar: "تراجع" },
   "common.fundingSource": { en: "Funding Source", ar: "مصدر التمويل" },
   "common.external": { en: "External Bank", ar: "بنك خارجي" },
   "common.internal": { en: "Internal Wallet", ar: "المحفظة الداخلية" },
+
+  // Auth
+  "auth.signOut": { en: "Sign out", ar: "تسجيل الخروج" },
 
   // Settings
   "settings.theme": { en: "Theme", ar: "الثيم" },
@@ -127,6 +132,47 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
     en: "A public link that lets someone else add investments to your portfolio — they cannot see any of your data. Each entry is flagged for your review.",
     ar: "رابط عام يسمح لشخص آخر بإضافة استثمارات إلى محفظتك — لا يستطيع رؤية أي من بياناتك. كل إدخال يُعلّم للمراجعة.",
   },
+
+  // Vision
+  "vision.invalidInputs": { en: "Invalid inputs", ar: "المدخلات غير صالحة" },
+  "vision.monthlyPlanGenerator": { en: "Monthly Plan Generator", ar: "مولد الخطة الشهرية" },
+  "vision.startingAmount": { en: "Starting Amount", ar: "مبلغ البداية" },
+  "vision.months": { en: "Months", ar: "الأشهر" },
+  "vision.month": { en: "Month", ar: "الشهر" },
+  "vision.target": { en: "Target", ar: "الهدف" },
+
+  // Investments
+  "investments.deleteConfirm": {
+    en: "Delete this investment? This will also remove related cashflows and alerts.",
+    ar: "حذف هذا الاستثمار؟ سيتم أيضًا حذف التدفقات النقدية والتنبيهات المرتبطة به.",
+  },
+
+  // Snapshots
+  "snapshots.createBackup": { en: "Create backup", ar: "إنشاء نسخة احتياطية" },
+  "snapshots.namePlaceholder": { en: "My snapshot", ar: "اسم النسخة" },
+  "snapshots.defaultName": { en: "Snapshot", ar: "لقطة" },
+  "snapshots.created": { en: "Snapshot created", ar: "تم إنشاء النسخة الاحتياطية" },
+  "snapshots.restoreConfirm": {
+    en: "This will replace ALL current data with the snapshot. Continue?",
+    ar: "سيتم استبدال جميع البيانات الحالية بهذه النسخة. هل تريد المتابعة؟",
+  },
+  "snapshots.resetConfirm": {
+    en: "Reset portfolio to a clean empty state? This will delete ALL current data.",
+    ar: "إعادة تعيين المحفظة إلى حالة فارغة؟ سيؤدي ذلك إلى حذف جميع البيانات الحالية.",
+  },
+  "snapshots.resetPrompt": {
+    en: "Type RESET to confirm permanent portfolio reset.",
+    ar: "اكتب RESET لتأكيد إعادة التعيين الدائمة للمحفظة.",
+  },
+  "snapshots.restored": { en: "Restored", ar: "تمت الاستعادة" },
+  "snapshots.resetSuccess": { en: "Portfolio reset", ar: "تمت إعادة تعيين المحفظة" },
+  "snapshots.cleanPortfolio": { en: "Clean Portfolio", ar: "محفظة جديدة" },
+  "snapshots.resetDescription": {
+    en: "Restore to an empty portfolio state.",
+    ar: "استعادة إلى حالة محفظة فارغة.",
+  },
+  "snapshots.resetAction": { en: "Reset", ar: "إعادة تعيين" },
+  "snapshots.restoreAction": { en: "Restore", ar: "استعادة" },
 
   // Share page
   "share.title": { en: "Add Investment", ar: "إضافة استثمار" },

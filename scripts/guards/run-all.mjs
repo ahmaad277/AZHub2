@@ -4,6 +4,8 @@ import { runCheck as runRandomUiLibraries } from "./check-no-random-ui-libraries
 import { runCheck as runDashboardMetricsSource } from "./check-dashboard-metrics-source.mjs";
 import { runCheck as runNoToFixed } from "./check-no-tofixed.mjs";
 import { runCheck as runProtectedRoutes } from "./check-protected-routes.mjs";
+import { runCheck as runNoHardcodedUiStrings } from "./check-no-hardcoded-ui-strings.mjs";
+import { runCheck as runNoDirectDateFormatting } from "./check-no-direct-date-formatting.mjs";
 
 const checks = [
   runFrontendFinance,
@@ -11,6 +13,8 @@ const checks = [
   runDashboardMetricsSource,
   runNoToFixed,
   runProtectedRoutes,
+  runNoHardcodedUiStrings,
+  runNoDirectDateFormatting,
 ];
 
 export async function runAllChecks() {

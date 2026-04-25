@@ -104,7 +104,7 @@ export default function CashflowsPage() {
               <th className="p-3 text-start">{t("nav.investments")}</th>
               <th className="p-3 text-start">{t("form.type")}</th>
               <th className="p-3 text-end">{t("form.amount")}</th>
-              <th className="p-3 text-start">Status</th>
+              <th className="p-3 text-start">{t("common.status")}</th>
               <th className="p-3"></th>
             </tr>
           </thead>
@@ -140,7 +140,7 @@ export default function CashflowsPage() {
                   ) : (
                     <Button size="sm" variant="ghost" onClick={() => undoReceived(r.id)}>
                       <Undo2 className="me-1 h-4 w-4" />
-                      Undo
+                      {t("common.undo")}
                     </Button>
                   )}
                 </td>

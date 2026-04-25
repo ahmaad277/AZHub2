@@ -64,7 +64,7 @@ export default function VisionPage() {
       end > start &&
       months > 0;
     if (!validInputs) {
-      toast.error("Invalid inputs");
+      toast.error(t("vision.invalidInputs"));
       return;
     }
     const step = (end - start) / months;
@@ -129,14 +129,14 @@ export default function VisionPage() {
 
       <div className="rounded-xl border p-5">
         <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm font-semibold">Monthly Plan Generator</div>
+          <div className="text-sm font-semibold">{t("vision.monthlyPlanGenerator")}</div>
           <Button variant="outline" size="sm" onClick={generateMonthlyTargets} className="gap-2">
             <Wand2 className="h-4 w-4" /> {t("common.generate")}
           </Button>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
           <div className="space-y-2">
-            <Label>Starting Amount</Label>
+            <Label>{t("vision.startingAmount")}</Label>
             <Input
               type="number"
               value={startAmount}
@@ -144,7 +144,7 @@ export default function VisionPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label>Target (2040)</Label>
+            <Label>{t("settings.target2040")}</Label>
             <Input
               type="number"
               value={targetCapital as any}
@@ -152,7 +152,7 @@ export default function VisionPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label>Months</Label>
+            <Label>{t("vision.months")}</Label>
             <Input
               type="number"
               value={months}
@@ -166,8 +166,8 @@ export default function VisionPage() {
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
             <tr>
-              <th className="p-3 text-start">Month</th>
-              <th className="p-3 text-end">Target</th>
+              <th className="p-3 text-start">{t("vision.month")}</th>
+              <th className="p-3 text-end">{t("vision.target")}</th>
             </tr>
           </thead>
           <tbody>

@@ -98,6 +98,7 @@ export function formatDate(
   const d = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(d.getTime())) return "";
   return new Intl.DateTimeFormat(locale, {
+    calendar: "gregory",
     numberingSystem: "latn",
     ...(options ?? {}),
   }).format(d);

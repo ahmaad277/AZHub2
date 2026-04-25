@@ -65,7 +65,7 @@ export default function InvestmentsPage() {
   });
 
   const removeInvestment = async (id: string) => {
-    if (!confirm("Delete this investment? This will also remove related cashflows and alerts.")) {
+    if (!confirm(t("investments.deleteConfirm"))) {
       return;
     }
     try {
@@ -124,7 +124,7 @@ export default function InvestmentsPage() {
               <th className="p-3 text-end">{t("form.expectedProfit")}</th>
               <th className="p-3 text-end">{t("metric.realizedGains")}</th>
               <th className="p-3 text-start">{t("form.endDate")}</th>
-              <th className="p-3 text-start">Status</th>
+              <th className="p-3 text-start">{t("common.status")}</th>
               <th className="p-3"></th>
             </tr>
           </thead>

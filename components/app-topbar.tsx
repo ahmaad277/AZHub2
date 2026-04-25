@@ -148,7 +148,7 @@ export function AppTopbar() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut} className="gap-2 text-destructive">
               <LogOut className="h-4 w-4" />
-              Sign out
+              {t("auth.signOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

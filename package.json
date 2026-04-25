@@ -16,6 +16,8 @@
     "guard:dashboard-metrics-source": "node scripts/guards/check-dashboard-metrics-source.mjs",
     "guard:no-tofixed": "node scripts/guards/check-no-tofixed.mjs",
     "guard:protected-routes": "node scripts/guards/check-protected-routes.mjs",
+    "guard:no-hardcoded-ui-strings": "node scripts/guards/check-no-hardcoded-ui-strings.mjs",
+    "guard:no-direct-date-formatting": "node scripts/guards/check-no-direct-date-formatting.mjs",
     "guard:enforce:partial": "node scripts/guards/enforce-partial.mjs",
     "db:generate": "node scripts/run-with-dotenv-local.mjs drizzle-kit generate",
     "db:push:unsafe": "node scripts/run-with-dotenv-local.mjs drizzle-kit push --force",
