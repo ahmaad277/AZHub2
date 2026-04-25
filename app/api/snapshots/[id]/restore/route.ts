@@ -23,6 +23,32 @@ import { requireOwner } from "@/lib/auth";
 
 type Ctx = { params: Promise<{ id: string }> };
 
+const toISO = (v: unknown): string | null => {
+  if (!v) return null;
+  if (v instanceof Date) return v.toISOString();
+  const d = new Date(v as any);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+};
+
+const toDate = (v: unknown): Date | null => {
+  const iso = toISO(v);
+  return iso ? new Date(iso) : null;
+};
+
+const normalizeSnapshotRows = (rows: any[], label: string): any[] =>
+  rows.map((row, idx) => {
+    const out: Record<string, any> = { ...row };
+    for (const [key, value] of Object.entries(out)) {
+      if (!/(At|Date)$/.test(key) || value === null || value === undefined) continue;
+      const parsed = toDate(value);
+      if (!parsed) {
+        throw new Error(`Invalid snapshot ${label} date at row ${idx + 1}: ${key}`);
+      }
+      out[key] = parsed;
+    }
+    return out;
+  });
+
 export async function POST(_req: NextRequest, { params }: Ctx) {
   return handleRoute(async () => {
     await requireOwner();
@@ -38,6 +64,9 @@ export async function POST(_req: NextRequest, { params }: Ctx) {
       throw e;
     }
     const data = snap.snapshotData as any;
+    if (!data || typeof data !== "object") {
+      throw new Error("Invalid snapshot");
+    }
 
     await db.transaction(async (tx) => {
       // Order matters: FK-dependent tables first.
@@ -50,19 +79,27 @@ export async function POST(_req: NextRequest, { params }: Ctx) {
       await tx.delete(platforms);
 
       if (Array.isArray(data.platforms) && data.platforms.length)
-        await tx.insert(platforms).values(data.platforms);
+        await tx.insert(platforms).values(normalizeSnapshotRows(data.platforms, "platforms"));
       if (Array.isArray(data.investments) && data.investments.length)
-        await tx.insert(investments).values(data.investments);
+        await tx
+          .insert(investments)
+          .values(normalizeSnapshotRows(data.investments, "investments"));
       if (Array.isArray(data.cashflows) && data.cashflows.length)
-        await tx.insert(cashflows).values(data.cashflows);
+        await tx.insert(cashflows).values(normalizeSnapshotRows(data.cashflows, "cashflows"));
       if (Array.isArray(data.cashTransactions) && data.cashTransactions.length)
-        await tx.insert(cashTransactions).values(data.cashTransactions);
+        await tx
+          .insert(cashTransactions)
+          .values(normalizeSnapshotRows(data.cashTransactions, "cashTransactions"));
       if (Array.isArray(data.visionTargets) && data.visionTargets.length)
-        await tx.insert(visionTargets).values(data.visionTargets);
+        await tx
+          .insert(visionTargets)
+          .values(normalizeSnapshotRows(data.visionTargets, "visionTargets"));
       if (Array.isArray(data.alerts) && data.alerts.length)
-        await tx.insert(alerts).values(data.alerts);
+        await tx.insert(alerts).values(normalizeSnapshotRows(data.alerts, "alerts"));
       if (Array.isArray(data.dataQualityIssues) && data.dataQualityIssues.length)
-        await tx.insert(dataQualityIssues).values(data.dataQualityIssues);
+        await tx
+          .insert(dataQualityIssues)
+          .values(normalizeSnapshotRows(data.dataQualityIssues, "dataQualityIssues"));
 
       if (data.userSettings) {
         const existing = await tx.select().from(userSettings).limit(1);

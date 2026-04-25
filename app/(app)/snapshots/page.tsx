@@ -38,7 +38,9 @@ export default function SnapshotsPage() {
     }
   };
 
-  const restore = async (id: string) => {
+  const restore = async (snapshot?: Snapshot) => {
+    if (!snapshot) throw new Error("Invalid snapshot");
+    const id = snapshot.id;
     if (!confirm("This will replace ALL current data with the snapshot. Continue?")) return;
     try {
       await api.post(`/api/snapshots/${id}/restore`);
@@ -87,7 +89,7 @@ export default function SnapshotsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => restore(s.id)} className="gap-2">
+              <Button variant="outline" size="sm" onClick={() => restore(s)} className="gap-2">
                 <RotateCcw className="h-3.5 w-3.5" /> Restore
               </Button>
               <Button variant="ghost" size="icon" onClick={() => remove(s.id)} className="text-destructive">
