@@ -91,7 +91,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "dash.forecast": { en: "Cashflow Forecast", ar: "توقعات التدفق" },
   "dash.allPlatforms": { en: "All Platforms", ar: "كل المنصات" },
   "dash.platformDistribution": { en: "Platform Distribution", ar: "توزيع المنصات" },
-  "dash.platformDefaults": { en: "Platform Defaults", ar: "تعثر المنصات" },
+  "dash.platformStatus": { en: "Platform Status", ar: "حالة المنصات" },
   "dash.monthlyCashflows": { en: "Monthly Cashflows", ar: "التدفقات الشهرية" },
   "dash.monthlyCashflowsHint": {
     en: "Pending cashflows from the current month onward, stacked by platform.",

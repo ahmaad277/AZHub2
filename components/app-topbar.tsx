@@ -61,11 +61,16 @@ export function AppTopbar() {
           <Menu className="h-4 w-4" />
         </Button>
 
-        <div className="min-w-[3.25rem] max-w-[3.25rem] md:min-w-[10rem] md:max-w-[14rem]">
+        <div className="w-9 shrink-0 md:w-auto md:min-w-[10rem] md:max-w-[14rem]">
           <Select value={platformFilter} onValueChange={setPlatformFilter}>
-            <SelectTrigger className="h-9 px-2 md:px-3" aria-label={t("form.platform")}>
+            <SelectTrigger
+              className="h-9 w-9 justify-center px-0 md:w-auto md:justify-between md:px-3 [&>svg:last-child]:hidden md:[&>svg:last-child]:block"
+              aria-label={t("form.platform")}
+            >
               <SlidersHorizontal className="h-4 w-4 md:hidden" />
-              <SelectValue placeholder={t("dash.allPlatforms")} className="hidden md:block" />
+              <span className="hidden md:contents">
+                <SelectValue placeholder={t("dash.allPlatforms")} />
+              </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t("dash.allPlatforms")}</SelectItem>
