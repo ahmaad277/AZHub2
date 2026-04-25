@@ -27,6 +27,7 @@ import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney } from "@/lib/finance/money";
 import type { Platform } from "@/db/schema";
+import { getPlatformColorOption } from "@/lib/platform-colors";
 
 interface TxRow {
   id: string;
@@ -34,7 +35,7 @@ interface TxRow {
   amount: string;
   type: "deposit" | "withdrawal" | "investment_funding" | "cashflow_receipt";
   notes: string | null;
-  platform?: { name: string } | null;
+  platform?: { name: string; color?: string | null } | null;
 }
 
 interface CashTransactionsSummary {
@@ -162,7 +163,22 @@ export default function WalletPage() {
                     {tx.type}
                   </Badge>
                 </td>
-                <td className="p-3 text-muted-foreground">{tx.platform?.name ?? "—"}</td>
+                <td className="p-3 text-muted-foreground">
+                  {tx.platform ? (
+                    <span className="inline-flex items-center gap-1.5">
+                      <span
+                        aria-hidden="true"
+                        className="inline-block h-2 w-2 rounded-full border"
+                        style={{
+                          backgroundColor: getPlatformColorOption(tx.platform.color).chartColor,
+                        }}
+                      />
+                      {tx.platform.name}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td className="p-3 text-muted-foreground">{tx.notes ?? "—"}</td>
                 <td
                   className={`p-3 text-end font-semibold tabular-nums ${

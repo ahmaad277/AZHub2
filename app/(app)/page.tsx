@@ -67,7 +67,7 @@ interface InvestmentRow {
   endDate: string;
   derivedStatus: "active" | "late" | "defaulted" | "completed";
   needsReview: boolean;
-  platform?: { name: string } | null;
+  platform?: { name: string; color?: string | null } | null;
 }
 
 interface CashflowRow {
@@ -76,7 +76,11 @@ interface CashflowRow {
   dueDate: string;
   type: "profit" | "principal";
   status: "pending" | "received";
-  investment: { id: string; name: string; platform?: { name: string } | null };
+  investment: {
+    id: string;
+    name: string;
+    platform?: { name: string; color?: string | null } | null;
+  };
 }
 
 interface RowsResponse<T> {
@@ -277,9 +281,20 @@ export default function DashboardPage() {
               <div
                 key={b.platformId}
                 className="rounded-lg border p-4"
+                style={{
+                  borderInlineStartWidth: 4,
+                  borderInlineStartColor: getPlatformColorOption(b.platformColor).chartColor,
+                }}
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-medium">{b.platformName}</div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-2.5 w-2.5 rounded-full border"
+                      style={{ backgroundColor: getPlatformColorOption(b.platformColor).chartColor }}
+                    />
+                    <div className="font-medium">{b.platformName}</div>
+                  </div>
                   <Badge variant="outline">{formatNumber(b.investmentsCount)}</Badge>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -327,9 +342,19 @@ export default function DashboardPage() {
               key={inv.id}
               href={`/investments?id=${inv.id}`}
               className="flex items-center justify-between rounded-lg border p-3 hover:border-primary/40"
+              style={{
+                borderInlineStartWidth: 4,
+                borderInlineStartColor: getPlatformColorOption(inv.platform?.color).chartColor,
+              }}
             >
               <div className="flex items-center gap-3">
-                <div className="grid h-9 w-9 place-items-center rounded-md bg-primary/10 text-primary text-xs font-semibold">
+                <div
+                  className="grid h-9 w-9 place-items-center rounded-md text-xs font-semibold"
+                  style={{
+                    backgroundColor: `${getPlatformColorOption(inv.platform?.color).chartColor}26`,
+                    color: getPlatformColorOption(inv.platform?.color).chartColor,
+                  }}
+                >
                   {inv.platform?.name?.slice(0, 2) ?? "—"}
                 </div>
                 <div>
@@ -374,6 +399,10 @@ export default function DashboardPage() {
             <div
               key={cf.id}
               className="flex items-center justify-between rounded-lg border p-3"
+              style={{
+                borderInlineStartWidth: 4,
+                borderInlineStartColor: getPlatformColorOption(cf.investment.platform?.color).chartColor,
+              }}
             >
               <div>
                 <div className="text-sm font-medium">
@@ -440,6 +469,64 @@ function ForecastCard({ label, value }: { label: string; value: number }) {
   );
 }
 
+function PieToggle({
+  mode,
+  onChange,
+}: {
+  mode: "percent" | "count";
+  onChange: (next: "percent" | "count") => void;
+}) {
+  const { t } = useApp();
+  return (
+    <div className="flex rounded-lg border p-0.5 text-xs">
+      {(["percent", "count"] as const).map((value) => (
+        <button
+          key={value}
+          type="button"
+          className={`rounded px-1.5 py-0.5 transition-colors ${
+            mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+          }`}
+          onClick={() => onChange(value)}
+        >
+          {t(`chart.${value}`)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function PieLegend({
+  items,
+  total,
+  mode,
+}: {
+  items: Array<{ id: string; name: string; value: number; color: string }>;
+  total: number;
+  mode: "percent" | "count";
+}) {
+  return (
+    <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+      {items.map((item) => (
+        <li key={item.id} className="flex items-center justify-between gap-2">
+          <span className="flex min-w-0 items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="truncate">{item.name}</span>
+          </span>
+          <span className="tabular-nums text-muted-foreground">
+            {mode === "percent" && total > 0
+              ? formatPercent((item.value / total) * 100, 0)
+              : formatNumber(item.value)}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function PlatformPieCard({
   title,
   data,
@@ -449,68 +536,61 @@ function PlatformPieCard({
 }) {
   const { t } = useApp();
   const [mode, setMode] = React.useState<"percent" | "count">("percent");
-  const filtered = data.filter((item) => item.value > 0);
+  const filtered = data
+    .filter((item) => item.value > 0)
+    .map((item) => ({ ...item, fill: getPlatformColorOption(item.color).chartColor }));
   const total = filtered.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <div className="rounded-xl border p-3 sm:p-4">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-medium">{title}</div>
-        <div className="flex rounded-lg border p-0.5 text-xs">
-          {(["percent", "count"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              className={`rounded px-1.5 py-0.5 transition-colors ${
-                mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-              }`}
-              onClick={() => setMode(value)}
-            >
-              {t(`chart.${value}`)}
-            </button>
-          ))}
-        </div>
+        <PieToggle mode={mode} onChange={setMode} />
       </div>
       {filtered.length === 0 ? (
         <div className="grid h-40 place-items-center text-sm text-muted-foreground sm:h-56">
           {t("common.empty")}
         </div>
       ) : (
-        <div className="h-44 sm:h-56">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={filtered}
-                dataKey="value"
-                nameKey="name"
-                innerRadius={0}
-                outerRadius="62%"
-                paddingAngle={2}
-                label={({ percent }) =>
-                  mode === "percent" ? formatPercent((percent ?? 0) * 100, 0) : undefined
-                }
-                labelLine={false}
-              >
-                {filtered.map((entry) => (
-                  <Cell key={entry.id} fill={getPlatformColorOption(entry.color).chartColor} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number, name: string) => [
-                  mode === "percent" && total > 0
-                    ? formatPercent((Number(value) / total) * 100, 1)
-                    : formatNumber(value),
-                  name,
-                ]}
-              />
-              <Legend
-                formatter={(value) => (
-                  <span className="text-xs">{value}</span>
-                )}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <>
+          <div className="h-36 sm:h-44">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={filtered}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={0}
+                  outerRadius="80%"
+                  paddingAngle={1}
+                  isAnimationActive={false}
+                >
+                  {filtered.map((entry) => (
+                    <Cell key={entry.id} fill={entry.fill} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value: number, name: string) => [
+                    mode === "percent" && total > 0
+                      ? formatPercent((Number(value) / total) * 100, 1)
+                      : formatNumber(value),
+                    name,
+                  ]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <PieLegend
+            items={filtered.map((item) => ({
+              id: item.id,
+              name: item.name,
+              value: item.value,
+              color: item.fill,
+            }))}
+            total={total}
+            mode={mode}
+          />
+        </>
       )}
     </div>
   );
@@ -552,61 +632,52 @@ function StatusPieCard({
     <div className="rounded-xl border p-3 sm:p-4">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-medium">{title}</div>
-        <div className="flex rounded-lg border p-0.5 text-xs">
-          {(["percent", "count"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              className={`rounded px-1.5 py-0.5 transition-colors ${
-                mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-              }`}
-              onClick={() => setMode(value)}
-            >
-              {t(`chart.${value}`)}
-            </button>
-          ))}
-        </div>
+        <PieToggle mode={mode} onChange={setMode} />
       </div>
       {data.length === 0 ? (
         <div className="grid h-40 place-items-center text-sm text-muted-foreground sm:h-56">
           {t("common.empty")}
         </div>
       ) : (
-        <div className="h-44 sm:h-56">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                innerRadius={0}
-                outerRadius="62%"
-                paddingAngle={2}
-                label={({ percent }) =>
-                  mode === "percent" ? formatPercent((percent ?? 0) * 100, 0) : undefined
-                }
-                labelLine={false}
-              >
-                {data.map((entry) => (
-                  <Cell key={entry.id} fill={STATUS_COLORS[entry.id]} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number, name: string) => [
-                  mode === "percent" && total > 0
-                    ? formatPercent((Number(value) / total) * 100, 1)
-                    : formatNumber(value),
-                  name,
-                ]}
-              />
-              <Legend
-                formatter={(value) => (
-                  <span className="text-xs">{value}</span>
-                )}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <>
+          <div className="h-36 sm:h-44">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={0}
+                  outerRadius="80%"
+                  paddingAngle={1}
+                  isAnimationActive={false}
+                >
+                  {data.map((entry) => (
+                    <Cell key={entry.id} fill={STATUS_COLORS[entry.id]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value: number, name: string) => [
+                    mode === "percent" && total > 0
+                      ? formatPercent((Number(value) / total) * 100, 1)
+                      : formatNumber(value),
+                    name,
+                  ]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <PieLegend
+            items={data.map((item) => ({
+              id: item.id,
+              name: item.name,
+              value: item.value,
+              color: STATUS_COLORS[item.id],
+            }))}
+            total={total}
+            mode={mode}
+          />
+        </>
       )}
     </div>
   );

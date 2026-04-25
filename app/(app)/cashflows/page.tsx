@@ -10,6 +10,7 @@ import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney } from "@/lib/finance/money";
 import { cn } from "@/lib/utils";
+import { getPlatformColorOption } from "@/lib/platform-colors";
 
 interface Row {
   id: string;
@@ -21,7 +22,7 @@ interface Row {
   investment: {
     id: string;
     name: string;
-    platform?: { name: string } | null;
+    platform?: { name: string; color?: string | null } | null;
   };
 }
 
@@ -122,7 +123,15 @@ export default function CashflowsPage() {
                 <td className="p-3">{formatDate(r.dueDate, dateLocale)}</td>
                 <td className="p-3">
                   <div>{r.investment.name}</div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-2 w-2 rounded-full border"
+                      style={{
+                        backgroundColor: getPlatformColorOption(r.investment.platform?.color)
+                          .chartColor,
+                      }}
+                    />
                     {r.investment.platform?.name}
                   </div>
                 </td>

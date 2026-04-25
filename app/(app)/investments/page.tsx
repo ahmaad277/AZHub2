@@ -19,6 +19,7 @@ import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney } from "@/lib/finance/money";
 import { cn } from "@/lib/utils";
+import { getPlatformColorOption } from "@/lib/platform-colors";
 
 const InvestmentWizard = dynamic(
   () => import("@/components/investment-wizard").then((mod) => mod.InvestmentWizard),
@@ -51,7 +52,7 @@ interface Row {
   fundedFromCash: boolean;
   notes: string | null;
   realizedProfit: number;
-  platform?: { id: string; name: string } | null;
+  platform?: { id: string; name: string; color?: string | null } | null;
   cashflows?: Array<{ dueDate: string; amount: string; type: "profit" | "principal" }>;
 }
 
@@ -186,7 +187,16 @@ export default function InvestmentsPage() {
                     ) : null}
                   </div>
                 </td>
-                <td className="p-3 text-muted-foreground">{r.platform?.name}</td>
+                <td className="p-3 text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-2 w-2 rounded-full border"
+                      style={{ backgroundColor: getPlatformColorOption(r.platform?.color).chartColor }}
+                    />
+                    {r.platform?.name}
+                  </span>
+                </td>
                 <td className="p-3 text-end font-semibold tabular-nums">
                   {formatMoney(r.principalAmount, settings.currency)}
                 </td>
