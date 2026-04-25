@@ -90,6 +90,13 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "dash.vision2040": { en: "Vision 2040 Progress", ar: "تقدم رؤية 2040" },
   "dash.forecast": { en: "Cashflow Forecast", ar: "توقعات التدفق" },
   "dash.allPlatforms": { en: "All Platforms", ar: "كل المنصات" },
+  "dash.platformDistribution": { en: "Platform Distribution", ar: "توزيع المنصات" },
+  "dash.platformDefaults": { en: "Platform Defaults", ar: "تعثر المنصات" },
+  "dash.monthlyCashflows": { en: "Monthly Cashflows", ar: "التدفقات الشهرية" },
+  "dash.monthlyCashflowsHint": {
+    en: "Pending cashflows from the current month onward, stacked by platform.",
+    ar: "التدفقات القادمة من الشهر الحالي وما بعده، مقسمة حسب المنصة.",
+  },
 
   // Common
   "common.proMode": { en: "Pro Mode", ar: "الوضع الاحترافي" },
@@ -108,9 +115,30 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "common.viewAll": { en: "View all", ar: "عرض الكل" },
   "common.status": { en: "Status", ar: "الحالة" },
   "common.undo": { en: "Undo", ar: "تراجع" },
+  "common.rows": { en: "rows", ar: "صفوف" },
   "common.fundingSource": { en: "Funding Source", ar: "مصدر التمويل" },
   "common.external": { en: "External Bank", ar: "بنك خارجي" },
   "common.internal": { en: "Internal Wallet", ar: "المحفظة الداخلية" },
+
+  // Charts
+  "chart.percent": { en: "Percent", ar: "النسبة" },
+  "chart.count": { en: "Count", ar: "العدد" },
+
+  // Platforms
+  "platform.fee": { en: "Fee", ar: "الرسوم" },
+  "platform.feePercent": { en: "Fee %", ar: "نسبة الرسوم" },
+  "platform.deductFees": { en: "Deduct fees", ar: "خصم الرسوم" },
+  "platform.deductFeesFromProfit": {
+    en: "Deduct fees from profit",
+    ar: "خصم الرسوم من الربح",
+  },
+  "platform.color": { en: "Color", ar: "اللون" },
+  "platform.color.white": { en: "White", ar: "أبيض" },
+  "platform.color.black": { en: "Black", ar: "أسود" },
+  "platform.color.cyan": { en: "Cyan", ar: "سماوي" },
+  "platform.color.yellow": { en: "Yellow", ar: "أصفر" },
+  "platform.color.green": { en: "Green", ar: "أخضر" },
+  "platform.color.blue": { en: "Blue", ar: "أزرق" },
 
   // Auth
   "auth.signOut": { en: "Sign out", ar: "تسجيل الخروج" },
@@ -142,6 +170,9 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "vision.target": { en: "Target", ar: "الهدف" },
 
   // Investments
+  "investment.isReinvestment": { en: "Is reinvestment", ar: "إعادة استثمار" },
+  "investment.customSchedule": { en: "Custom schedule", ar: "جدول مخصص" },
+  "investment.schedulePreview": { en: "Schedule preview", ar: "معاينة الجدول" },
   "investments.deleteConfirm": {
     en: "Delete this investment? This will also remove related cashflows and alerts.",
     ar: "حذف هذا الاستثمار؟ سيتم أيضًا حذف التدفقات النقدية والتنبيهات المرتبطة به.",

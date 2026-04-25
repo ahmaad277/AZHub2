@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Plus, Search, Trash2 } from "lucide-react";
+import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +30,7 @@ const InvestmentWizard = dynamic(
 
 interface Row {
   id: string;
+  platformId: string;
   name: string;
   principalAmount: string;
   expectedProfit: string;
@@ -36,11 +38,21 @@ interface Row {
   startDate: string;
   endDate: string;
   durationMonths: number;
-  distributionFrequency: string;
+  distributionFrequency:
+    | "monthly"
+    | "quarterly"
+    | "semi_annually"
+    | "annually"
+    | "at_maturity"
+    | "custom";
   derivedStatus: "active" | "late" | "defaulted" | "completed";
   needsReview: boolean;
+  isReinvestment: boolean;
+  fundedFromCash: boolean;
+  notes: string | null;
   realizedProfit: number;
   platform?: { id: string; name: string } | null;
+  cashflows?: Array<{ dueDate: string; amount: string; type: "profit" | "principal" }>;
 }
 
 const STATUS_VARIANTS: Record<string, "default" | "warning" | "destructive" | "secondary"> = {
@@ -53,10 +65,13 @@ const STATUS_VARIANTS: Record<string, "default" | "warning" | "destructive" | "s
 export default function InvestmentsPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
+  const searchParams = useSearchParams();
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [open, setOpen] = React.useState(false);
+  const [editingInvestment, setEditingInvestment] = React.useState<Row | null>(null);
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string>("all");
+  const handledQueryId = React.useRef<string | null>(null);
 
   const { data = [] } = useQuery<Row[]>({
     queryKey: ["investments", platformFilter],
@@ -71,6 +86,28 @@ export default function InvestmentsPage() {
     if (!search) return true;
     return r.name.toLowerCase().includes(search.toLowerCase());
   });
+
+  const startAdd = () => {
+    setEditingInvestment(null);
+    setOpen(true);
+  };
+
+  const startEdit = React.useCallback(async (id: string) => {
+    try {
+      const investment = await api.get<Row>(`/api/investments/${id}`);
+      setEditingInvestment(investment);
+      setOpen(true);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const id = searchParams.get("id");
+    if (!id || handledQueryId.current === id) return;
+    handledQueryId.current = id;
+    void startEdit(id);
+  }, [searchParams, startEdit]);
 
   const removeInvestment = async (id: string) => {
     if (!confirm(t("investments.deleteConfirm"))) {
@@ -116,7 +153,7 @@ export default function InvestmentsPage() {
             </button>
           ))}
         </div>
-        <Button onClick={() => setOpen(true)} className="gap-2">
+        <Button onClick={startAdd} className="gap-2">
           <Plus className="h-4 w-4" />
           {t("nav.investments")}
         </Button>
@@ -166,15 +203,25 @@ export default function InvestmentsPage() {
                   </Badge>
                 </td>
                 <td className="p-3 text-end">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeInvestment(r.id)}
-                    className="text-destructive"
-                    aria-label={t("form.delete")}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex justify-end gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => startEdit(r.id)}
+                      aria-label={t("form.edit")}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeInvestment(r.id)}
+                      className="text-destructive"
+                      aria-label={t("form.delete")}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -189,14 +236,22 @@ export default function InvestmentsPage() {
         </table>
       </div>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next);
+          if (!next) setEditingInvestment(null);
+        }}
+      >
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-auto">
           <DialogHeader>
-            <DialogTitle>{t("nav.investments")}</DialogTitle>
+            <DialogTitle>{editingInvestment ? t("form.edit") : t("nav.investments")}</DialogTitle>
           </DialogHeader>
           <InvestmentWizard
+            initialInvestment={editingInvestment}
             onCreated={() => {
               setOpen(false);
+              setEditingInvestment(null);
               void Promise.all(
                 ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
                   (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),

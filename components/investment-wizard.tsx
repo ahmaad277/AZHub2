@@ -25,7 +25,7 @@ import { SmartDateInput } from "./smart-date-input";
 import { useApp } from "./providers";
 import { api } from "@/lib/fetcher";
 import type { Platform } from "@/db/schema";
-import { formatMoney } from "@/lib/finance/money";
+import { formatDate, formatMoney } from "@/lib/finance/money";
 import { cn } from "@/lib/utils";
 
 interface PreviewRow {
@@ -42,12 +42,36 @@ interface PreviewResponse {
   rows: PreviewRow[];
 }
 
+interface EditableInvestment {
+  id: string;
+  platformId: string;
+  name: string;
+  principalAmount: string;
+  expectedProfit: string;
+  expectedIrr: string;
+  startDate: string;
+  durationMonths: number;
+  endDate: string;
+  distributionFrequency:
+    | "monthly"
+    | "quarterly"
+    | "semi_annually"
+    | "annually"
+    | "at_maturity"
+    | "custom";
+  isReinvestment: boolean;
+  fundedFromCash: boolean;
+  notes: string | null;
+  cashflows?: Array<{ dueDate: string; amount: string; type: "profit" | "principal" }>;
+}
+
 interface InvestmentWizardProps {
   onCreated?: () => void;
   onCancel?: () => void;
   /** Public / share-link mode — hides funding question and accepts a submit handler. */
   publicSubmit?: (payload: any) => Promise<void>;
   availablePlatforms?: Array<{ id: string; name: string }>;
+  initialInvestment?: EditableInvestment | null;
 }
 
 export function InvestmentWizard({
@@ -55,9 +79,11 @@ export function InvestmentWizard({
   onCancel,
   publicSubmit,
   availablePlatforms,
+  initialInvestment,
 }: InvestmentWizardProps) {
   const { t, settings } = useApp();
   const qc = useQueryClient();
+  const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
 
   const platformsQuery = useQuery<Platform[]>({
     queryKey: ["platforms"],
@@ -94,6 +120,33 @@ export function InvestmentWizard({
   >([]);
   const [preview, setPreview] = React.useState<PreviewResponse | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!initialInvestment) return;
+    setForm({
+      platformId: initialInvestment.platformId,
+      name: initialInvestment.name,
+      principalAmount: initialInvestment.principalAmount,
+      expectedProfit: initialInvestment.expectedProfit,
+      expectedIrr: initialInvestment.expectedIrr,
+      startDate: initialInvestment.startDate.slice(0, 10),
+      durationMonths: initialInvestment.durationMonths,
+      endDate: initialInvestment.endDate.slice(0, 10),
+      distributionFrequency: initialInvestment.distributionFrequency,
+      isReinvestment: initialInvestment.isReinvestment,
+      fundedFromCash: initialInvestment.fundedFromCash,
+      notes: initialInvestment.notes ?? "",
+    });
+    setDateMode("duration");
+    setCustomRows(
+      (initialInvestment.cashflows ?? []).map((row) => ({
+        dueDate: row.dueDate.slice(0, 10),
+        amount: row.amount,
+        type: row.type,
+      })),
+    );
+    setPreview(null);
+  }, [initialInvestment]);
 
   React.useEffect(() => {
     if (!form.endDate && form.startDate && typeof form.durationMonths === "number") {
@@ -144,6 +197,14 @@ export function InvestmentWizard({
       const payload = buildPayload();
       if (publicSubmit) {
         await publicSubmit(payload);
+      } else if (initialInvestment) {
+        await api.patch(`/api/investments/${initialInvestment.id}`, payload);
+        await Promise.all(
+          ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
+            (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
+          ),
+        );
+        toast.success(t("form.save"));
       } else {
         await api.post("/api/investments", payload);
         await Promise.all(
@@ -269,7 +330,7 @@ export function InvestmentWizard({
             </SelectContent>
           </Select>
         </div>
-        {!publicSubmit ? (
+        {!publicSubmit && !initialInvestment ? (
           <div className="space-y-2">
             <Label>{t("common.fundingSource")}</Label>
             <RadioGroup
@@ -293,7 +354,7 @@ export function InvestmentWizard({
       {form.distributionFrequency === "custom" ? (
         <div className="space-y-2 rounded-lg border p-3">
           <div className="flex items-center justify-between">
-            <Label>Custom schedule</Label>
+            <Label>{t("investment.customSchedule")}</Label>
             <Button
               type="button"
               size="sm"
@@ -361,7 +422,7 @@ export function InvestmentWizard({
             ))}
             {customRows.length === 0 ? (
               <div className="py-2 text-center text-xs text-muted-foreground">
-                No rows yet.
+                {t("common.empty")}
               </div>
             ) : null}
           </div>
@@ -383,7 +444,7 @@ export function InvestmentWizard({
             checked={form.isReinvestment}
             onCheckedChange={(v) => setForm({ ...form, isReinvestment: v })}
           />
-          <span className="text-sm">Is reinvestment</span>
+          <span className="text-sm">{t("investment.isReinvestment")}</span>
         </div>
       ) : null}
 
@@ -404,9 +465,10 @@ export function InvestmentWizard({
       {preview ? (
         <div className="rounded-lg border p-3">
           <div className="mb-2 flex items-center justify-between">
-            <div className="text-sm font-medium">Schedule preview</div>
+            <div className="text-sm font-medium">{t("investment.schedulePreview")}</div>
             <div className="text-xs text-muted-foreground">
-              {preview.durationMonths} months · {preview.rows.length} rows
+              {preview.durationMonths} {t("vision.months")} · {preview.rows.length}{" "}
+              {t("common.rows")}
             </div>
           </div>
           <div className="max-h-64 overflow-auto">
@@ -421,7 +483,7 @@ export function InvestmentWizard({
               <tbody>
                 {preview.rows.map((r, i) => (
                   <tr key={i} className={cn("border-t", r.type === "principal" && "bg-muted/40")}>
-                    <td className="p-2">{new Date(r.dueDate).toLocaleDateString()}</td>
+                    <td className="p-2">{formatDate(r.dueDate, dateLocale)}</td>
                     <td className="p-2">
                       <Badge variant={r.type === "profit" ? "default" : "secondary"}>
                         {r.type}

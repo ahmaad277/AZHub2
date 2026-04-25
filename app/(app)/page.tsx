@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +15,19 @@ import {
   Target,
   ArrowDownCircle,
 } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { MetricTile } from "@/components/metric-tile";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
@@ -21,6 +35,7 @@ import type { DashboardMetrics } from "@/lib/finance/metrics";
 import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getPlatformColorOption } from "@/lib/platform-colors";
 
 const CollapsibleSection = dynamic(
   () => import("@/components/collapsible-section").then((mod) => mod.CollapsibleSection),
@@ -39,6 +54,8 @@ interface MetricsResponse {
     realizedGains: number;
     expectedProfit: number;
     investmentsCount: number;
+    defaultedCount: number;
+    platformColor: string | null;
   }>;
 }
 
@@ -64,6 +81,19 @@ interface CashflowRow {
 
 interface RowsResponse<T> {
   rows?: T[];
+}
+
+interface MonthlyCashflowResponse {
+  rows: Array<{
+    month: string;
+    total: number;
+    platforms: Array<{
+      platformId: string;
+      platformName: string;
+      platformColor: string | null;
+      total: number;
+    }>;
+  }>;
 }
 
 export default function DashboardPage() {
@@ -92,6 +122,14 @@ export default function DashboardPage() {
     queryFn: () =>
       api.get<CashflowRow[] | RowsResponse<CashflowRow>>(
         `/api/cashflows?status=pending${platformQuery}`,
+      ),
+  });
+
+  const { data: monthlyData } = useQuery<MonthlyCashflowResponse>({
+    queryKey: ["cashflows-monthly-summary", platformFilter],
+    queryFn: () =>
+      api.get<MonthlyCashflowResponse>(
+        `/api/cashflows/monthly-summary${platformFilter !== "all" ? `?platformId=${platformFilter}` : ""}`,
       ),
   });
 
@@ -191,6 +229,29 @@ export default function DashboardPage() {
           accent="muted"
         />
       </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <PlatformPieCard
+          title={t("dash.platformDistribution")}
+          data={breakdown.map((row) => ({
+            id: row.platformId,
+            name: row.platformName,
+            value: row.investmentsCount,
+            color: row.platformColor,
+          }))}
+        />
+        <PlatformPieCard
+          title={t("dash.platformDefaults")}
+          data={breakdown.map((row) => ({
+            id: row.platformId,
+            name: row.platformName,
+            value: row.defaultedCount,
+            color: row.platformColor,
+          }))}
+        />
+      </div>
+
+      <MonthlyCashflowChart rows={monthlyData?.rows ?? []} />
 
       {/* Vision 2040 */}
       <CollapsibleSection
@@ -377,6 +438,161 @@ function ForecastCard({ label, value }: { label: string; value: number }) {
       <div className="mt-1 text-xl font-semibold tabular-nums text-primary">
         {formatMoney(value, settings.currency)}
       </div>
+    </div>
+  );
+}
+
+function PlatformPieCard({
+  title,
+  data,
+}: {
+  title: string;
+  data: Array<{ id: string; name: string; value: number; color: string | null }>;
+}) {
+  const { t } = useApp();
+  const [mode, setMode] = React.useState<"percent" | "count">("percent");
+  const filtered = data.filter((item) => item.value > 0);
+  const total = filtered.reduce((sum, item) => sum + item.value, 0);
+
+  return (
+    <div className="rounded-xl border p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="font-medium">{title}</div>
+        <div className="flex rounded-lg border p-1 text-xs">
+          {(["percent", "count"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={`rounded px-2 py-1 transition-colors ${
+                mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              }`}
+              onClick={() => setMode(value)}
+            >
+              {t(`chart.${value}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+      {filtered.length === 0 ? (
+        <div className="grid h-56 place-items-center text-sm text-muted-foreground">
+          {t("common.empty")}
+        </div>
+      ) : (
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={filtered}
+                dataKey="value"
+                nameKey="name"
+                innerRadius={52}
+                outerRadius={86}
+                paddingAngle={2}
+                label={({ name, value, percent }) =>
+                  `${name}: ${
+                    mode === "percent"
+                      ? formatPercent((percent ?? 0) * 100, 0)
+                      : formatNumber(value ?? 0)
+                  }`
+                }
+              >
+                {filtered.map((entry) => (
+                  <Cell key={entry.id} fill={getPlatformColorOption(entry.color).chartColor} />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value: number, name: string) => [
+                  mode === "percent" && total > 0
+                    ? formatPercent((Number(value) / total) * 100, 1)
+                    : formatNumber(value),
+                  name,
+                ]}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MonthlyCashflowChart({
+  rows,
+}: {
+  rows: Array<{
+    month: string;
+    total: number;
+    platforms: Array<{
+      platformId: string;
+      platformName: string;
+      platformColor: string | null;
+      total: number;
+    }>;
+  }>;
+}) {
+  const { t, settings } = useApp();
+  const series = new Map<string, { key: string; name: string; color: string | null }>();
+  const chartRows = rows.map((row) => {
+    const item: Record<string, string | number> = { month: row.month, total: row.total };
+    for (const platform of row.platforms) {
+      const key = `p_${platform.platformId.replace(/[^a-zA-Z0-9_]/g, "_")}`;
+      series.set(platform.platformId, {
+        key,
+        name: platform.platformName,
+        color: platform.platformColor,
+      });
+      item[key] = platform.total;
+    }
+    return item;
+  });
+  const chartWidth = Math.max(640, rows.length * 72);
+
+  return (
+    <div className="rounded-xl border p-4">
+      <div className="mb-3">
+        <div className="font-medium">{t("dash.monthlyCashflows")}</div>
+        <div className="text-xs text-muted-foreground">{t("dash.monthlyCashflowsHint")}</div>
+      </div>
+      {rows.length === 0 ? (
+        <div className="grid h-56 place-items-center text-sm text-muted-foreground">
+          {t("common.empty")}
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <div style={{ minWidth: chartWidth }} className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartRows}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={12}
+                  tickFormatter={(value) => formatNumber(Number(value))}
+                />
+                <Tooltip
+                  formatter={(value: number, name: string) => [
+                    formatMoney(value, settings.currency),
+                    name,
+                  ]}
+                  labelFormatter={(label) => `${t("vision.month")}: ${label}`}
+                />
+                <Legend />
+                {Array.from(series.values()).map((platform) => (
+                  <Bar
+                    key={platform.key}
+                    dataKey={platform.key}
+                    name={platform.name}
+                    stackId="cashflows"
+                    fill={getPlatformColorOption(platform.color).chartColor}
+                    radius={[4, 4, 0, 0]}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

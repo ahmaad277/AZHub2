@@ -4,7 +4,7 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Languages, Gauge, Menu, LogOut } from "lucide-react";
+import { Moon, Sun, Languages, Gauge, Menu, LogOut, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -31,24 +31,14 @@ export function AppTopbar() {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
-  const [showPlatformFilter, setShowPlatformFilter] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  React.useEffect(() => {
-    const query = window.matchMedia("(min-width: 768px)");
-    const sync = () => setShowPlatformFilter(query.matches);
-    sync();
-    query.addEventListener("change", sync);
-    return () => query.removeEventListener("change", sync);
-  }, []);
-
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms"),
-    enabled: showPlatformFilter,
   });
 
   const signOut = async () => {
@@ -71,10 +61,11 @@ export function AppTopbar() {
           <Menu className="h-4 w-4" />
         </Button>
 
-        <div className="hidden min-w-[10rem] max-w-[14rem] md:block">
+        <div className="min-w-[3.25rem] max-w-[3.25rem] md:min-w-[10rem] md:max-w-[14rem]">
           <Select value={platformFilter} onValueChange={setPlatformFilter}>
-            <SelectTrigger className="h-9">
-              <SelectValue placeholder={t("dash.allPlatforms")} />
+            <SelectTrigger className="h-9 px-2 md:px-3" aria-label={t("form.platform")}>
+              <SlidersHorizontal className="h-4 w-4 md:hidden" />
+              <SelectValue placeholder={t("dash.allPlatforms")} className="hidden md:block" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t("dash.allPlatforms")}</SelectItem>
