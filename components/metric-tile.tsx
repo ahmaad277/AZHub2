@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useApp } from "./providers";
-import { formatMoney, formatPercent, formatNumber } from "@/lib/finance/money";
+import { formatMoney, formatPercent, formatNumber, parseMoney } from "@/lib/finance/money";
 
 interface Props {
   label: string;
@@ -39,9 +39,21 @@ export function MetricTile({
   const localeCode = locale === "ar" ? "ar-SA" : "en-US";
 
   let display: string = "—";
+  let moneyFull = "";
+  let moneyCompact = "";
+  let showMoneyResponsive = false;
   if (value === null || value === undefined || value === "") display = "—";
-  else if (format === "money") display = formatMoney(value as number, settings.currency, localeCode);
-  else if (format === "percent")
+  else if (format === "money") {
+    showMoneyResponsive = true;
+    moneyFull = formatMoney(value as number, settings.currency, localeCode);
+    moneyCompact = new Intl.NumberFormat(localeCode, {
+      style: "currency",
+      currency: settings.currency,
+      numberingSystem: "latn",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(parseMoney(value as number));
+  } else if (format === "percent")
     display = formatPercent(Number(value), 2, localeCode);
   else if (format === "days")
     display = `${formatNumber(Number(value), localeCode, 0)} d`;
@@ -67,7 +79,14 @@ export function MetricTile({
         ) : null}
       </div>
       <div className={cn("mt-2 text-xl sm:text-2xl font-semibold tabular-nums", ACCENT[accent])}>
-        {display}
+        {showMoneyResponsive ? (
+          <>
+            <span className="sm:hidden">{moneyCompact}</span>
+            <span className="hidden sm:inline">{moneyFull}</span>
+          </>
+        ) : (
+          display
+        )}
       </div>
       {sublabel ? (
         <div className="mt-1 text-xs text-muted-foreground">{sublabel}</div>
