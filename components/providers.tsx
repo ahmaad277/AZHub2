@@ -113,6 +113,19 @@ export function Providers({
   }, [settings.language, settings.fontSize]);
 
   const t = React.useMemo(() => createTranslator(settings.language), [settings.language]);
+  const appValue = React.useMemo<AppContextValue>(
+    () => ({
+      settings,
+      setSettings,
+      platformFilter,
+      setPlatformFilter,
+      t,
+      locale: settings.language,
+      isRtl: settings.language === "ar",
+      toggleCollapsed,
+    }),
+    [platformFilter, settings, setSettings, t, toggleCollapsed],
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -122,18 +135,7 @@ export function Providers({
         enableSystem
         forcedTheme={undefined}
       >
-        <AppContext.Provider
-          value={{
-            settings,
-            setSettings,
-            platformFilter,
-            setPlatformFilter,
-            t,
-            locale: settings.language,
-            isRtl: settings.language === "ar",
-            toggleCollapsed,
-          }}
-        >
+        <AppContext.Provider value={appValue}>
           {children}
           <Toaster richColors position="top-center" />
         </AppContext.Provider>

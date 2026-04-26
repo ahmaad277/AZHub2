@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ResolvedIssueBadge } from "@/components/resolved-issue-badge";
+import { TablePagination } from "@/components/table-pagination";
 import {
   Dialog,
   DialogContent,
@@ -65,6 +66,7 @@ const STATUS_VARIANTS: Record<string, "default" | "warning" | "destructive" | "s
   defaulted: "destructive",
   completed: "secondary",
 };
+const PAGE_SIZE = 50;
 
 export default function InvestmentsPage() {
   const { t, settings, platformFilter } = useApp();
@@ -75,6 +77,7 @@ export default function InvestmentsPage() {
   const [editingInvestment, setEditingInvestment] = React.useState<Row | null>(null);
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string>("all");
+  const [page, setPage] = React.useState(1);
   const handledQueryId = React.useRef<string | null>(null);
 
   const { data = [] } = useQuery<Row[]>({
@@ -85,11 +88,27 @@ export default function InvestmentsPage() {
       ),
   });
 
-  const filtered = data.filter((r) => {
-    if (statusFilter !== "all" && r.derivedStatus !== statusFilter) return false;
-    if (!search) return true;
-    return r.name.toLowerCase().includes(search.toLowerCase());
-  });
+  const filtered = React.useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+    return data.filter((r) => {
+      if (statusFilter !== "all" && r.derivedStatus !== statusFilter) return false;
+      if (!normalizedSearch) return true;
+      return r.name.toLowerCase().includes(normalizedSearch);
+    });
+  }, [data, search, statusFilter]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = React.useMemo(
+    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filtered, page],
+  );
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [platformFilter, search, statusFilter]);
+
+  React.useEffect(() => {
+    setPage((current) => Math.min(current, pageCount));
+  }, [pageCount]);
 
   const startAdd = () => {
     setEditingInvestment(null);
@@ -124,7 +143,8 @@ export default function InvestmentsPage() {
         qc.invalidateQueries({ queryKey: ["investments"] }),
         qc.invalidateQueries({ queryKey: ["cashflows"] }),
         qc.invalidateQueries({ queryKey: ["cashflows-upcoming"] }),
-        qc.invalidateQueries({ queryKey: ["metrics"] }),
+        qc.invalidateQueries({ queryKey: ["cashflows-monthly-summary"] }),
+        qc.invalidateQueries({ queryKey: ["dashboard-metrics"] }),
       ]);
     } catch (e) {
       toast.error((e as Error).message);
@@ -140,16 +160,16 @@ export default function InvestmentsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t("nav.investments")}
-            className="ps-9"
+            className="ps-9 rounded-full bg-muted/50 border-transparent hover:bg-muted/80 transition-colors focus-visible:bg-background focus-visible:border-border h-9"
           />
         </div>
-        <div className="flex items-center gap-1 rounded-lg border p-1 text-xs">
+        <div className="flex items-center gap-1 rounded-full bg-muted/30 p-1 text-xs">
           {["all", "active", "late", "defaulted", "completed"].map((s) => (
             <button
               key={s}
               className={cn(
-                "rounded px-2 py-1 transition-colors",
-                statusFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                "rounded-full px-4 py-1.5 transition-all font-medium",
+                statusFilter === s ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
               )}
               onClick={() => setStatusFilter(s)}
             >
@@ -163,24 +183,28 @@ export default function InvestmentsPage() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border">
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <table className="w-full text-sm">
-          <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/50">
             <tr>
-              <th className="p-3 text-start">{t("form.name")}</th>
-              <th className="p-3 text-start">{t("form.platform")}</th>
-              <th className="p-3 text-end">{t("form.principalAmount")}</th>
-              <th className="p-3 text-end">{t("form.expectedProfit")}</th>
-              <th className="p-3 text-end">{t("metric.realizedGains")}</th>
-              <th className="p-3 text-start">{t("form.endDate")}</th>
-              <th className="p-3 text-start">{t("common.status")}</th>
-              <th className="p-3"></th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.name")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.platform")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("form.principalAmount")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("form.expectedProfit")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("metric.realizedGains")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.endDate")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("common.status")}</th>
+              <th className="p-3 sm:px-4 sm:py-3"></th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((r) => (
-              <tr key={r.id} className="border-t hover:bg-muted/30">
-                <td className="p-3">
+            {paginated.map((r) => (
+              <tr key={r.id} className="border-t border-border/50 hover:bg-muted/30 transition-colors group relative">
+                {/* Decorative hover effect indicator */}
+                <td className="p-0 w-0 relative">
+                  <div className="absolute inset-y-0 start-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center" />
+                </td>
+                <td className="p-3 sm:px-4 sm:py-3">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{r.name}</span>
                     {r.needsReview ? (
@@ -190,7 +214,7 @@ export default function InvestmentsPage() {
                     ) : null}
                   </div>
                 </td>
-                <td className="p-3 text-muted-foreground">
+                <td className="p-3 sm:px-4 sm:py-3 text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
                     <span
                       aria-hidden="true"
@@ -200,17 +224,17 @@ export default function InvestmentsPage() {
                     {r.platform?.name}
                   </span>
                 </td>
-                <td className="p-3 text-end font-semibold tabular-nums">
+                <td className="p-3 sm:px-4 sm:py-3 text-end font-semibold tabular-nums">
                   {formatMoney(r.principalAmount, settings.currency)}
                 </td>
-                <td className="p-3 text-end tabular-nums">
+                <td className="p-3 sm:px-4 sm:py-3 text-end tabular-nums">
                   {formatMoney(r.expectedProfit, settings.currency)}
                 </td>
-                <td className="p-3 text-end tabular-nums text-[hsl(var(--success))]">
+                <td className="p-3 sm:px-4 sm:py-3 text-end tabular-nums text-[hsl(var(--success))]">
                   {formatMoney(r.realizedProfit, settings.currency)}
                 </td>
-                <td className="p-3">{formatDate(r.endDate, dateLocale)}</td>
-                <td className="p-3">
+                <td className="p-3 sm:px-4 sm:py-3">{formatDate(r.endDate, dateLocale)}</td>
+                <td className="p-3 sm:px-4 sm:py-3">
                   <div className="inline-flex items-center gap-2">
                     <Badge variant={STATUS_VARIANTS[r.derivedStatus]}>
                       {t(`status.${r.derivedStatus}`)}
@@ -221,7 +245,7 @@ export default function InvestmentsPage() {
                     />
                   </div>
                 </td>
-                <td className="p-3 text-end">
+                <td className="p-3 sm:px-4 sm:py-3 text-end">
                   <div className="flex justify-end gap-1">
                     <Button
                       variant="ghost"
@@ -255,6 +279,8 @@ export default function InvestmentsPage() {
         </table>
       </div>
 
+      <TablePagination page={page} pageCount={pageCount} onPageChange={setPage} />
+
       <Dialog
         open={open}
         onOpenChange={(next) => {
@@ -272,9 +298,15 @@ export default function InvestmentsPage() {
               setOpen(false);
               setEditingInvestment(null);
               void Promise.all(
-                ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
-                  (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
-                ),
+                [
+                  "investments",
+                  "cashflows",
+                  "cashflows-upcoming",
+                  "cashflows-monthly-summary",
+                  "dashboard-metrics",
+                  "cashTxs",
+                  "alerts",
+                ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
               );
             }}
             onCancel={() => setOpen(false)}

@@ -315,6 +315,8 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
     realizedGains: number;
     expectedProfit: number;
     investmentsCount: number;
+    defaultedCount: number;
+    platformColor: string | null;
   }>;
   for (const p of plats) {
     const m = await getDashboardMetrics({ platformId: p.id, now });
@@ -325,6 +327,8 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
       realizedGains: m.realizedGains,
       expectedProfit: m.totalExpectedProfit,
       investmentsCount: m.activeCount + m.lateCount + m.defaultedCount + m.completedCount,
+      defaultedCount: m.defaultedCount,
+      platformColor: p.color ?? null,
     });
   }
   return results;

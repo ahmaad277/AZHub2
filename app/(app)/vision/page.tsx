@@ -7,6 +7,7 @@ import { Target, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TablePagination } from "@/components/table-pagination";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney, formatPercent } from "@/lib/finance/money";
@@ -18,6 +19,8 @@ interface VisionTargetRow {
   targetValue: string;
 }
 
+const PAGE_SIZE = 50;
+
 export default function VisionPage() {
   const { t, settings, setSettings } = useApp();
   const qc = useQueryClient();
@@ -27,6 +30,7 @@ export default function VisionPage() {
   );
   const [startAmount, setStartAmount] = React.useState("100000");
   const [months, setMonths] = React.useState(180); // 15 years
+  const [page, setPage] = React.useState(1);
 
   const { data: targets = [] } = useQuery<VisionTargetRow[]>({
     queryKey: ["visionTargets"],
@@ -34,13 +38,22 @@ export default function VisionPage() {
   });
 
   const { data: metricsResp } = useQuery<{ metrics: DashboardMetrics }>({
-    queryKey: ["metrics-vision"],
+    queryKey: ["dashboard-metrics", "all", "summary"],
     queryFn: () => api.get<{ metrics: DashboardMetrics }>("/api/dashboard/metrics"),
   });
 
+  const pageCount = Math.max(1, Math.ceil(targets.length / PAGE_SIZE));
+  const paginatedTargets = React.useMemo(
+    () => targets.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [page, targets],
+  );
   const nav = metricsResp?.metrics.nav ?? 0;
   const target = Number(targetCapital || 0);
   const pct = target > 0 ? Math.min(100, (nav / target) * 100) : 0;
+
+  React.useEffect(() => {
+    setPage((current) => Math.min(current, pageCount));
+  }, [pageCount]);
 
   const saveTarget = async () => {
     try {
@@ -88,7 +101,7 @@ export default function VisionPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border p-5">
+      <div className="rounded-xl border border-border/50 bg-card p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Target className="h-4 w-4" /> {t("dash.vision2040")}
         </div>
@@ -110,7 +123,7 @@ export default function VisionPage() {
         </div>
       </div>
 
-      <div className="rounded-xl border p-5">
+      <div className="rounded-xl border border-border/50 bg-card p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <div className="mb-4 text-sm font-semibold">{t("settings.target2040")}</div>
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex-1 min-w-[14rem] space-y-2">
@@ -127,7 +140,7 @@ export default function VisionPage() {
         </div>
       </div>
 
-      <div className="rounded-xl border p-5">
+      <div className="rounded-xl border border-border/50 bg-card p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm font-semibold">{t("vision.monthlyPlanGenerator")}</div>
           <Button variant="outline" size="sm" onClick={generateMonthlyTargets} className="gap-2">
@@ -162,19 +175,19 @@ export default function VisionPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border">
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <table className="w-full text-sm">
-          <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/50">
             <tr>
-              <th className="p-3 text-start">{t("vision.month")}</th>
-              <th className="p-3 text-end">{t("vision.target")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-start">{t("vision.month")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-end">{t("vision.target")}</th>
             </tr>
           </thead>
           <tbody>
-            {targets.map((r) => (
-              <tr key={r.id} className="border-t">
-                <td className="p-3">{formatDate(r.month, dateLocale, { year: "numeric", month: "short" })}</td>
-                <td className="p-3 text-end tabular-nums">
+            {paginatedTargets.map((r) => (
+              <tr key={r.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors last:border-0">
+                <td className="p-3 sm:px-4 sm:py-3">{formatDate(r.month, dateLocale, { year: "numeric", month: "short" })}</td>
+                <td className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-end tabular-nums">
                   {formatMoney(r.targetValue, settings.currency)}
                 </td>
               </tr>
@@ -189,6 +202,8 @@ export default function VisionPage() {
           </tbody>
         </table>
       </div>
+
+      <TablePagination page={page} pageCount={pageCount} onPageChange={setPage} />
     </div>
   );
 }

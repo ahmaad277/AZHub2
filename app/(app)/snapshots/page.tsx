@@ -62,11 +62,11 @@ export default function SnapshotsPage() {
       await Promise.all(
         [
           "snapshots",
-          "metrics",
-          "metrics-vision",
+          "dashboard-metrics",
           "investments",
           "cashflows",
           "cashflows-upcoming",
+          "cashflows-monthly-summary",
           "cashTxs",
           "platforms",
           "alerts",
@@ -91,7 +91,7 @@ export default function SnapshotsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border p-5">
+      <div className="rounded-xl border border-border/50 bg-card p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Archive className="h-4 w-4" /> {t("snapshots.createBackup")}
         </div>
@@ -116,7 +116,7 @@ export default function SnapshotsPage() {
           } as Snapshot,
           ...data,
         ].map((s) => (
-          <div key={s.id} className="flex items-center justify-between rounded-xl border p-4">
+          <div key={s.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]">
             <div>
               <div className="text-sm font-semibold">{s.name}</div>
               <div className="text-xs text-muted-foreground">

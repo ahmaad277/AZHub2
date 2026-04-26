@@ -89,6 +89,7 @@ export function InvestmentWizard({
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms"),
     enabled: !availablePlatforms,
+    staleTime: 5 * 60_000,
   });
   const platforms = availablePlatforms ?? platformsQuery.data ?? [];
 
@@ -200,17 +201,29 @@ export function InvestmentWizard({
       } else if (initialInvestment) {
         await api.patch(`/api/investments/${initialInvestment.id}`, payload);
         await Promise.all(
-          ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
-            (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
-          ),
+          [
+            "investments",
+            "cashflows",
+            "cashflows-upcoming",
+            "cashflows-monthly-summary",
+            "dashboard-metrics",
+            "cashTxs",
+            "alerts",
+          ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
         );
         toast.success(t("form.save"));
       } else {
         await api.post("/api/investments", payload);
         await Promise.all(
-          ["investments", "cashflows", "cashflows-upcoming", "metrics", "cashTxs", "alerts"].map(
-            (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
-          ),
+          [
+            "investments",
+            "cashflows",
+            "cashflows-upcoming",
+            "cashflows-monthly-summary",
+            "dashboard-metrics",
+            "cashTxs",
+            "alerts",
+          ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
         );
         toast.success(t("form.save"));
       }
@@ -352,7 +365,7 @@ export function InvestmentWizard({
       </div>
 
       {form.distributionFrequency === "custom" ? (
-        <div className="space-y-2 rounded-lg border p-3">
+        <div className="space-y-2 rounded-xl border border-border/50 p-4">
           <div className="flex items-center justify-between">
             <Label>{t("investment.customSchedule")}</Label>
             <Button
@@ -463,7 +476,7 @@ export function InvestmentWizard({
       </div>
 
       {preview ? (
-        <div className="rounded-lg border p-3">
+        <div className="rounded-xl border border-border/50 p-4">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-sm font-medium">{t("investment.schedulePreview")}</div>
             <div className="text-xs text-muted-foreground">

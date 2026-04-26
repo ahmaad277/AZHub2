@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { CheckCircle2, Undo2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { TablePagination } from "@/components/table-pagination";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney } from "@/lib/finance/money";
@@ -35,11 +36,14 @@ interface CashflowsResponse {
   summary: CashflowsSummary;
 }
 
+const PAGE_SIZE = 50;
+
 export default function CashflowsPage() {
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
   const [status, setStatus] = React.useState<"all" | "pending" | "received">("pending");
+  const [page, setPage] = React.useState(1);
 
   const { data } = useQuery<Row[] | CashflowsResponse>({
     queryKey: ["cashflows", platformFilter, status],
@@ -51,19 +55,41 @@ export default function CashflowsPage() {
     },
   });
 
-  const rows = Array.isArray(data) ? data : (data?.rows ?? []);
+  const rows = React.useMemo(
+    () => (Array.isArray(data) ? data : (data?.rows ?? [])),
+    [data],
+  );
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const paginatedRows = React.useMemo(
+    () => rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [page, rows],
+  );
   const total = Array.isArray(data)
     ? rows.reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
     : (data?.summary.totalAmount ?? 0);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [platformFilter, status]);
+
+  React.useEffect(() => {
+    setPage((current) => Math.min(current, pageCount));
+  }, [pageCount]);
 
   const markReceived = async (id: string) => {
     try {
       await api.patch(`/api/cashflows/${id}/receive`, {});
       toast.success(t("common.markReceived"));
       await Promise.all(
-        ["cashflows", "cashflows-upcoming", "metrics", "investments", "cashTxs", "alerts"].map(
-          (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
-        ),
+        [
+          "cashflows",
+          "cashflows-upcoming",
+          "cashflows-monthly-summary",
+          "dashboard-metrics",
+          "investments",
+          "cashTxs",
+          "alerts",
+        ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
       );
     } catch (e) {
       toast.error((e as Error).message);
@@ -74,9 +100,15 @@ export default function CashflowsPage() {
     try {
       await api.del(`/api/cashflows/${id}/receive`);
       await Promise.all(
-        ["cashflows", "cashflows-upcoming", "metrics", "investments", "cashTxs", "alerts"].map(
-          (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
-        ),
+        [
+          "cashflows",
+          "cashflows-upcoming",
+          "cashflows-monthly-summary",
+          "dashboard-metrics",
+          "investments",
+          "cashTxs",
+          "alerts",
+        ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
       );
     } catch (e) {
       toast.error((e as Error).message);
@@ -86,13 +118,13 @@ export default function CashflowsPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1 rounded-lg border p-1 text-xs">
+        <div className="flex items-center gap-1 rounded-full bg-muted/30 p-1 text-xs">
           {(["pending", "received", "all"] as const).map((s) => (
             <button
               key={s}
               className={cn(
-                "rounded px-3 py-1.5",
-                status === s ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+                "rounded-full px-4 py-1.5 transition-all font-medium",
+                status === s ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
               )}
               onClick={() => setStatus(s)}
             >
@@ -105,23 +137,27 @@ export default function CashflowsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border">
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <table className="w-full text-sm">
-          <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/50">
             <tr>
-              <th className="p-3 text-start">{t("form.date")}</th>
-              <th className="p-3 text-start">{t("nav.investments")}</th>
-              <th className="p-3 text-start">{t("form.type")}</th>
-              <th className="p-3 text-end">{t("form.amount")}</th>
-              <th className="p-3 text-start">{t("common.status")}</th>
-              <th className="p-3"></th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.date")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("nav.investments")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.type")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("form.amount")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("common.status")}</th>
+              <th className="p-3 sm:px-4 sm:py-3"></th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} className="border-t hover:bg-muted/30">
-                <td className="p-3">{formatDate(r.dueDate, dateLocale)}</td>
-                <td className="p-3">
+            {paginatedRows.map((r) => (
+              <tr key={r.id} className="border-t border-border/50 hover:bg-muted/30 transition-colors group relative cursor-pointer" onClick={() => markReceived(r.id)}>
+                {/* Decorative hover effect indicator */}
+                <td className="p-0 w-0 relative">
+                  <div className="absolute inset-y-0 start-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center" />
+                </td>
+                <td className="p-3 sm:px-4 sm:py-3">{formatDate(r.dueDate, dateLocale)}</td>
+                <td className="p-3 sm:px-4 sm:py-3">
                   <div>{r.investment.name}</div>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <span
@@ -135,20 +171,20 @@ export default function CashflowsPage() {
                     {r.investment.platform?.name}
                   </div>
                 </td>
-                <td className="p-3">
+                <td className="p-3 sm:px-4 sm:py-3">
                   <Badge variant={r.type === "profit" ? "default" : "secondary"}>
                     {r.type}
                   </Badge>
                 </td>
-                <td className="p-3 text-end font-semibold tabular-nums">
-                  {formatMoney(r.amount, settings.currency)}
+                <td className="p-3 sm:px-4 sm:py-3 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
+                  +{formatMoney(r.amount, settings.currency)}
                 </td>
-                <td className="p-3">
+                <td className="p-3 sm:px-4 sm:py-3">
                   <Badge variant={r.status === "received" ? "success" : "outline"}>
                     {t(`status.${r.status}`)}
                   </Badge>
                 </td>
-                <td className="p-3 text-end">
+                <td className="p-3 sm:px-4 sm:py-3 text-end">
                   {r.status === "pending" ? (
                     <Button size="sm" variant="outline" onClick={() => markReceived(r.id)}>
                       <CheckCircle2 className="me-1 h-4 w-4" />
@@ -173,6 +209,8 @@ export default function CashflowsPage() {
           </tbody>
         </table>
       </div>
+
+      <TablePagination page={page} pageCount={pageCount} onPageChange={setPage} />
     </div>
   );
 }

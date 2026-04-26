@@ -12,14 +12,20 @@ import { asc, desc, eq, inArray } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
+function parseLimit(value: string | null) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, 100) : undefined;
+}
+
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
     await requireOwner();
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const needsReviewOnly = searchParams.get("needsReview") === "true";
+    const limit = parseLimit(searchParams.get("limit"));
 
-    const rows = await db
+    let query = db
       .select({
         investment: investments,
         platform: platforms,
@@ -31,7 +37,14 @@ export async function GET(request: NextRequest) {
           ? eq(investments.platformId, platformId)
           : undefined,
       )
-      .orderBy(desc(investments.createdAt));
+      .orderBy(desc(investments.createdAt))
+      .$dynamic();
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const rows = await query;
 
     const ids = rows.map((r) => r.investment.id);
     const cfs = ids.length

@@ -4,18 +4,18 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%; /* #F7F8FA */
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
+    --primary: 234 60% 60%; /* Indigo #5E6AD2 */
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 25% 65%; /* #94A3B8 */
     --accent: 210 40% 96%;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
@@ -24,21 +24,21 @@
     --success-foreground: 210 40% 98%;
     --warning: 38 92% 50%;
     --warning-foreground: 222 47% 11%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --radius: 0.75rem;
+    --border: 210 16% 93%; /* #EBECEF */
+    --input: 210 16% 93%;
+    --ring: 234 60% 60%;
+    --radius: 0.75rem; /* 12px */
   }
 
   .dark {
-    --background: 222 47% 6%;
+    --background: 215 21% 11%; /* #161B22 */
     --foreground: 210 40% 98%;
-    --card: 222 47% 8%;
+    --card: 215 21% 14%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
+    --popover: 215 21% 14%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 234 60% 60%;
+    --primary-foreground: 210 40% 98%;
     --secondary: 217 33% 15%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 15%;
@@ -53,7 +53,7 @@
     --warning-foreground: 222 47% 11%;
     --border: 217 33% 18%;
     --input: 217 33% 18%;
-    --ring: 217 91% 60%;
+    --ring: 234 60% 60%;
   }
 }
 
@@ -93,5 +93,18 @@
   }
   .tabular-nums {
     font-variant-numeric: tabular-nums;
+  }
+  @media (orientation: landscape) and (max-height: 500px) {
+    .recharts-legend-item-text {
+      display: none !important;
+    }
+    .recharts-default-legend {
+      display: flex !important;
+      justify-content: center !important;
+      flex-wrap: wrap !important;
+    }
+    .recharts-legend-item {
+      margin-right: 8px !important;
+    }
   }
 }

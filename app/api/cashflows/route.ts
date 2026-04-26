@@ -8,6 +8,11 @@ import { sumMoney } from "@/lib/finance/money";
 
 export const dynamic = "force-dynamic";
 
+function parseLimit(value: string | null) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, 100) : undefined;
+}
+
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
     await requireOwner();
@@ -16,6 +21,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status"); // pending | received | all
     const from = searchParams.get("from");
     const to = searchParams.get("to");
+    const limit = parseLimit(searchParams.get("limit"));
 
     const conds: any[] = [];
     if (status && status !== "all") conds.push(eq(cashflows.status, status as any));
@@ -25,7 +31,7 @@ export async function GET(request: NextRequest) {
       conds.push(eq(investments.platformId, platformId));
     }
 
-    const rows = await db
+    let query = db
       .select({
         cashflow: cashflows,
         investment: investments,
@@ -35,7 +41,14 @@ export async function GET(request: NextRequest) {
       .innerJoin(investments, eq(cashflows.investmentId, investments.id))
       .leftJoin(platforms, eq(platforms.id, investments.platformId))
       .where(conds.length ? and(...conds) : undefined)
-      .orderBy(asc(cashflows.dueDate));
+      .orderBy(asc(cashflows.dueDate))
+      .$dynamic();
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const rows = await query;
 
     const normalizedRows = rows.map((r) => ({
       ...r.cashflow,

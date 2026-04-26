@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { TablePagination } from "@/components/table-pagination";
 import {
   Select,
   SelectContent,
@@ -51,6 +52,7 @@ interface CashTransactionsResponse {
 }
 
 const NO_PLATFORM = "__none__";
+const PAGE_SIZE = 50;
 
 export default function WalletPage() {
   const { t, settings, platformFilter } = useApp();
@@ -62,10 +64,12 @@ export default function WalletPage() {
   const [platformId, setPlatformId] = React.useState(NO_PLATFORM);
   const [date, setDate] = React.useState(String(new Date().toISOString()).slice(0, 10));
   const [notes, setNotes] = React.useState("");
+  const [page, setPage] = React.useState(1);
 
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms"),
+    staleTime: 5 * 60_000,
   });
 
   const { data } = useQuery<TxRow[] | CashTransactionsResponse>({
@@ -78,7 +82,15 @@ export default function WalletPage() {
       ),
   });
 
-  const txs = Array.isArray(data) ? data : (data?.rows ?? []);
+  const txs = React.useMemo(
+    () => (Array.isArray(data) ? data : (data?.rows ?? [])),
+    [data],
+  );
+  const pageCount = Math.max(1, Math.ceil(txs.length / PAGE_SIZE));
+  const paginatedTxs = React.useMemo(
+    () => txs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [page, txs],
+  );
   const balance = Array.isArray(data)
     ? txs.reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
     : (data?.summary.balance ?? 0);
@@ -98,6 +110,14 @@ export default function WalletPage() {
         .reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
     : (data?.summary.receipts ?? 0);
 
+  React.useEffect(() => {
+    setPage(1);
+  }, [platformFilter]);
+
+  React.useEffect(() => {
+    setPage((current) => Math.min(current, pageCount));
+  }, [pageCount]);
+
   const submit = async () => {
     try {
       await api.post("/api/cash-transactions", {
@@ -112,9 +132,15 @@ export default function WalletPage() {
       setAmount("");
       setNotes("");
       await Promise.all(
-        ["cashTxs", "metrics", "investments", "cashflows", "cashflows-upcoming", "alerts"].map(
-          (queryKey) => qc.invalidateQueries({ queryKey: [queryKey] }),
-        ),
+        [
+          "cashTxs",
+          "dashboard-metrics",
+          "investments",
+          "cashflows",
+          "cashflows-upcoming",
+          "cashflows-monthly-summary",
+          "alerts",
+        ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
       );
     } catch (e) {
       toast.error((e as Error).message);
@@ -137,22 +163,22 @@ export default function WalletPage() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border">
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
         <table className="w-full text-sm">
-          <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/50">
             <tr>
-              <th className="p-3 text-start">{t("form.date")}</th>
-              <th className="p-3 text-start">{t("form.type")}</th>
-              <th className="p-3 text-start">{t("form.platform")}</th>
-              <th className="p-3 text-start">{t("form.notes")}</th>
-              <th className="p-3 text-end">{t("form.amount")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-start">{t("form.date")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-start">{t("form.type")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-start">{t("form.platform")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-start">{t("form.notes")}</th>
+              <th className="p-3 sm:px-4 sm:py-3 sm:px-4 sm:py-3 text-end">{t("form.amount")}</th>
             </tr>
           </thead>
           <tbody>
-            {txs.map((tx) => (
-              <tr key={tx.id} className="border-t">
-                <td className="p-3">{formatDate(tx.date, dateLocale)}</td>
-                <td className="p-3">
+            {paginatedTxs.map((tx) => (
+              <tr key={tx.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors last:border-0">
+                <td className="p-3 sm:px-4 sm:py-3">{formatDate(tx.date, dateLocale)}</td>
+                <td className="p-3 sm:px-4 sm:py-3">
                   <Badge
                     variant={
                       tx.type === "deposit" || tx.type === "cashflow_receipt"
@@ -163,7 +189,7 @@ export default function WalletPage() {
                     {tx.type}
                   </Badge>
                 </td>
-                <td className="p-3 text-muted-foreground">
+                <td className="p-3 sm:px-4 sm:py-3 text-muted-foreground">
                   {tx.platform ? (
                     <span className="inline-flex items-center gap-1.5">
                       <span
@@ -179,7 +205,7 @@ export default function WalletPage() {
                     "—"
                   )}
                 </td>
-                <td className="p-3 text-muted-foreground">{tx.notes ?? "—"}</td>
+                <td className="p-3 sm:px-4 sm:py-3 text-muted-foreground">{tx.notes ?? "—"}</td>
                 <td
                   className={`p-3 text-end font-semibold tabular-nums ${
                     Number(tx.amount) >= 0
@@ -201,6 +227,8 @@ export default function WalletPage() {
           </tbody>
         </table>
       </div>
+
+      <TablePagination page={page} pageCount={pageCount} onPageChange={setPage} />
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
