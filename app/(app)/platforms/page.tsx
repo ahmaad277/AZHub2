@@ -107,7 +107,7 @@ export default function PlatformsPage() {
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {data.map((p) => (
-          <div key={p.id} className="rounded-xl border p-5">
+          <div key={p.id} className="rounded-2xl border p-5">
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">

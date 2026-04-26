@@ -49,7 +49,7 @@ export default function SharePage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
       <div className="mb-8 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
           <Sparkles className="h-6 w-6" />
         </div>
         <h1 className="mt-4 text-2xl font-bold">{t("share.title")}</h1>
@@ -59,13 +59,13 @@ export default function SharePage() {
       </div>
 
       {state === "loading" ? (
-        <div className="rounded-xl border p-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-2xl border p-8 text-center text-sm text-muted-foreground">
           {t("common.loading")}
         </div>
       ) : null}
 
       {state === "invalid" ? (
-        <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-8 text-center">
+        <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-8 text-center">
           <AlertCircle className="mx-auto h-6 w-6 text-destructive" />
           <div className="mt-2 font-semibold">{t("share.expired")}</div>
           {error ? (
@@ -75,7 +75,7 @@ export default function SharePage() {
       ) : null}
 
       {state === "ready" && meta ? (
-        <div className="rounded-xl border bg-card/50 p-5">
+        <div className="rounded-2xl border bg-card/50 p-5">
           <div className="mb-4 text-xs text-muted-foreground">
             Link: <span className="font-semibold">{meta.label}</span>
             {meta.expiresAt
@@ -101,7 +101,7 @@ export default function SharePage() {
       ) : null}
 
       {state === "done" ? (
-        <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-10 text-center">
+        <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/5 p-10 text-center">
           <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-500" />
           <div className="mt-3 text-lg font-semibold">{t("share.submitted")}</div>
         </div>

@@ -127,7 +127,7 @@ function ReportCard({
   label: string;
 }) {
   return (
-    <div className="rounded-xl border p-5">
+    <div className="rounded-2xl border p-5">
       <div className="flex items-center gap-2 text-primary">{icon}</div>
       <div className="mt-3 text-lg font-semibold">{title}</div>
       <p className="mt-1 text-sm text-muted-foreground">{description}</p>

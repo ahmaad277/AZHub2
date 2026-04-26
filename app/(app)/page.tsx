@@ -279,7 +279,7 @@ export default function DashboardPage() {
             breakdown.map((b) => (
               <div
                 key={b.platformId}
-                className="rounded-xl border border-border/50 bg-card p-4 text-card-foreground shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]"
+                className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-border/80"
                 style={{
                   borderInlineStartWidth: 4,
                   borderInlineStartColor: getPlatformColorOption(b.platformColor).chartColor,
@@ -340,7 +340,7 @@ export default function DashboardPage() {
             <Link
               key={inv.id}
               href={`/investments?id=${inv.id}`}
-              className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-3 text-card-foreground shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]"
+              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-border/80"
               style={{
                 borderInlineStartWidth: 4,
                 borderInlineStartColor: getPlatformColorOption(inv.platform?.color).chartColor,
@@ -404,7 +404,7 @@ export default function DashboardPage() {
           {cfs.slice(0, 6).map((cf) => (
             <div
               key={cf.id}
-              className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-3 text-card-foreground shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]"
+              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-border/80"
               style={{
                 borderInlineStartWidth: 4,
                 borderInlineStartColor: getPlatformColorOption(cf.investment.platform?.color).chartColor,
@@ -440,10 +440,10 @@ function DashboardChartsSkeleton() {
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <Skeleton className="h-56 rounded-xl" />
-        <Skeleton className="h-56 rounded-xl" />
+        <Skeleton className="h-56 rounded-2xl" />
+        <Skeleton className="h-56 rounded-2xl" />
       </div>
-      <Skeleton className="h-96 rounded-xl" />
+      <Skeleton className="h-96 rounded-2xl" />
     </>
   );
 }
@@ -490,7 +490,7 @@ function VisionProgress({ nav }: { nav: number }) {
 function ForecastCard({ label, value }: { label: string; value: number }) {
   const { settings } = useApp();
   return (
-    <div className="rounded-xl border border-border/50 bg-card p-4 text-card-foreground shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
+    <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
       <div className="text-xs font-medium uppercase text-muted-foreground">{label}</div>
       <div className="mt-1 text-xl font-semibold tabular-nums text-primary">
         {formatMoney(value, settings.currency)}

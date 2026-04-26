@@ -137,27 +137,23 @@ export default function CashflowsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
+      <div className="overflow-hidden bg-transparent">
         <table className="w-full text-sm">
-          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/50">
+          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
             <tr>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.date")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("nav.investments")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.type")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("form.amount")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("common.status")}</th>
-              <th className="p-3 sm:px-4 sm:py-3"></th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.date")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("nav.investments")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.type")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.amount")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("common.status")}</th>
+              <th className="p-4 sm:px-6 sm:py-5"></th>
             </tr>
           </thead>
           <tbody>
             {paginatedRows.map((r) => (
-              <tr key={r.id} className="border-t border-border/50 hover:bg-muted/30 transition-colors group relative cursor-pointer" onClick={() => markReceived(r.id)}>
-                {/* Decorative hover effect indicator */}
-                <td className="p-0 w-0 relative">
-                  <div className="absolute inset-y-0 start-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center" />
-                </td>
-                <td className="p-3 sm:px-4 sm:py-3">{formatDate(r.dueDate, dateLocale)}</td>
-                <td className="p-3 sm:px-4 sm:py-3">
+              <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0 cursor-pointer" onClick={() => markReceived(r.id)}>
+                <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.dueDate, dateLocale)}</td>
+                <td className="p-4 sm:px-6 sm:py-5">
                   <div>{r.investment.name}</div>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <span
@@ -171,20 +167,20 @@ export default function CashflowsPage() {
                     {r.investment.platform?.name}
                   </div>
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3">
+                <td className="p-4 sm:px-6 sm:py-5">
                   <Badge variant={r.type === "profit" ? "default" : "secondary"}>
                     {r.type}
                   </Badge>
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
+                <td className="p-4 sm:px-6 sm:py-5 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
                   +{formatMoney(r.amount, settings.currency)}
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3">
+                <td className="p-4 sm:px-6 sm:py-5">
                   <Badge variant={r.status === "received" ? "success" : "outline"}>
                     {t(`status.${r.status}`)}
                   </Badge>
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-end">
+                <td className="p-4 sm:px-6 sm:py-5 text-end">
                   {r.status === "pending" ? (
                     <Button size="sm" variant="outline" onClick={() => markReceived(r.id)}>
                       <CheckCircle2 className="me-1 h-4 w-4" />

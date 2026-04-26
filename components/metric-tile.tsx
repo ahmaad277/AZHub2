@@ -52,7 +52,7 @@ export function MetricTile({
   return (
     <div
       className={cn(
-        "rounded-xl border border-border/50 bg-card p-4 sm:p-5 text-card-foreground shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05),_0_8px_24px_-8px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08),_0_12px_32px_-8px_rgba(0,0,0,0.08)]",
+        "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-border/80",
         className,
       )}
     >

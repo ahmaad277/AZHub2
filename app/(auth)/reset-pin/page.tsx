@@ -82,7 +82,7 @@ function ResetPinForm() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-lg">
         <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary">
             <Sparkles className="h-6 w-6" />
           </div>
           <div className="space-y-1">
@@ -140,7 +140,7 @@ function ResetPinFallback() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-lg">
         <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary">
             <Sparkles className="h-6 w-6" />
           </div>
           <div className="space-y-1">

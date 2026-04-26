@@ -183,28 +183,24 @@ export default function InvestmentsPage() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)]">
+      <div className="rounded-2xl border border-border/40 bg-card shadow-sm">
         <table className="w-full text-sm">
-          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/50">
+          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
             <tr>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.name")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.platform")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("form.principalAmount")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("form.expectedProfit")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-end">{t("metric.realizedGains")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("form.endDate")}</th>
-              <th className="p-3 sm:px-4 sm:py-3 text-start">{t("common.status")}</th>
-              <th className="p-3 sm:px-4 sm:py-3"></th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.name")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.platform")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.principalAmount")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.expectedProfit")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("metric.realizedGains")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.endDate")}</th>
+              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("common.status")}</th>
+              <th className="p-4 sm:px-6 sm:py-5"></th>
             </tr>
           </thead>
           <tbody>
             {paginated.map((r) => (
-              <tr key={r.id} className="border-t border-border/50 hover:bg-muted/30 transition-colors group relative">
-                {/* Decorative hover effect indicator */}
-                <td className="p-0 w-0 relative">
-                  <div className="absolute inset-y-0 start-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform origin-center" />
-                </td>
-                <td className="p-3 sm:px-4 sm:py-3">
+              <tr key={r.id} className="border-t border-border/40 hover:bg-muted/30 transition-colors">
+                <td className="p-4 sm:px-6 sm:py-5">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{r.name}</span>
                     {r.needsReview ? (
@@ -214,7 +210,7 @@ export default function InvestmentsPage() {
                     ) : null}
                   </div>
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-muted-foreground">
+                <td className="p-4 sm:px-6 sm:py-5 text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
                     <span
                       aria-hidden="true"
@@ -224,17 +220,17 @@ export default function InvestmentsPage() {
                     {r.platform?.name}
                   </span>
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-end font-semibold tabular-nums">
+                <td className="p-4 sm:px-6 sm:py-5 text-end font-semibold tabular-nums">
                   {formatMoney(r.principalAmount, settings.currency)}
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-end tabular-nums">
+                <td className="p-4 sm:px-6 sm:py-5 text-end tabular-nums">
                   {formatMoney(r.expectedProfit, settings.currency)}
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-end tabular-nums text-[hsl(var(--success))]">
+                <td className="p-4 sm:px-6 sm:py-5 text-end tabular-nums text-[hsl(var(--success))]">
                   {formatMoney(r.realizedProfit, settings.currency)}
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3">{formatDate(r.endDate, dateLocale)}</td>
-                <td className="p-3 sm:px-4 sm:py-3">
+                <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.endDate, dateLocale)}</td>
+                <td className="p-4 sm:px-6 sm:py-5">
                   <div className="inline-flex items-center gap-2">
                     <Badge variant={STATUS_VARIANTS[r.derivedStatus]}>
                       {t(`status.${r.derivedStatus}`)}
@@ -245,7 +241,7 @@ export default function InvestmentsPage() {
                     />
                   </div>
                 </td>
-                <td className="p-3 sm:px-4 sm:py-3 text-end">
+                <td className="p-4 sm:px-6 sm:py-5 text-end">
                   <div className="flex justify-end gap-1">
                     <Button
                       variant="ghost"
