@@ -9,8 +9,10 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { cashTransactions, cashflows, investments } from "@/db/schema";
-import { handleRoute, jsonError } from "@/lib/api";
+import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
+import { daysBetween } from "@/lib/finance/date-smart";
+import { classifyResolvedIssueDays } from "@/lib/finance/status-resolver";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -74,6 +76,44 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
         date: receivedDate,
       });
 
+      const investmentCashflows = await tx
+        .select({
+          dueDate: cashflows.dueDate,
+          type: cashflows.type,
+          status: cashflows.status,
+          receivedDate: cashflows.receivedDate,
+        })
+        .from(cashflows)
+        .where(eq(cashflows.investmentId, cf.investmentId));
+
+      const isCompleted = investmentCashflows.every((row) => row.status === "received");
+      if (isCompleted) {
+        const resolvedPrincipalIssue = investmentCashflows
+          .filter((row) => row.type === "principal" && row.receivedDate)
+          .map((row) => ({
+            days: daysBetween(row.dueDate, row.receivedDate as Date),
+            resolvedAt: row.receivedDate as Date,
+          }))
+          .filter((row) => row.days > 0)
+          .sort((a, b) => b.days - a.days)[0];
+
+        const resolvedIssueStatus = resolvedPrincipalIssue
+          ? classifyResolvedIssueDays(resolvedPrincipalIssue.days)
+          : null;
+
+        await tx
+          .update(investments)
+          .set({
+            resolvedIssueStatus,
+            resolvedIssueDays: resolvedIssueStatus ? resolvedPrincipalIssue.days : null,
+            resolvedIssueResolvedAt: resolvedIssueStatus
+              ? resolvedPrincipalIssue.resolvedAt
+              : null,
+            updatedAt: new Date(),
+          })
+          .where(eq(investments.id, cf.investmentId));
+      }
+
       return { ok: true };
     });
   });
@@ -100,6 +140,17 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
         .update(cashflows)
         .set({ status: "pending", receivedDate: null })
         .where(eq(cashflows.id, id));
+      if (cf.type === "principal") {
+        await tx
+          .update(investments)
+          .set({
+            resolvedIssueStatus: null,
+            resolvedIssueDays: null,
+            resolvedIssueResolvedAt: null,
+            updatedAt: new Date(),
+          })
+          .where(eq(investments.id, cf.investmentId));
+      }
       return { ok: true };
     });
   });

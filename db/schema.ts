@@ -179,6 +179,13 @@ export const investments = pgTable(
       .notNull()
       .default(false),
     needsReview: boolean("needs_review").notNull().default(false),
+    resolvedIssueStatus: text("resolved_issue_status").$type<
+      "late" | "defaulted" | null
+    >(),
+    resolvedIssueDays: integer("resolved_issue_days"),
+    resolvedIssueResolvedAt: timestamp("resolved_issue_resolved_at", {
+      withTimezone: true,
+    }),
     sourceShareLinkId: text("source_share_link_id"), // if created via share link
     tags: jsonb("tags").$type<string[] | null>(),
     notes: text("notes"),
@@ -207,6 +214,14 @@ export const investments = pgTable(
     datesCoherent: check(
       "investments_dates_coherent",
       sql`${t.endDate} > ${t.startDate}`,
+    ),
+    resolvedIssueStatusValid: check(
+      "investments_resolved_issue_status_valid",
+      sql`${t.resolvedIssueStatus} IS NULL OR ${t.resolvedIssueStatus} IN ('late', 'defaulted')`,
+    ),
+    resolvedIssueCoherent: check(
+      "investments_resolved_issue_coherent",
+      sql`(${t.resolvedIssueStatus} IS NULL AND ${t.resolvedIssueDays} IS NULL AND ${t.resolvedIssueResolvedAt} IS NULL) OR (${t.resolvedIssueStatus} IS NOT NULL AND ${t.resolvedIssueDays} > 0 AND ${t.resolvedIssueResolvedAt} IS NOT NULL)`,
     ),
   }),
 );

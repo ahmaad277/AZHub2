@@ -27,6 +27,11 @@ import {
 } from "@/db/schema";
 import { daysBetween } from "./date-smart";
 import { roundToMoney, sumMoney } from "./money";
+import {
+  DEFAULT_GRACE_DAYS,
+  classifyResolvedIssueDays,
+  getPrincipalOverdueDays,
+} from "./status-resolver";
 
 export interface DashboardMetrics {
   totalCashBalance: number;
@@ -56,7 +61,7 @@ export interface MetricsOptions {
   platformId?: string;
   /** Override "now" for deterministic tests. */
   now?: Date;
-  /** Grace period before an overdue pending cashflow counts as default. */
+  /** Grace period before overdue pending principal counts as defaulted. */
   graceDays?: number;
 }
 
@@ -80,7 +85,7 @@ export async function getDashboardMetrics(
   options: MetricsOptions = {},
 ): Promise<DashboardMetrics> {
   const now = options.now ?? new Date();
-  const graceDays = options.graceDays ?? 90;
+  const graceDays = options.graceDays ?? DEFAULT_GRACE_DAYS;
   const platformId = options.platformId;
 
   // Load investments (optionally scoped to platform).
@@ -139,29 +144,24 @@ export async function getDashboardMetrics(
   // Compute per-investment derived status + overdue days.
   const computed: InvestmentComputedRow[] = investmentRows.map((i) => {
     const cfs = cfByInvestment.get(i.id) ?? [];
-    let maxOverdue = 0;
     let pendingCount = 0;
     let receivedCount = 0;
     for (const cf of cfs) {
       if (cf.status === "pending") {
         pendingCount++;
-        if (cf.dueDate.getTime() < now.getTime()) {
-          const d = daysBetween(cf.dueDate, now);
-          if (d > maxOverdue) maxOverdue = d;
-        }
       } else {
         receivedCount++;
       }
     }
+    const maxOverdue = getPrincipalOverdueDays(cfs, now);
+    const resolvedIssueStatus = classifyResolvedIssueDays(maxOverdue, graceDays);
     let derived: DerivedStatus;
     if (cfs.length === 0 && i.endDate.getTime() < now.getTime()) {
       derived = "completed";
     } else if (pendingCount === 0 && receivedCount > 0) {
       derived = "completed";
-    } else if (maxOverdue > graceDays) {
-      derived = "defaulted";
-    } else if (maxOverdue > 0) {
-      derived = "late";
+    } else if (resolvedIssueStatus) {
+      derived = resolvedIssueStatus;
     } else {
       derived = "active";
     }

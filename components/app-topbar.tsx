@@ -4,7 +4,7 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Languages, Gauge, Menu, LogOut, SlidersHorizontal } from "lucide-react";
+import { Moon, Sun, Languages, Gauge, Menu, LogOut, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -61,14 +61,14 @@ export function AppTopbar() {
           <Menu className="h-4 w-4" />
         </Button>
 
-        <div className="w-9 shrink-0 lg:w-auto lg:min-w-[10rem] lg:max-w-[14rem]">
+        <div className="w-9 shrink-0 md:w-auto md:min-w-[10rem] md:max-w-[14rem]">
           <Select value={platformFilter} onValueChange={setPlatformFilter}>
             <SelectTrigger
-              className="h-9 w-9 justify-center px-0 lg:w-auto lg:justify-between lg:px-3 [&>svg:last-child]:hidden lg:[&>svg:last-child]:block"
+              className="h-9 w-9 justify-center px-0 md:w-auto md:justify-between md:px-3 [&>svg:last-child]:hidden md:[&>svg:last-child]:block"
               aria-label={t("form.platform")}
             >
-              <SlidersHorizontal className="h-4 w-4 lg:hidden" />
-              <span className="hidden lg:contents">
+              <Filter className="h-4 w-4 md:hidden" />
+              <span className="hidden md:contents">
                 <SelectValue placeholder={t("dash.allPlatforms")} />
               </span>
             </SelectTrigger>

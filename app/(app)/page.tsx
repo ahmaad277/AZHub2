@@ -30,6 +30,7 @@ import {
 } from "recharts";
 import { MetricTile } from "@/components/metric-tile";
 import { useApp } from "@/components/providers";
+import { ResolvedIssueBadge } from "@/components/resolved-issue-badge";
 import { api } from "@/lib/fetcher";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
 import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
@@ -67,6 +68,8 @@ interface InvestmentRow {
   endDate: string;
   derivedStatus: "active" | "late" | "defaulted" | "completed";
   needsReview: boolean;
+  resolvedIssueStatus?: "late" | "defaulted" | null;
+  resolvedIssueDays?: number | null;
   platform?: { name: string; color?: string | null } | null;
 }
 
@@ -368,6 +371,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {inv.platform?.name} · {t(`status.${inv.derivedStatus}`)}
+                    <ResolvedIssueBadge
+                      status={inv.resolvedIssueStatus}
+                      days={inv.resolvedIssueDays}
+                      className="ms-1"
+                    />
                   </div>
                 </div>
               </div>
@@ -712,7 +720,9 @@ function MonthlyCashflowChart({
     }
     return item;
   });
-  const chartWidth = Math.max(640, rows.length * 72);
+  const isRtl = settings.language === "ar";
+  const visualChartRows = isRtl ? [...chartRows].reverse() : chartRows;
+  const chartWidth = Math.max(640, rows.length * 18);
 
   return (
     <div className="rounded-xl border p-4">
@@ -725,10 +735,10 @@ function MonthlyCashflowChart({
           {t("common.empty")}
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <div style={{ minWidth: chartWidth }} className="h-80">
+        <div className="overflow-x-auto" dir={isRtl ? "rtl" : "ltr"}>
+          <div style={{ minWidth: chartWidth }} className="h-80" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartRows}>
+              <BarChart data={visualChartRows} barSize={14} barCategoryGap={4}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis

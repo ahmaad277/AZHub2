@@ -58,7 +58,7 @@ export function AppSidebar({ mobile = false, onNavigate }: AppSidebarProps) {
         </div>
         <div className="leading-tight">
           <div className="text-sm font-semibold">{t("app.name")}</div>
-          <div className="text-xs text-muted-foreground">v2.0</div>
+          <div className="text-xs text-muted-foreground">v2.1</div>
         </div>
       </div>
 

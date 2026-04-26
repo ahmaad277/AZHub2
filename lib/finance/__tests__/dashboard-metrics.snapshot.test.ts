@@ -361,7 +361,7 @@ describe("getDashboardMetrics snapshots", () => {
     expect(metrics).toMatchInlineSnapshot(`
       {
         "activeAnnualYieldPercent": 42.58,
-        "activeCount": 1,
+        "activeCount": 2,
         "activePrincipal": 3000,
         "cashDragPercent": 21.05,
         "completedCount": 1,
@@ -371,7 +371,7 @@ describe("getDashboardMetrics snapshots", () => {
         "expectedInflow60d": 60,
         "expectedInflow90d": 2060,
         "generatedAt": "2026-01-15T00:00:00.000Z",
-        "lateCount": 1,
+        "lateCount": 0,
         "nav": 3800,
         "nextPayment": {
           "amount": 30,

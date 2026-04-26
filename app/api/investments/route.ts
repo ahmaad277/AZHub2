@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
         cashflows: theseCfs.map((c) => ({
           status: c.status as "pending" | "received",
           dueDate: c.dueDate,
+          type: c.type as "profit" | "principal",
         })),
       });
       const received = theseCfs.filter(

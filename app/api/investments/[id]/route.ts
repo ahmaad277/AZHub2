@@ -49,6 +49,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
       cashflows: cfs.map((c) => ({
         status: c.status as "pending" | "received",
         dueDate: c.dueDate,
+        type: c.type as "profit" | "principal",
       })),
     });
     return {

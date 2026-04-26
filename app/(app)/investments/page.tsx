@@ -9,6 +9,7 @@ import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ResolvedIssueBadge } from "@/components/resolved-issue-badge";
 import {
   Dialog,
   DialogContent,
@@ -48,6 +49,8 @@ interface Row {
     | "custom";
   derivedStatus: "active" | "late" | "defaulted" | "completed";
   needsReview: boolean;
+  resolvedIssueStatus?: "late" | "defaulted" | null;
+  resolvedIssueDays?: number | null;
   isReinvestment: boolean;
   fundedFromCash: boolean;
   notes: string | null;
@@ -208,9 +211,15 @@ export default function InvestmentsPage() {
                 </td>
                 <td className="p-3">{formatDate(r.endDate, dateLocale)}</td>
                 <td className="p-3">
-                  <Badge variant={STATUS_VARIANTS[r.derivedStatus]}>
-                    {t(`status.${r.derivedStatus}`)}
-                  </Badge>
+                  <div className="inline-flex items-center gap-2">
+                    <Badge variant={STATUS_VARIANTS[r.derivedStatus]}>
+                      {t(`status.${r.derivedStatus}`)}
+                    </Badge>
+                    <ResolvedIssueBadge
+                      status={r.resolvedIssueStatus}
+                      days={r.resolvedIssueDays}
+                    />
+                  </div>
                 </td>
                 <td className="p-3 text-end">
                   <div className="flex justify-end gap-1">

@@ -1,4 +1,4 @@
-# A.Z Finance Hub — v2.0
+# A.Z Finance Hub — v2.1
 
 Personal Sukuk & Fixed-Income Portfolio Management System. A single-user financial command center with strict **Single Source of Truth (SSOT)** architecture, an atomic cash ledger, and computed investment statuses.
 

@@ -10,6 +10,7 @@ import type { DerivedInvestmentStatus } from "@/db/schema";
 export interface StatusInputCashflow {
   status: "pending" | "received";
   dueDate: Date;
+  type: "profit" | "principal";
 }
 
 export interface StatusInput {
@@ -22,6 +23,34 @@ export interface StatusInput {
  * "defaulted". 1..90 days overdue → "late".
  */
 export const DEFAULT_GRACE_DAYS = 90;
+
+export type ResolvedIssueStatus = "late" | "defaulted";
+
+export function classifyResolvedIssueDays(
+  days: number,
+  graceDays: number = DEFAULT_GRACE_DAYS,
+): ResolvedIssueStatus | null {
+  if (days <= 0) return null;
+  return days > graceDays ? "defaulted" : "late";
+}
+
+export function getPrincipalOverdueDays(
+  cashflows: StatusInputCashflow[],
+  now: Date,
+): number {
+  let maxOverdue = 0;
+  for (const cf of cashflows) {
+    if (
+      cf.type === "principal" &&
+      cf.status === "pending" &&
+      cf.dueDate.getTime() < now.getTime()
+    ) {
+      const d = daysBetween(cf.dueDate, now);
+      if (d > maxOverdue) maxOverdue = d;
+    }
+  }
+  return maxOverdue;
+}
 
 export function resolveStatus(
   input: StatusInput,
@@ -44,19 +73,11 @@ export function resolveStatus(
     return { status: "completed", overdueDays: 0 };
   }
 
-  let maxOverdue = 0;
-  for (const c of pending) {
-    if (c.dueDate.getTime() < now.getTime()) {
-      const d = daysBetween(c.dueDate, now);
-      if (d > maxOverdue) maxOverdue = d;
-    }
-  }
+  const maxOverdue = getPrincipalOverdueDays(cfs, now);
 
-  if (maxOverdue > graceDays) {
-    return { status: "defaulted", overdueDays: maxOverdue };
-  }
-  if (maxOverdue > 0) {
-    return { status: "late", overdueDays: maxOverdue };
+  const resolvedIssueStatus = classifyResolvedIssueDays(maxOverdue, graceDays);
+  if (resolvedIssueStatus) {
+    return { status: resolvedIssueStatus, overdueDays: maxOverdue };
   }
   return { status: "active", overdueDays: 0 };
 }

@@ -91,7 +91,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "dash.forecast": { en: "Cashflow Forecast", ar: "توقعات التدفق" },
   "dash.allPlatforms": { en: "All Platforms", ar: "كل المنصات" },
   "dash.platformDistribution": { en: "Platform Distribution", ar: "توزيع المنصات" },
-  "dash.platformStatus": { en: "Platform Status", ar: "حالة المنصات" },
+  "dash.platformStatus": { en: "Opportunities Status", ar: "حالة الفرص" },
   "dash.monthlyCashflows": { en: "Monthly Cashflows", ar: "التدفقات الشهرية" },
   "dash.monthlyCashflowsHint": {
     en: "Pending cashflows from the current month onward, stacked by platform.",
@@ -173,6 +173,14 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "investment.isReinvestment": { en: "Is reinvestment", ar: "إعادة استثمار" },
   "investment.customSchedule": { en: "Custom schedule", ar: "جدول مخصص" },
   "investment.schedulePreview": { en: "Schedule preview", ar: "معاينة الجدول" },
+  "investment.resolvedIssue.late": {
+    en: "Was late, then resolved after",
+    ar: "كانت متأخرة ثم انحلت بعد",
+  },
+  "investment.resolvedIssue.defaulted": {
+    en: "Was defaulted, then resolved after",
+    ar: "كانت متعثرة ثم انحلت بعد",
+  },
   "investments.deleteConfirm": {
     en: "Delete this investment? This will also remove related cashflows and alerts.",
     ar: "حذف هذا الاستثمار؟ سيتم أيضًا حذف التدفقات النقدية والتنبيهات المرتبطة به.",
