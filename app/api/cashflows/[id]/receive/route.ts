@@ -16,6 +16,8 @@ import { classifyResolvedIssueDays } from "@/lib/finance/status-resolver";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { revalidateTag } from "next/cache";
+
 type Ctx = { params: Promise<{ id: string }> };
 
 const bodySchema = z.object({
@@ -114,6 +116,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
           .where(eq(investments.id, cf.investmentId));
       }
 
+      revalidateTag("dashboard-metrics");
       return { ok: true };
     });
   });
@@ -151,6 +154,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
           })
           .where(eq(investments.id, cf.investmentId));
       }
+      revalidateTag("dashboard-metrics");
       return { ok: true };
     });
   });

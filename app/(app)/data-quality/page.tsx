@@ -27,6 +27,7 @@ export default function DataQualityPage() {
   const { data = [] } = useQuery<Issue[]>({
     queryKey: ["dq"],
     queryFn: () => api.get<Issue[]>("/api/data-quality/scan"),
+    staleTime: 5 * 60 * 1000,
   });
 
   const scan = async () => {

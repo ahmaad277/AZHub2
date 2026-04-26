@@ -111,6 +111,7 @@ export default function DashboardPage() {
     queryFn: () =>
       api.get<MetricsResponse>(`/api/dashboard/metrics?breakdown=true${platformQuery}`),
     placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: invsData = [], isLoading: invsLoading } = useQuery<
@@ -122,6 +123,7 @@ export default function DashboardPage() {
         `/api/investments?limit=6${platformFilter !== "all" ? `&platformId=${platformFilter}` : ""}`,
       ),
     placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: cfsData = [], isLoading: cfsLoading } = useQuery<
@@ -133,6 +135,7 @@ export default function DashboardPage() {
         `/api/cashflows?status=pending&limit=6${platformQuery}`,
       ),
     placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: monthlyData, isLoading: monthlyLoading } = useQuery<MonthlyCashflowResponse>({
@@ -142,6 +145,7 @@ export default function DashboardPage() {
         `/api/cashflows/monthly-summary${platformFilter !== "all" ? `?platformId=${platformFilter}` : ""}`,
       ),
     placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
   });
 
   const m = data?.metrics;

@@ -5,8 +5,22 @@ import {
   getDashboardMetrics,
   getPlatformBreakdown,
 } from "@/lib/finance/metrics";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = "force-dynamic";
+
+const getCachedMetrics = unstable_cache(
+  async (platformId?: string) =>
+    getDashboardMetrics({ platformId }),
+  ["dashboard-metrics"],
+  { tags: ["dashboard-metrics"], revalidate: 3600 }
+);
+
+const getCachedBreakdown = unstable_cache(
+  async () => getPlatformBreakdown(),
+  ["dashboard-breakdown"],
+  { tags: ["dashboard-metrics"], revalidate: 3600 }
+);
 
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
@@ -15,12 +29,11 @@ export async function GET(request: NextRequest) {
     const platformId = searchParams.get("platformId");
     const includeBreakdown = searchParams.get("breakdown") === "true";
 
-    const metrics = await getDashboardMetrics({
-      platformId: platformId && platformId !== "all" ? platformId : undefined,
-    });
+    const pid = platformId && platformId !== "all" ? platformId : undefined;
+    const metrics = await getCachedMetrics(pid);
 
     if (includeBreakdown) {
-      const breakdown = await getPlatformBreakdown();
+      const breakdown = await getCachedBreakdown();
       return { metrics, breakdown };
     }
     return { metrics };

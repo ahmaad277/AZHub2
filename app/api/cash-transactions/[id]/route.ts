@@ -4,6 +4,7 @@ import { cashTransactions } from "@/db/schema";
 import { handleRoute, jsonError } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -32,6 +33,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
       throw e;
     }
     await db.delete(cashTransactions).where(eq(cashTransactions.id, id));
+    revalidateTag("dashboard-metrics");
     return { ok: true };
   });
 }

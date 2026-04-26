@@ -10,6 +10,8 @@ import {
 import { resolveStatus } from "@/lib/finance/status-resolver";
 import { asc, desc, eq, inArray, sql } from "drizzle-orm";
 
+import { revalidateTag } from "next/cache";
+
 export const dynamic = "force-dynamic";
 
 function parseLimit(value: string | null) {
@@ -124,6 +126,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const input = investmentInputSchema.parse(body);
     const inv = await createInvestmentWithSchedule(input);
+    revalidateTag("dashboard-metrics");
     return inv;
   });
 }

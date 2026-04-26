@@ -94,6 +94,7 @@ export default function InvestmentsPage() {
       params.set("limit", PAGE_SIZE.toString());
       return api.get<Row[] | InvestmentsResponse>(`/api/investments?${params.toString()}`);
     },
+    staleTime: 5 * 60 * 1000,
   });
 
   const allRows = React.useMemo(

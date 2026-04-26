@@ -35,11 +35,13 @@ export default function VisionPage() {
   const { data: targets = [] } = useQuery<VisionTargetRow[]>({
     queryKey: ["visionTargets"],
     queryFn: () => api.get<VisionTargetRow[]>("/api/vision/targets"),
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: metricsResp } = useQuery<{ metrics: DashboardMetrics }>({
     queryKey: ["dashboard-metrics", "all", "summary"],
     queryFn: () => api.get<{ metrics: DashboardMetrics }>("/api/dashboard/metrics"),
+    staleTime: 5 * 60 * 1000,
   });
 
   const pageCount = Math.max(1, Math.ceil(targets.length / PAGE_SIZE));

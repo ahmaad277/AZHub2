@@ -56,6 +56,7 @@ export default function CashflowsPage() {
       params.set("limit", PAGE_SIZE.toString());
       return api.get<Row[] | CashflowsResponse>(`/api/cashflows?${params.toString()}`);
     },
+    staleTime: 5 * 60 * 1000,
   });
 
   const allRows = React.useMemo(

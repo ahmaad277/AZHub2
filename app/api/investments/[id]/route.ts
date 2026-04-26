@@ -12,6 +12,8 @@ import {
 } from "@/lib/finance/investments-service";
 import { z } from "zod";
 
+import { revalidateTag } from "next/cache";
+
 type Ctx = { params: Promise<{ id: string }> };
 
 const updateSchema = z
@@ -156,6 +158,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
           }
         }
 
+        revalidateTag("dashboard-metrics");
         return row;
       });
     }
@@ -171,6 +174,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       })
       .where(eq(investments.id, id))
       .returning();
+    revalidateTag("dashboard-metrics");
     return row;
   });
 }
@@ -180,6 +184,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await requireOwner();
     const { id } = await params;
     await db.delete(investments).where(eq(investments.id, id));
+    revalidateTag("dashboard-metrics");
     return { ok: true };
   });
 }

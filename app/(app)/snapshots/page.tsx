@@ -29,6 +29,7 @@ export default function SnapshotsPage() {
   const { data = [] } = useQuery<Snapshot[]>({
     queryKey: ["snapshots"],
     queryFn: () => api.get<Snapshot[]>("/api/snapshots"),
+    staleTime: 5 * 60 * 1000,
   });
 
   const create = async () => {

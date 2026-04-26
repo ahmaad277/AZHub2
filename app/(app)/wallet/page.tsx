@@ -80,6 +80,7 @@ export default function WalletPage() {
           platformFilter !== "all" ? `?platformId=${platformFilter}` : ""
         }`,
       ),
+    staleTime: 5 * 60 * 1000,
   });
 
   const txs = React.useMemo(
