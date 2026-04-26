@@ -53,6 +53,7 @@ interface MetricsResponse {
     investmentsCount: number;
     defaultedCount: number;
     platformColor: string | null;
+    investmentsPrincipalTotal: number;
   }>;
 }
 
@@ -111,7 +112,8 @@ export default function DashboardPage() {
     queryFn: () =>
       api.get<MetricsResponse>(`/api/dashboard/metrics?breakdown=true${platformQuery}`),
     placeholderData: (previousData) => previousData,
-    staleTime: 5 * 60 * 1000,
+    // Align with `QueryClient` default in `components/providers` (60s), not 5m — still invalidates on mutations
+    staleTime: 60_000,
   });
 
   const { data: invsData = [], isLoading: invsLoading } = useQuery<
@@ -255,6 +257,14 @@ export default function DashboardPage() {
           lateCount={m?.lateCount ?? 0}
           defaultedCount={m?.defaultedCount ?? 0}
           completedCount={m?.completedCount ?? 0}
+          principalByStatus={
+            m?.principalByStatus ?? {
+              active: 0,
+              late: 0,
+              defaulted: 0,
+              completed: 0,
+            }
+          }
         />
       )}
 

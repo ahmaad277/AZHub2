@@ -339,4 +339,19 @@ describe("getDashboardMetrics invariants", () => {
 
     expect(metrics.activeAnnualYieldPercent).toBe(expectedYield);
   });
+
+  it("partitions book principal across principalByStatus for pie weighting", async () => {
+    dbState.fixture = mediumFixture;
+    const metrics = await getDashboardMetrics({ now: NOW });
+    const bookTotal = roundToMoney(
+      mediumFixture.investments.reduce((s, inv) => s + Number(inv.principalAmount), 0),
+    );
+    const sliceSum = roundToMoney(
+      metrics.principalByStatus.active +
+        metrics.principalByStatus.late +
+        metrics.principalByStatus.defaulted +
+        metrics.principalByStatus.completed,
+    );
+    expect(sliceSum).toBe(bookTotal);
+  });
 });

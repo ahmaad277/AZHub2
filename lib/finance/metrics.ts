@@ -54,6 +54,13 @@ export interface DashboardMetrics {
   overdueBalance: number;
   nextPayment: { amount: number; dueDate: string | null; investmentId: string | null };
   generatedAt: string;
+  /** Sum of principal_amount per derived status — for dashboard pie «percent» by weight (not a canonical metric). */
+  principalByStatus: {
+    active: number;
+    late: number;
+    defaulted: number;
+    completed: number;
+  };
 }
 
 export interface MetricsOptions {
@@ -258,6 +265,17 @@ function computeMetrics(
     computed.reduce((acc, r) => acc + r.expectedProfit, 0),
   );
 
+  const sumPrincipalForStatus = (s: DerivedStatus) =>
+    roundToMoney(
+      computed.filter((r) => r.derivedStatus === s).reduce((acc, r) => acc + r.principal, 0),
+    );
+  const principalByStatus = {
+    active: sumPrincipalForStatus("active"),
+    late: sumPrincipalForStatus("late"),
+    defaulted: sumPrincipalForStatus("defaulted"),
+    completed: sumPrincipalForStatus("completed"),
+  };
+
   return {
     totalCashBalance,
     activePrincipal,
@@ -284,6 +302,7 @@ function computeMetrics(
         }
       : { amount: 0, dueDate: null, investmentId: null },
     generatedAt: now.toISOString(),
+    principalByStatus,
   };
 }
 
@@ -387,6 +406,7 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
     investmentsCount: number;
     defaultedCount: number;
     platformColor: string | null;
+    investmentsPrincipalTotal: number;
   }>;
 
   for (const p of plats) {
@@ -397,7 +417,11 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
     const platformCashRows = cashRows.filter((cr) => cr.platformId === p.id || cr.platformId === null);
 
     const m = computeMetrics(platformInvestments, platformCashflows, platformCashRows, now, graceDays);
-    
+
+    const investmentsPrincipalTotal = roundToMoney(
+      platformInvestments.reduce((acc, i) => acc + Number(i.principal), 0),
+    );
+
     results.push({
       platformId: p.id,
       platformName: p.name,
@@ -407,6 +431,7 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
       investmentsCount: m.activeCount + m.lateCount + m.defaultedCount + m.completedCount,
       defaultedCount: m.defaultedCount,
       platformColor: p.color ?? null,
+      investmentsPrincipalTotal,
     });
   }
   return results;

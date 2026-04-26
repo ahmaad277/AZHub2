@@ -32,6 +32,8 @@ export interface DashboardBreakdownRow {
   investmentsCount: number;
   defaultedCount: number;
   platformColor: string | null;
+  /** Sum of principal_amount for all investments on this platform (pie «percent» weight). */
+  investmentsPrincipalTotal: number;
 }
 
 export interface MonthlyCashflowRow {
@@ -52,6 +54,12 @@ interface DashboardChartsProps {
   lateCount: number;
   defaultedCount: number;
   completedCount: number;
+  principalByStatus: {
+    active: number;
+    late: number;
+    defaulted: number;
+    completed: number;
+  };
 }
 
 export function DashboardCharts({
@@ -61,6 +69,7 @@ export function DashboardCharts({
   lateCount,
   defaultedCount,
   completedCount,
+  principalByStatus,
 }: DashboardChartsProps) {
   const { t } = useApp();
   const platformPieData = React.useMemo(
@@ -68,7 +77,8 @@ export function DashboardCharts({
       breakdown.map((row) => ({
         id: row.platformId,
         name: row.platformName,
-        value: row.investmentsCount,
+        count: row.investmentsCount,
+        weight: row.investmentsPrincipalTotal,
         color: row.platformColor,
       })),
     [breakdown],
@@ -84,6 +94,7 @@ export function DashboardCharts({
           lateCount={lateCount}
           defaultedCount={defaultedCount}
           completedCount={completedCount}
+          principalByStatus={principalByStatus}
         />
       </div>
       <MonthlyCashflowChart rows={monthlyRows} />
@@ -180,17 +191,31 @@ function PlatformPieCard({
   data,
 }: {
   title: string;
-  data: Array<{ id: string; name: string; value: number; color: string | null }>;
+  data: Array<{
+    id: string;
+    name: string;
+    count: number;
+    weight: number;
+    color: string | null;
+  }>;
 }) {
   const { t } = useApp();
   const [mode, setMode] = React.useState<PieMode>("percent");
-  const filtered = React.useMemo(
-    () =>
-      data
-        .filter((item) => item.value > 0)
-        .map((item) => ({ ...item, fill: getPlatformColorOption(item.color).chartColor })),
-    [data],
-  );
+  const filtered = React.useMemo(() => {
+    return data
+      .map((item) => {
+        const value = mode === "percent" ? item.weight : item.count;
+        return {
+          id: item.id,
+          name: item.name,
+          count: item.count,
+          weight: item.weight,
+          value,
+          fill: getPlatformColorOption(item.color).chartColor,
+        };
+      })
+      .filter((item) => item.value > 0);
+  }, [data, mode]);
   const total = React.useMemo(
     () => filtered.reduce((sum, item) => sum + item.value, 0),
     [filtered],
@@ -267,25 +292,67 @@ function StatusPieCard({
   lateCount,
   defaultedCount,
   completedCount,
+  principalByStatus,
 }: {
   title: string;
   activeCount: number;
   lateCount: number;
   defaultedCount: number;
   completedCount: number;
+  principalByStatus: {
+    active: number;
+    late: number;
+    defaulted: number;
+    completed: number;
+  };
 }) {
   const { t } = useApp();
   const [mode, setMode] = React.useState<PieMode>("percent");
-  const data = React.useMemo(
-    () =>
-      [
-        { id: "active", name: t("status.active"), value: activeCount },
-        { id: "late", name: t("status.late"), value: lateCount },
-        { id: "defaulted", name: t("status.defaulted"), value: defaultedCount },
-        { id: "completed", name: t("status.completed"), value: completedCount },
-      ].filter((item) => item.value > 0),
-    [activeCount, completedCount, defaultedCount, lateCount, t],
-  );
+  const data = React.useMemo(() => {
+    const rows = [
+      {
+        id: "active",
+        name: t("status.active"),
+        count: activeCount,
+        weight: principalByStatus.active,
+      },
+      {
+        id: "late",
+        name: t("status.late"),
+        count: lateCount,
+        weight: principalByStatus.late,
+      },
+      {
+        id: "defaulted",
+        name: t("status.defaulted"),
+        count: defaultedCount,
+        weight: principalByStatus.defaulted,
+      },
+      {
+        id: "completed",
+        name: t("status.completed"),
+        count: completedCount,
+        weight: principalByStatus.completed,
+      },
+    ];
+    return rows
+      .map((item) => ({
+        ...item,
+        value: mode === "percent" ? item.weight : item.count,
+      }))
+      .filter((item) => item.value > 0);
+  }, [
+    activeCount,
+    completedCount,
+    defaultedCount,
+    lateCount,
+    mode,
+    principalByStatus.active,
+    principalByStatus.completed,
+    principalByStatus.defaulted,
+    principalByStatus.late,
+    t,
+  ]);
   const total = React.useMemo(
     () => data.reduce((sum, item) => sum + item.value, 0),
     [data],

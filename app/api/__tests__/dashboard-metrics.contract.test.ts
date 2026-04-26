@@ -24,6 +24,12 @@ const metricsFixture = {
     investmentId: "inv-active",
   },
   generatedAt: "2026-01-15T00:00:00.000Z",
+  principalByStatus: {
+    active: 1000,
+    late: 2000,
+    defaulted: 1500,
+    completed: 500,
+  },
 };
 
 const breakdownFixture = [
@@ -34,6 +40,9 @@ const breakdownFixture = [
     realizedGains: 100,
     expectedProfit: 695,
     investmentsCount: 4,
+    defaultedCount: 0,
+    platformColor: null,
+    investmentsPrincipalTotal: 5000,
   },
 ];
 
@@ -71,6 +80,7 @@ const expectedMetricKeys = [
   "nav",
   "nextPayment",
   "overdueBalance",
+  "principalByStatus",
   "realizedGains",
   "totalCashBalance",
   "totalExpectedProfit",
@@ -116,6 +126,9 @@ describe("dashboard metrics route contract", () => {
         realizedGains: expect.any(Number),
         expectedProfit: expect.any(Number),
         investmentsCount: expect.any(Number),
+        defaultedCount: expect.any(Number),
+        platformColor: expect.anything(),
+        investmentsPrincipalTotal: expect.any(Number),
       },
     ]);
   });
