@@ -74,50 +74,42 @@ interface InvestmentComputedRow {
   endDate: Date;
   derivedStatus: DerivedStatus;
   maxOverdueDays: number;
+  platformId: string;
+}
+
+interface RawInvestment {
+  id: string;
+  principal: string;
+  expectedProfit: string;
+  endDate: Date;
+  platformId: string;
+}
+
+interface RawCashflow {
+  id: string;
+  investmentId: string;
+  dueDate: Date;
+  amount: string;
+  type: string;
+  status: string;
+}
+
+interface RawCashTransaction {
+  amount: string;
+  platformId: string | null;
 }
 
 /**
- * Compute metrics ENTIRELY in the backend. This function performs a minimal
- * number of parallel queries and then joins the results in memory — which
- * keeps the code portable across Postgres/SQLite and easy to test.
+ * Core metrics calculation logic extracted for reuse.
+ * Computes metrics in-memory from pre-fetched rows.
  */
-export async function getDashboardMetrics(
-  options: MetricsOptions = {},
-): Promise<DashboardMetrics> {
-  const now = options.now ?? new Date();
-  const graceDays = options.graceDays ?? DEFAULT_GRACE_DAYS;
-  const platformId = options.platformId;
-
-  // Load investments (optionally scoped to platform).
-  const investmentRows = await db
-    .select({
-      id: investments.id,
-      principal: investments.principalAmount,
-      expectedProfit: investments.expectedProfit,
-      endDate: investments.endDate,
-      platformId: investments.platformId,
-    })
-    .from(investments)
-    .where(platformId ? eq(investments.platformId, platformId) : sql`true`);
-
-  const investmentIds = investmentRows.map((i) => i.id);
-
-  // Load all cashflows for those investments.
-  const cashflowRows =
-    investmentIds.length === 0
-      ? []
-      : await db
-          .select({
-            id: cashflows.id,
-            investmentId: cashflows.investmentId,
-            dueDate: cashflows.dueDate,
-            amount: cashflows.amount,
-            type: cashflows.type,
-            status: cashflows.status,
-          })
-          .from(cashflows)
-          .where(inArray(cashflows.investmentId, investmentIds));
-
+function computeMetrics(
+  investmentRows: RawInvestment[],
+  cashflowRows: RawCashflow[],
+  cashRows: RawCashTransaction[],
+  now: Date,
+  graceDays: number,
+): DashboardMetrics {
   // Group cashflows by investment.
   const cfByInvestment = new Map<
     string,
@@ -172,6 +164,7 @@ export async function getDashboardMetrics(
       endDate: i.endDate,
       derivedStatus: derived,
       maxOverdueDays: maxOverdue,
+      platformId: i.platformId,
     };
   });
 
@@ -181,17 +174,6 @@ export async function getDashboardMetrics(
   );
 
   // Metric 1: Total Cash Balance (from the ledger, always).
-  const cashRows = await db
-    .select({ amount: cashTransactions.amount })
-    .from(cashTransactions)
-    .where(
-      platformId
-        ? or(
-            eq(cashTransactions.platformId, platformId),
-            isNull(cashTransactions.platformId),
-          )
-        : sql`true`,
-    );
   const totalCashBalance = sumMoney(cashRows.map((r) => r.amount));
 
   // Metric 2: Active Principal.
@@ -305,9 +287,97 @@ export async function getDashboardMetrics(
   };
 }
 
+/**
+ * Compute metrics ENTIRELY in the backend. This function performs a minimal
+ * number of parallel queries and then joins the results in memory — which
+ * keeps the code portable across Postgres/SQLite and easy to test.
+ */
+export async function getDashboardMetrics(
+  options: MetricsOptions = {},
+): Promise<DashboardMetrics> {
+  const now = options.now ?? new Date();
+  const graceDays = options.graceDays ?? DEFAULT_GRACE_DAYS;
+  const platformId = options.platformId;
+
+  // Load investments (optionally scoped to platform).
+  const investmentRows = await db
+    .select({
+      id: investments.id,
+      principal: investments.principalAmount,
+      expectedProfit: investments.expectedProfit,
+      endDate: investments.endDate,
+      platformId: investments.platformId,
+    })
+    .from(investments)
+    .where(platformId ? eq(investments.platformId, platformId) : sql`true`);
+
+  const investmentIds = investmentRows.map((i) => i.id);
+
+  // Load all cashflows for those investments.
+  const cashflowRows =
+    investmentIds.length === 0
+      ? []
+      : await db
+          .select({
+            id: cashflows.id,
+            investmentId: cashflows.investmentId,
+            dueDate: cashflows.dueDate,
+            amount: cashflows.amount,
+            type: cashflows.type,
+            status: cashflows.status,
+          })
+          .from(cashflows)
+          .where(inArray(cashflows.investmentId, investmentIds));
+
+  // Metric 1: Total Cash Balance (from the ledger, always).
+  const cashRows = await db
+    .select({ amount: cashTransactions.amount, platformId: cashTransactions.platformId })
+    .from(cashTransactions)
+    .where(
+      platformId
+        ? or(
+            eq(cashTransactions.platformId, platformId),
+            isNull(cashTransactions.platformId),
+          )
+        : sql`true`,
+    );
+
+  return computeMetrics(investmentRows, cashflowRows, cashRows, now, graceDays);
+}
+
 /** Breakdown per platform — used by Platform Overview card. */
 export async function getPlatformBreakdown(now: Date = new Date()) {
   const plats = await db.select().from(platforms);
+  const graceDays = DEFAULT_GRACE_DAYS;
+
+  // 1. Fetch all investments
+  const investmentRows = await db
+    .select({
+      id: investments.id,
+      principal: investments.principalAmount,
+      expectedProfit: investments.expectedProfit,
+      endDate: investments.endDate,
+      platformId: investments.platformId,
+    })
+    .from(investments);
+
+  // 2. Fetch all cashflows
+  const cashflowRows = await db
+    .select({
+      id: cashflows.id,
+      investmentId: cashflows.investmentId,
+      dueDate: cashflows.dueDate,
+      amount: cashflows.amount,
+      type: cashflows.type,
+      status: cashflows.status,
+    })
+    .from(cashflows);
+
+  // 3. Fetch all cash transactions
+  const cashRows = await db
+    .select({ amount: cashTransactions.amount, platformId: cashTransactions.platformId })
+    .from(cashTransactions);
+
   const results = [] as Array<{
     platformId: string;
     platformName: string;
@@ -318,8 +388,16 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
     defaultedCount: number;
     platformColor: string | null;
   }>;
+
   for (const p of plats) {
-    const m = await getDashboardMetrics({ platformId: p.id, now });
+    // Filter rows for this specific platform
+    const platformInvestments = investmentRows.filter((i) => i.platformId === p.id);
+    const platformInvestmentIds = new Set(platformInvestments.map((i) => i.id));
+    const platformCashflows = cashflowRows.filter((cf) => platformInvestmentIds.has(cf.investmentId));
+    const platformCashRows = cashRows.filter((cr) => cr.platformId === p.id || cr.platformId === null);
+
+    const m = computeMetrics(platformInvestments, platformCashflows, platformCashRows, now, graceDays);
+    
     results.push({
       platformId: p.id,
       platformName: p.name,

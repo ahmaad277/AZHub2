@@ -13,6 +13,11 @@ function parseLimit(value: string | null) {
   return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, 100) : undefined;
 }
 
+function parsePage(value: string | null) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
     await requireOwner();
@@ -22,6 +27,7 @@ export async function GET(request: NextRequest) {
     const from = searchParams.get("from");
     const to = searchParams.get("to");
     const limit = parseLimit(searchParams.get("limit"));
+    const page = parsePage(searchParams.get("page"));
 
     const conds: any[] = [];
     if (status && status !== "all") conds.push(eq(cashflows.status, status as any));
@@ -30,7 +36,19 @@ export async function GET(request: NextRequest) {
     if (platformId && platformId !== "all") {
       conds.push(eq(investments.platformId, platformId));
     }
+    const baseWhere = conds.length ? and(...conds) : undefined;
 
+    // 1. Get total count and sum for pagination and summary
+    const [{ count, totalAmount }] = await db
+      .select({
+        count: sql<number>`cast(count(*) as integer)`,
+        totalAmount: sql<string>`sum(${cashflows.amount})`,
+      })
+      .from(cashflows)
+      .innerJoin(investments, eq(cashflows.investmentId, investments.id))
+      .where(baseWhere);
+
+    // 2. Fetch paginated rows
     let query = db
       .select({
         cashflow: cashflows,
@@ -40,12 +58,12 @@ export async function GET(request: NextRequest) {
       .from(cashflows)
       .innerJoin(investments, eq(cashflows.investmentId, investments.id))
       .leftJoin(platforms, eq(platforms.id, investments.platformId))
-      .where(conds.length ? and(...conds) : undefined)
+      .where(baseWhere)
       .orderBy(asc(cashflows.dueDate))
       .$dynamic();
 
     if (limit) {
-      query = query.limit(limit);
+      query = query.limit(limit).offset((page - 1) * limit);
     }
 
     const rows = await query;
@@ -58,8 +76,9 @@ export async function GET(request: NextRequest) {
     return {
       rows: normalizedRows,
       summary: {
-        totalAmount: sumMoney(normalizedRows.map((row) => row.amount)),
+        totalAmount: Number(totalAmount ?? 0),
       },
+      totalCount: count,
     };
   });
 }

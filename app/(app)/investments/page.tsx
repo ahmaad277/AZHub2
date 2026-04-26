@@ -60,6 +60,11 @@ interface Row {
   cashflows?: Array<{ dueDate: string; amount: string; type: "profit" | "principal" }>;
 }
 
+interface InvestmentsResponse {
+  rows: Row[];
+  totalCount: number;
+}
+
 const STATUS_VARIANTS: Record<string, "default" | "warning" | "destructive" | "secondary"> = {
   active: "default",
   late: "warning",
@@ -80,27 +85,33 @@ export default function InvestmentsPage() {
   const [page, setPage] = React.useState(1);
   const handledQueryId = React.useRef<string | null>(null);
 
-  const { data = [] } = useQuery<Row[]>({
-    queryKey: ["investments", platformFilter],
-    queryFn: () =>
-      api.get<Row[]>(
-        `/api/investments${platformFilter !== "all" ? `?platformId=${platformFilter}` : ""}`,
-      ),
+  const { data } = useQuery<Row[] | InvestmentsResponse>({
+    queryKey: ["investments", platformFilter, page],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (platformFilter !== "all") params.set("platformId", platformFilter);
+      params.set("page", page.toString());
+      params.set("limit", PAGE_SIZE.toString());
+      return api.get<Row[] | InvestmentsResponse>(`/api/investments?${params.toString()}`);
+    },
   });
+
+  const allRows = React.useMemo(
+    () => (Array.isArray(data) ? data : (data?.rows ?? [])),
+    [data],
+  );
+  
+  const totalCount = Array.isArray(data) ? allRows.length : (data?.totalCount ?? 0);
+  const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const filtered = React.useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
-    return data.filter((r) => {
+    return allRows.filter((r) => {
       if (statusFilter !== "all" && r.derivedStatus !== statusFilter) return false;
       if (!normalizedSearch) return true;
       return r.name.toLowerCase().includes(normalizedSearch);
     });
-  }, [data, search, statusFilter]);
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = React.useMemo(
-    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-    [filtered, page],
-  );
+  }, [allRows, search, statusFilter]);
 
   React.useEffect(() => {
     setPage(1);
@@ -198,7 +209,7 @@ export default function InvestmentsPage() {
             </tr>
           </thead>
           <tbody>
-            {paginated.map((r) => (
+            {filtered.map((r) => (
               <tr key={r.id} className="border-t border-border/40 hover:bg-muted/30 transition-colors">
                 <td className="p-4 sm:px-6 sm:py-5">
                   <div className="flex items-center gap-2">

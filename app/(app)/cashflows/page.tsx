@@ -34,6 +34,7 @@ interface CashflowsSummary {
 interface CashflowsResponse {
   rows: Row[];
   summary: CashflowsSummary;
+  totalCount: number;
 }
 
 const PAGE_SIZE = 50;
@@ -46,26 +47,27 @@ export default function CashflowsPage() {
   const [page, setPage] = React.useState(1);
 
   const { data } = useQuery<Row[] | CashflowsResponse>({
-    queryKey: ["cashflows", platformFilter, status],
+    queryKey: ["cashflows", platformFilter, status, page],
     queryFn: () => {
       const params = new URLSearchParams();
       if (status !== "all") params.set("status", status);
       if (platformFilter !== "all") params.set("platformId", platformFilter);
+      params.set("page", page.toString());
+      params.set("limit", PAGE_SIZE.toString());
       return api.get<Row[] | CashflowsResponse>(`/api/cashflows?${params.toString()}`);
     },
   });
 
-  const rows = React.useMemo(
+  const allRows = React.useMemo(
     () => (Array.isArray(data) ? data : (data?.rows ?? [])),
     [data],
   );
-  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
-  const paginatedRows = React.useMemo(
-    () => rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-    [page, rows],
-  );
+  
+  const totalCount = Array.isArray(data) ? allRows.length : (data?.totalCount ?? 0);
+  const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  
   const total = Array.isArray(data)
-    ? rows.reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
+    ? allRows.reduce((sum, row) => sum + parseFloat(row.amount || "0"), 0)
     : (data?.summary.totalAmount ?? 0);
 
   React.useEffect(() => {
@@ -133,7 +135,7 @@ export default function CashflowsPage() {
           ))}
         </div>
         <div className="text-sm text-muted-foreground">
-          {rows.length} · <span className="font-semibold text-foreground tabular-nums">{formatMoney(total, settings.currency)}</span>
+          {totalCount} · <span className="font-semibold text-foreground tabular-nums">{formatMoney(total, settings.currency)}</span>
         </div>
       </div>
 
@@ -150,7 +152,7 @@ export default function CashflowsPage() {
             </tr>
           </thead>
           <tbody>
-            {paginatedRows.map((r) => (
+            {allRows.map((r) => (
               <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
                 <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.dueDate, dateLocale)}</td>
                 <td className="p-4 sm:px-6 sm:py-5">
@@ -195,7 +197,7 @@ export default function CashflowsPage() {
                 </td>
               </tr>
             ))}
-            {rows.length === 0 ? (
+            {allRows.length === 0 ? (
               <tr>
                 <td colSpan={6} className="p-8 text-center text-sm text-muted-foreground">
                   {t("common.empty")}
