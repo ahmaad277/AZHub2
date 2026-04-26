@@ -90,7 +90,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "dash.vision2040": { en: "Vision 2040 Progress", ar: "تقدم رؤية 2040" },
   "dash.forecast": { en: "Cashflow Forecast", ar: "توقعات التدفق" },
   "dash.allPlatforms": { en: "All Platforms", ar: "كل المنصات" },
-  "dash.platformDistribution": { en: "Platform Distribution", ar: "توزيع المنصات" },
+  "dash.platformDistribution": { en: "Platform Distribution", ar: "المنصات" },
   "dash.platformStatus": { en: "Opportunities Status", ar: "حالة الفرص" },
   "dash.monthlyCashflows": { en: "Monthly Cashflows", ar: "التدفقات الشهرية" },
   "dash.monthlyCashflowsHint": {
@@ -123,6 +123,8 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   // Charts
   "chart.percent": { en: "Percent", ar: "النسبة" },
   "chart.count": { en: "Count", ar: "العدد" },
+  "chart.bar": { en: "Bars", ar: "أعمدة" },
+  "chart.line": { en: "Line", ar: "خطي" },
 
   // Platforms
   "platform.fee": { en: "Fee", ar: "الرسوم" },

@@ -21,6 +21,8 @@ import {
   CartesianGrid,
   Cell,
   Legend,
+  Line,
+  LineChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -503,6 +505,32 @@ function PieToggle({
   );
 }
 
+function MonthlyChartToggle({
+  mode,
+  onChange,
+}: {
+  mode: "bar" | "line";
+  onChange: (next: "bar" | "line") => void;
+}) {
+  const { t } = useApp();
+  return (
+    <div className="flex rounded-lg border p-0.5 text-xs">
+      {(["bar", "line"] as const).map((value) => (
+        <button
+          key={value}
+          type="button"
+          className={`rounded px-1.5 py-0.5 transition-colors ${
+            mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+          }`}
+          onClick={() => onChange(value)}
+        >
+          {t(`chart.${value}`)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function PieLegend({
   items,
   total,
@@ -513,18 +541,18 @@ function PieLegend({
   mode: "percent" | "count";
 }) {
   return (
-    <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+    <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs [@media(orientation:landscape)_and_(max-height:500px)]:flex [@media(orientation:landscape)_and_(max-height:500px)]:flex-wrap [@media(orientation:landscape)_and_(max-height:500px)]:justify-center">
       {items.map((item) => (
-        <li key={item.id} className="flex items-center justify-between gap-2">
+        <li key={item.id} className="flex items-center justify-between gap-2 [@media(orientation:landscape)_and_(max-height:500px)]:justify-center">
           <span className="flex min-w-0 items-center gap-1.5">
             <span
               aria-hidden="true"
               className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border"
               style={{ backgroundColor: item.color }}
             />
-            <span className="truncate">{item.name}</span>
+            <span className="truncate [@media(orientation:landscape)_and_(max-height:500px)]:hidden">{item.name}</span>
           </span>
-          <span className="tabular-nums text-muted-foreground">
+          <span className="tabular-nums text-muted-foreground [@media(orientation:landscape)_and_(max-height:500px)]:hidden">
             {mode === "percent" && total > 0
               ? formatPercent((item.value / total) * 100, 0)
               : formatNumber(item.value)}
@@ -610,6 +638,41 @@ const STATUS_COLORS: Record<string, string> = {
   defaulted: "#ef4444",
   completed: "#94a3b8",
 };
+
+function getCurrentMonthKey() {
+  const now = new Date();
+  return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
+function buildMonthlyLineRows(
+  startMonth: string,
+  endMonth: string,
+  rowsByMonth: Map<string, Record<string, string | number>>,
+) {
+  const [startYear, startMonthNumber] = startMonth.split("-").map(Number);
+  const [endYear, endMonthNumber] = endMonth.split("-").map(Number);
+
+  if (!startYear || !startMonthNumber || !endYear || !endMonthNumber) {
+    return [];
+  }
+
+  const rows: Array<Record<string, string | number>> = [];
+  let year = startYear;
+  let month = startMonthNumber;
+
+  while (year < endYear || (year === endYear && month <= endMonthNumber)) {
+    const monthKey = `${year}-${String(month).padStart(2, "0")}`;
+    rows.push(rowsByMonth.get(monthKey) ?? { month: monthKey, total: 0 });
+
+    month += 1;
+    if (month > 12) {
+      month = 1;
+      year += 1;
+    }
+  }
+
+  return rows;
+}
 
 function StatusPieCard({
   title,
@@ -706,6 +769,7 @@ function MonthlyCashflowChart({
   }>;
 }) {
   const { t, settings } = useApp();
+  const [mode, setMode] = React.useState<"bar" | "line">("bar");
   const series = new Map<string, { key: string; name: string; color: string | null }>();
   const chartRows = rows.map((row) => {
     const item: Record<string, string | number> = { month: row.month, total: row.total };
@@ -721,14 +785,41 @@ function MonthlyCashflowChart({
     return item;
   });
   const isRtl = settings.language === "ar";
+  const chartRowsByMonth = new Map(chartRows.map((row) => [String(row.month), row]));
+  const currentMonth = getCurrentMonthKey();
+  const lastMonth = rows.reduce(
+    (latest, row) => (row.month > latest ? row.month : latest),
+    currentMonth,
+  );
+  const lineChartRows = buildMonthlyLineRows(currentMonth, lastMonth, chartRowsByMonth);
   const visualChartRows = isRtl ? [...chartRows].reverse() : chartRows;
-  const chartWidth = Math.max(640, rows.length * 18);
+  const visualLineChartRows = isRtl ? [...lineChartRows].reverse() : lineChartRows;
+  const chartWidth = Math.max(576, (mode === "line" ? lineChartRows.length : rows.length) * 18);
+  const formatMonthTick = (month: string) => month.replace(/^20(\d{2})-/, "$1-");
 
   return (
     <div className="rounded-xl border p-4">
-      <div className="mb-3">
-        <div className="font-medium">{t("dash.monthlyCashflows")}</div>
-        <div className="text-xs text-muted-foreground">{t("dash.monthlyCashflowsHint")}</div>
+      <style>{`
+        @media (orientation: landscape) and (max-height: 500px) {
+          .recharts-legend-item-text {
+            display: none !important;
+          }
+          .recharts-default-legend {
+            display: flex !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+          }
+          .recharts-legend-item {
+            margin-right: 8px !important;
+          }
+        }
+      `}</style>
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <div className="font-medium">{t("dash.monthlyCashflows")}</div>
+          <div className="text-xs text-muted-foreground">{t("dash.monthlyCashflowsHint")}</div>
+        </div>
+        <MonthlyChartToggle mode={mode} onChange={setMode} />
       </div>
       {rows.length === 0 ? (
         <div className="grid h-56 place-items-center text-sm text-muted-foreground">
@@ -738,34 +829,75 @@ function MonthlyCashflowChart({
         <div className="overflow-x-auto" dir={isRtl ? "rtl" : "ltr"}>
           <div style={{ minWidth: chartWidth }} className="h-80" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={visualChartRows} barSize={14} barCategoryGap={4}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  fontSize={12}
-                  tickFormatter={(value) => formatNumber(Number(value))}
-                />
-                <Tooltip
-                  formatter={(value: number, name: string) => [
-                    formatMoney(value, settings.currency),
-                    name,
-                  ]}
-                  labelFormatter={(label) => `${t("vision.month")}: ${label}`}
-                />
-                <Legend />
-                {Array.from(series.values()).map((platform) => (
-                  <Bar
-                    key={platform.key}
-                    dataKey={platform.key}
-                    name={platform.name}
-                    stackId="cashflows"
-                    fill={getPlatformColorOption(platform.color).chartColor}
-                    radius={[4, 4, 0, 0]}
+              {mode === "line" ? (
+                <LineChart data={visualLineChartRows}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={12}
+                    tickFormatter={formatMonthTick}
                   />
-                ))}
-              </BarChart>
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={12}
+                    tickFormatter={(value) => formatNumber(Number(value))}
+                  />
+                  <Tooltip
+                    formatter={(value: number, name: string) => [
+                      formatMoney(value, settings.currency),
+                      name,
+                    ]}
+                    labelFormatter={(label) => `${t("vision.month")}: ${label}`}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="total"
+                    name={t("common.total")}
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                  />
+                </LineChart>
+              ) : (
+                <BarChart data={visualChartRows} barSize={14} barCategoryGap={4}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={12}
+                    tickFormatter={formatMonthTick}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={12}
+                    tickFormatter={(value) => formatNumber(Number(value))}
+                  />
+                  <Tooltip
+                    formatter={(value: number, name: string) => [
+                      formatMoney(value, settings.currency),
+                      name,
+                    ]}
+                    labelFormatter={(label) => `${t("vision.month")}: ${label}`}
+                  />
+                  <Legend />
+                  {Array.from(series.values()).map((platform) => (
+                    <Bar
+                      key={platform.key}
+                      dataKey={platform.key}
+                      name={platform.name}
+                      stackId="cashflows"
+                      fill={getPlatformColorOption(platform.color).chartColor}
+                      radius={[4, 4, 0, 0]}
+                    />
+                  ))}
+                </BarChart>
+              )}
             </ResponsiveContainer>
           </div>
         </div>

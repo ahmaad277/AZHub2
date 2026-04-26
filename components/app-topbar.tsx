@@ -67,10 +67,10 @@ export function AppTopbar() {
               className="h-9 w-9 justify-center px-0 md:w-auto md:justify-between md:px-3 [&>svg:last-child]:hidden md:[&>svg:last-child]:block"
               aria-label={t("form.platform")}
             >
-              <Filter className="h-4 w-4 md:hidden" />
-              <span className="hidden md:contents">
+              <Filter className="h-4 w-4 md:hidden" aria-hidden="true" />
+              <div className="hidden min-w-0 md:block md:[&>span]:line-clamp-1">
                 <SelectValue placeholder={t("dash.allPlatforms")} />
-              </span>
+              </div>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t("dash.allPlatforms")}</SelectItem>
