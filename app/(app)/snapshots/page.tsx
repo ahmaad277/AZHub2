@@ -91,7 +91,7 @@ export default function SnapshotsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+      <div className="rounded-xl border p-5">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Archive className="h-4 w-4" /> {t("snapshots.createBackup")}
         </div>
@@ -116,7 +116,7 @@ export default function SnapshotsPage() {
           } as Snapshot,
           ...data,
         ].map((s) => (
-          <div key={s.id} className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-border/80">
+          <div key={s.id} className="flex items-center justify-between rounded-xl border p-4">
             <div>
               <div className="text-sm font-semibold">{s.name}</div>
               <div className="text-xs text-muted-foreground">

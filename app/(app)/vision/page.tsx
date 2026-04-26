@@ -101,7 +101,7 @@ export default function VisionPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+      <div className="rounded-xl border p-5">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Target className="h-4 w-4" /> {t("dash.vision2040")}
         </div>
@@ -123,7 +123,7 @@ export default function VisionPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+      <div className="rounded-xl border p-5">
         <div className="mb-4 text-sm font-semibold">{t("settings.target2040")}</div>
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex-1 min-w-[14rem] space-y-2">
@@ -140,7 +140,7 @@ export default function VisionPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+      <div className="rounded-xl border p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm font-semibold">{t("vision.monthlyPlanGenerator")}</div>
           <Button variant="outline" size="sm" onClick={generateMonthlyTargets} className="gap-2">
@@ -175,19 +175,19 @@ export default function VisionPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card shadow-sm">
+      <div className="overflow-hidden rounded-xl border">
         <table className="w-full text-sm">
-          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
+          <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
             <tr>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("vision.month")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("vision.target")}</th>
+              <th className="p-3 text-start">{t("vision.month")}</th>
+              <th className="p-3 text-end">{t("vision.target")}</th>
             </tr>
           </thead>
           <tbody>
             {paginatedTargets.map((r) => (
-              <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
-                <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.month, dateLocale, { year: "numeric", month: "short" })}</td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end tabular-nums">
+              <tr key={r.id} className="border-t">
+                <td className="p-3">{formatDate(r.month, dateLocale, { year: "numeric", month: "short" })}</td>
+                <td className="p-3 text-end tabular-nums">
                   {formatMoney(r.targetValue, settings.currency)}
                 </td>
               </tr>

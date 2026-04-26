@@ -50,7 +50,7 @@ export function AppTopbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-border/40 bg-background/80 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur md:px-6">
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <Button
           variant="ghost"

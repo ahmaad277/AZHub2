@@ -59,7 +59,7 @@ export default function ImportPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border p-6 text-center">
+      <div className="rounded-xl border p-6 text-center">
         <Upload className="mx-auto h-6 w-6 text-muted-foreground" />
         <div className="mt-2 text-sm font-medium">CSV / XLSX import</div>
         <p className="mx-auto mt-1 max-w-md text-xs text-muted-foreground">
@@ -82,7 +82,7 @@ export default function ImportPage() {
       </div>
 
       {preview ? (
-        <div className="rounded-2xl border p-5">
+        <div className="rounded-xl border p-5">
           <div className="mb-3 flex items-center justify-between">
             <div>
               <div className="text-sm font-semibold">

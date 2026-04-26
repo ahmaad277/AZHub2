@@ -365,7 +365,7 @@ export function InvestmentWizard({
       </div>
 
       {form.distributionFrequency === "custom" ? (
-        <div className="space-y-2 rounded-2xl border border-border/40 p-4">
+        <div className="space-y-2 rounded-lg border p-3">
           <div className="flex items-center justify-between">
             <Label>{t("investment.customSchedule")}</Label>
             <Button
@@ -476,7 +476,7 @@ export function InvestmentWizard({
       </div>
 
       {preview ? (
-        <div className="rounded-2xl border border-border/40 p-4">
+        <div className="rounded-lg border p-3">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-sm font-medium">{t("investment.schedulePreview")}</div>
             <div className="text-xs text-muted-foreground">

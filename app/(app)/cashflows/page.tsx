@@ -151,7 +151,7 @@ export default function CashflowsPage() {
           </thead>
           <tbody>
             {paginatedRows.map((r) => (
-              <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0 cursor-pointer" onClick={() => markReceived(r.id)}>
+              <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
                 <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.dueDate, dateLocale)}</td>
                 <td className="p-4 sm:px-6 sm:py-5">
                   <div>{r.investment.name}</div>

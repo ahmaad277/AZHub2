@@ -154,7 +154,7 @@ function LoginForm() {
       >
       <Card className="w-full border-primary/15 shadow-sm">
         <CardHeader>
-          <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary">
+          <div className="mb-3 grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
             {success ? <Sparkles className="h-6 w-6" /> : <KeyRound className="h-6 w-6" />}
           </div>
           <div className="space-y-2 text-center">
@@ -213,7 +213,7 @@ function LoginFallback() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-lg border-primary/15 shadow-sm">
         <CardHeader>
-          <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary">
+          <div className="mb-3 grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
             <KeyRound className="h-6 w-6" />
           </div>
           <div className="space-y-2 text-center">

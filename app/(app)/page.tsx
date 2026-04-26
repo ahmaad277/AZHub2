@@ -340,7 +340,7 @@ export default function DashboardPage() {
             <Link
               key={inv.id}
               href={`/investments?id=${inv.id}`}
-              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-border/80"
+              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-border/80"
               style={{
                 borderInlineStartWidth: 4,
                 borderInlineStartColor: getPlatformColorOption(inv.platform?.color).chartColor,
@@ -404,7 +404,7 @@ export default function DashboardPage() {
           {cfs.slice(0, 6).map((cf) => (
             <div
               key={cf.id}
-              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-border/80"
+              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-border/80"
               style={{
                 borderInlineStartWidth: 4,
                 borderInlineStartColor: getPlatformColorOption(cf.investment.platform?.color).chartColor,
@@ -440,10 +440,10 @@ function DashboardChartsSkeleton() {
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <Skeleton className="h-56 rounded-2xl" />
-        <Skeleton className="h-56 rounded-2xl" />
+        <Skeleton className="h-56 rounded-xl" />
+        <Skeleton className="h-56 rounded-xl" />
       </div>
-      <Skeleton className="h-96 rounded-2xl" />
+      <Skeleton className="h-96 rounded-xl" />
     </>
   );
 }

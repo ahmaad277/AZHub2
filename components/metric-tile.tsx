@@ -52,7 +52,7 @@ export function MetricTile({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-border/80",
+        "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm transition-all hover:shadow-md hover:border-border/80",
         className,
       )}
     >
@@ -66,7 +66,7 @@ export function MetricTile({
           </div>
         ) : null}
       </div>
-      <div className={cn("mt-2 text-2xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
+      <div className={cn("mt-3 text-2xl sm:text-3xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
         {display}
       </div>
       {sublabel ? (

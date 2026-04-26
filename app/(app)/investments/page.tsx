@@ -160,7 +160,7 @@ export default function InvestmentsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t("nav.investments")}
-            className="ps-9 rounded-full bg-muted/50 border-transparent hover:bg-muted/80 transition-colors focus-visible:bg-background focus-visible:border-border h-9"
+            className="ps-9 rounded-full bg-muted/50 border-transparent hover:bg-muted/80 transition-colors focus-visible:bg-background focus-visible:border-border"
           />
         </div>
         <div className="flex items-center gap-1 rounded-full bg-muted/30 p-1 text-xs">
@@ -168,7 +168,7 @@ export default function InvestmentsPage() {
             <button
               key={s}
               className={cn(
-                "rounded-full px-4 py-1.5 transition-all font-medium",
+                "rounded-full px-3 py-1.5 transition-all font-medium",
                 statusFilter === s ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
               )}
               onClick={() => setStatusFilter(s)}
@@ -183,7 +183,7 @@ export default function InvestmentsPage() {
         </Button>
       </div>
 
-      <div className="rounded-2xl border border-border/40 bg-card shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card shadow-sm">
         <table className="w-full text-sm">
           <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
             <tr>

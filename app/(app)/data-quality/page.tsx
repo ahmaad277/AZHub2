@@ -52,7 +52,7 @@ export default function DataQualityPage() {
 
       <div className="space-y-2">
         {data.map((i) => (
-          <div key={i.id} className="rounded-2xl border p-4">
+          <div key={i.id} className="rounded-xl border p-4">
             <div className="flex items-center gap-2">
               <Badge variant={i.severity === "error" ? "destructive" : "warning"}>
                 {i.severity}

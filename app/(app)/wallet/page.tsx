@@ -163,22 +163,22 @@ export default function WalletPage() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card shadow-sm">
+      <div className="overflow-hidden rounded-xl border">
         <table className="w-full text-sm">
-          <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
+          <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
             <tr>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.date")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.type")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.platform")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.notes")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.amount")}</th>
+              <th className="p-3 text-start">{t("form.date")}</th>
+              <th className="p-3 text-start">{t("form.type")}</th>
+              <th className="p-3 text-start">{t("form.platform")}</th>
+              <th className="p-3 text-start">{t("form.notes")}</th>
+              <th className="p-3 text-end">{t("form.amount")}</th>
             </tr>
           </thead>
           <tbody>
             {paginatedTxs.map((tx) => (
-              <tr key={tx.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
-                <td className="p-4 sm:px-6 sm:py-5">{formatDate(tx.date, dateLocale)}</td>
-                <td className="p-4 sm:px-6 sm:py-5">
+              <tr key={tx.id} className="border-t">
+                <td className="p-3">{formatDate(tx.date, dateLocale)}</td>
+                <td className="p-3">
                   <Badge
                     variant={
                       tx.type === "deposit" || tx.type === "cashflow_receipt"
@@ -189,7 +189,7 @@ export default function WalletPage() {
                     {tx.type}
                   </Badge>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-muted-foreground">
+                <td className="p-3 text-muted-foreground">
                   {tx.platform ? (
                     <span className="inline-flex items-center gap-1.5">
                       <span
@@ -205,7 +205,7 @@ export default function WalletPage() {
                     "—"
                   )}
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-muted-foreground">{tx.notes ?? "—"}</td>
+                <td className="p-3 text-muted-foreground">{tx.notes ?? "—"}</td>
                 <td
                   className={`p-3 text-end font-semibold tabular-nums ${
                     Number(tx.amount) >= 0

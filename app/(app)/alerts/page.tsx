@@ -69,7 +69,7 @@ export default function AlertsPage() {
         {data.map((a) => (
           <div
             key={a.id}
-            className={`flex items-start justify-between gap-3 rounded-2xl border p-4 ${
+            className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${
               a.read ? "opacity-70" : ""
             }`}
           >

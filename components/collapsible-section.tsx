@@ -40,7 +40,7 @@ export function CollapsibleSection({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-border/40 bg-card text-card-foreground shadow-sm",
+        "rounded-xl border bg-card text-card-foreground shadow-sm",
         className,
       )}
     >

@@ -216,7 +216,7 @@ function PlatformPieCard({
   );
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 text-card-foreground shadow-sm">
+    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-medium">{title}</div>
         <PieToggle mode={mode} onChange={setMode} />
@@ -311,7 +311,7 @@ function StatusPieCard({
   );
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 text-card-foreground shadow-sm">
+    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-medium">{title}</div>
         <PieToggle mode={mode} onChange={setMode} />
@@ -456,7 +456,7 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
   );
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 text-card-foreground shadow-sm">
+    <div className="rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm">
       <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div>
           <div className="font-medium">{t("dash.monthlyCashflows")}</div>
