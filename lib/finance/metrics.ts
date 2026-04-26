@@ -10,8 +10,8 @@
  *                             (STRICT — no fallback logic)
  *   6. Expected Inflow 30D  = SUM(cashflows.amount) where status=pending AND due<=NOW+30d
  *   7. WAM (days)           = SUM(principal * days_to_maturity) / SUM(principal)
- *   8. Default Rate         = SUM(principal where overdue>90d) / NAV * 100
- *   9. Active Annual Yield  = SUM(expected_profit) / Active Principal * (365 / WAM_days)
+ *   8. Default Rate         = defaulted principal / (active+late+defaulted principal) * 100
+ *   9. Active Annual Yield  = principal-weighted annual return (contract start→end)
  *
  * Nothing else is allowed to derive metrics. The frontend calls
  * `/api/dashboard/metrics` and displays whatever comes back.
@@ -78,6 +78,7 @@ interface InvestmentComputedRow {
   id: string;
   principal: number;
   expectedProfit: number;
+  startDate: Date;
   endDate: Date;
   derivedStatus: DerivedStatus;
   maxOverdueDays: number;
@@ -88,6 +89,7 @@ interface RawInvestment {
   id: string;
   principal: string;
   expectedProfit: string;
+  startDate: Date;
   endDate: Date;
   platformId: string;
 }
@@ -168,6 +170,7 @@ function computeMetrics(
       id: i.id,
       principal: Number(i.principal),
       expectedProfit: Number(i.expectedProfit),
+      startDate: i.startDate,
       endDate: i.endDate,
       derivedStatus: derived,
       maxOverdueDays: maxOverdue,
@@ -243,16 +246,31 @@ function computeMetrics(
       .filter((r) => r.derivedStatus === "defaulted")
       .reduce((acc, r) => acc + r.principal, 0),
   );
-  const defaultRatePercent =
-    nav > 0 ? roundToMoney((defaultedPrincipal / nav) * 100) : 0;
-
-  // Metric 9: Active Annual Yield.
-  const totalExpectedProfitActive = roundToMoney(
-    activeSet.reduce((acc, r) => acc + r.expectedProfit, 0),
+  const totalPrincipalExposure = roundToMoney(
+    computed
+      .filter(
+        (r) =>
+          r.derivedStatus === "active" ||
+          r.derivedStatus === "late" ||
+          r.derivedStatus === "defaulted",
+      )
+      .reduce((acc, r) => acc + r.principal, 0),
   );
+  const defaultRatePercent =
+    totalPrincipalExposure > 0
+      ? roundToMoney((defaultedPrincipal / totalPrincipalExposure) * 100)
+      : 0;
+
+  // Metric 9: Active Annual Yield (principal-weighted; contract start→end).
+  let aprWeightedNumerator = 0;
+  for (const r of activeSet) {
+    const durationDays = Math.max(1, daysBetween(r.startDate, r.endDate));
+    const annualReturn = (r.expectedProfit / r.principal) * (365 / durationDays);
+    aprWeightedNumerator += r.principal * annualReturn;
+  }
   const activeAnnualYieldPercent =
-    activePrincipal > 0 && wamDays > 0
-      ? roundToMoney((totalExpectedProfitActive / activePrincipal) * (365 / wamDays) * 100)
+    activePrincipal > 0
+      ? roundToMoney((aprWeightedNumerator / activePrincipal) * 100)
       : 0;
 
   // Next upcoming payment (helpful for Lite mode).
@@ -324,6 +342,7 @@ export async function getDashboardMetrics(
       id: investments.id,
       principal: investments.principalAmount,
       expectedProfit: investments.expectedProfit,
+      startDate: investments.startDate,
       endDate: investments.endDate,
       platformId: investments.platformId,
     })
@@ -375,6 +394,7 @@ export async function getPlatformBreakdown(now: Date = new Date()) {
       id: investments.id,
       principal: investments.principalAmount,
       expectedProfit: investments.expectedProfit,
+      startDate: investments.startDate,
       endDate: investments.endDate,
       platformId: investments.platformId,
     })

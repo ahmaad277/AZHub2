@@ -5,6 +5,7 @@ type FixtureInvestment = {
   platformId: string;
   principalAmount: string;
   expectedProfit: string;
+  startDate: Date;
   endDate: Date;
 };
 
@@ -57,6 +58,7 @@ const { dbState, dbMock } = vi.hoisted(() => {
           id: investment.id,
           principal: investment.principalAmount,
           expectedProfit: investment.expectedProfit,
+          startDate: investment.startDate,
           endDate: investment.endDate,
           platformId: investment.platformId,
         })),
@@ -115,6 +117,7 @@ const fixtures: Record<string, DashboardFixture> = {
         platformId: "platform-a",
         principalAmount: "1000.00",
         expectedProfit: "120.00",
+        startDate: new Date(Date.UTC(2025, 6, 15)),
         endDate: new Date(Date.UTC(2026, 6, 15)),
       },
     ],
@@ -164,6 +167,7 @@ const fixtures: Record<string, DashboardFixture> = {
         platformId: "platform-a",
         principalAmount: "1000.00",
         expectedProfit: "120.00",
+        startDate: new Date(Date.UTC(2025, 6, 15)),
         endDate: new Date(Date.UTC(2026, 6, 15)),
       },
       {
@@ -171,6 +175,7 @@ const fixtures: Record<string, DashboardFixture> = {
         platformId: "platform-b",
         principalAmount: "2000.00",
         expectedProfit: "300.00",
+        startDate: new Date(Date.UTC(2025, 3, 15)),
         endDate: new Date(Date.UTC(2026, 3, 15)),
       },
       {
@@ -178,6 +183,7 @@ const fixtures: Record<string, DashboardFixture> = {
         platformId: "platform-c",
         principalAmount: "1500.00",
         expectedProfit: "225.00",
+        startDate: new Date(Date.UTC(2024, 9, 1)),
         endDate: new Date(Date.UTC(2025, 9, 1)),
       },
       {
@@ -185,6 +191,7 @@ const fixtures: Record<string, DashboardFixture> = {
         platformId: "platform-d",
         principalAmount: "500.00",
         expectedProfit: "50.00",
+        startDate: new Date(Date.UTC(2024, 11, 1)),
         endDate: new Date(Date.UTC(2025, 11, 1)),
       },
     ],
@@ -284,6 +291,7 @@ const fixtures: Record<string, DashboardFixture> = {
         platformId: "platform-a",
         principalAmount: "800.00",
         expectedProfit: "200.00",
+        startDate: new Date(Date.UTC(2025, 2, 16)),
         endDate: new Date(Date.UTC(2026, 2, 16)),
       },
     ],
@@ -328,7 +336,7 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 24.2,
+        "activeAnnualYieldPercent": 12,
         "activeCount": 1,
         "activePrincipal": 1000,
         "cashDragPercent": 23.08,
@@ -366,12 +374,12 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 42.58,
+        "activeAnnualYieldPercent": 14,
         "activeCount": 2,
         "activePrincipal": 3000,
         "cashDragPercent": 21.05,
         "completedCount": 1,
-        "defaultRatePercent": 39.47,
+        "defaultRatePercent": 33.33,
         "defaultedCount": 1,
         "expectedInflow30d": 30,
         "expectedInflow60d": 60,
@@ -404,7 +412,7 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 152.08,
+        "activeAnnualYieldPercent": 25,
         "activeCount": 1,
         "activePrincipal": 800,
         "cashDragPercent": 13.04,

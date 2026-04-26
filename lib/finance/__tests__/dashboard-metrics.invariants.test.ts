@@ -5,6 +5,7 @@ type FixtureInvestment = {
   platformId: string;
   principalAmount: string;
   expectedProfit: string;
+  startDate: Date;
   endDate: Date;
 };
 
@@ -57,6 +58,7 @@ const { dbState, dbMock } = vi.hoisted(() => {
           id: investment.id,
           principal: investment.principalAmount,
           expectedProfit: investment.expectedProfit,
+          startDate: investment.startDate,
           endDate: investment.endDate,
           platformId: investment.platformId,
         })),
@@ -107,7 +109,7 @@ vi.mock("@/db", () => ({ db: dbMock }));
 
 import { daysBetween } from "../date-smart";
 import { getDashboardMetrics } from "../metrics";
-import { roundToMoney, sumMoney } from "../money";
+import { roundToMoney } from "../money";
 
 const mediumFixture: DashboardFixture = {
   investments: [
@@ -116,6 +118,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-a",
       principalAmount: "1000.00",
       expectedProfit: "120.00",
+      startDate: new Date(Date.UTC(2025, 6, 15)),
       endDate: new Date(Date.UTC(2026, 6, 15)),
     },
     {
@@ -123,6 +126,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-b",
       principalAmount: "2000.00",
       expectedProfit: "300.00",
+      startDate: new Date(Date.UTC(2025, 3, 15)),
       endDate: new Date(Date.UTC(2026, 3, 15)),
     },
     {
@@ -130,6 +134,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-c",
       principalAmount: "1500.00",
       expectedProfit: "225.00",
+      startDate: new Date(Date.UTC(2024, 9, 1)),
       endDate: new Date(Date.UTC(2025, 9, 1)),
     },
     {
@@ -137,6 +142,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-d",
       principalAmount: "500.00",
       expectedProfit: "50.00",
+      startDate: new Date(Date.UTC(2024, 11, 1)),
       endDate: new Date(Date.UTC(2025, 11, 1)),
     },
   ],
@@ -237,6 +243,7 @@ const edgeStrictFixture: DashboardFixture = {
       platformId: "platform-a",
       principalAmount: "800.00",
       expectedProfit: "200.00",
+      startDate: new Date(Date.UTC(2025, 2, 16)),
       endDate: new Date(Date.UTC(2026, 2, 16)),
     },
   ],
@@ -316,26 +323,32 @@ describe("getDashboardMetrics invariants", () => {
     expect(metrics.wamDays).toBe(expectedWam);
   });
 
-  it("keeps default rate calculation consistent with defaulted principal over nav", async () => {
+  it("keeps default rate calculation consistent with defaulted principal over exposure", async () => {
     dbState.fixture = mediumFixture;
     const metrics = await getDashboardMetrics({ now: NOW });
 
     const defaultedPrincipal = roundToMoney(1500);
-    const expectedDefaultRate = roundToMoney(
-      (defaultedPrincipal / metrics.nav) * 100,
-    );
+    const exposure = roundToMoney(3000 + 1500);
+    const expectedDefaultRate = roundToMoney((defaultedPrincipal / exposure) * 100);
 
     expect(metrics.defaultRatePercent).toBe(expectedDefaultRate);
   });
 
-  it("keeps active annual yield tied to the active-set expected profit weighting logic", async () => {
+  it("keeps active annual yield tied to contract tenor and principal weights", async () => {
     dbState.fixture = mediumFixture;
     const metrics = await getDashboardMetrics({ now: NOW });
 
-    const expectedProfitActive = sumMoney(["120.00", "300.00"]);
-    const expectedYield = roundToMoney(
-      (expectedProfitActive / metrics.activePrincipal) * (365 / metrics.wamDays) * 100,
+    const activeAndLate = mediumFixture.investments.filter(
+      (inv) => inv.id === "inv-active" || inv.id === "inv-late",
     );
+    let aprNum = 0;
+    for (const inv of activeAndLate) {
+      const d = Math.max(1, daysBetween(inv.startDate, inv.endDate));
+      const annualReturn =
+        (Number(inv.expectedProfit) / Number(inv.principalAmount)) * (365 / d);
+      aprNum += Number(inv.principalAmount) * annualReturn;
+    }
+    const expectedYield = roundToMoney((aprNum / metrics.activePrincipal) * 100);
 
     expect(metrics.activeAnnualYieldPercent).toBe(expectedYield);
   });
