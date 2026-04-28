@@ -140,23 +140,23 @@ export default function CashflowsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden bg-transparent">
-        <table className="w-full text-sm">
+      <div className="bg-transparent max-md:overflow-x-auto max-md:overscroll-x-contain md:overflow-hidden">
+        <table className="w-full max-md:min-w-[44rem] text-sm md:min-w-0">
           <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
             <tr>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.date")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("nav.investments")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.type")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.amount")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("common.status")}</th>
-              <th className="p-4 sm:px-6 sm:py-5"></th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("form.date")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("nav.investments")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("form.type")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">{t("form.amount")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("common.status")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2"></th>
             </tr>
           </thead>
           <tbody>
             {allRows.map((r) => (
               <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
-                <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.dueDate, dateLocale)}</td>
-                <td className="p-4 sm:px-6 sm:py-5">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">{formatDate(r.dueDate, dateLocale)}</td>
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
                   <div>{r.investment.name}</div>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <span
@@ -170,20 +170,20 @@ export default function CashflowsPage() {
                     {r.investment.platform?.name}
                   </div>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
                   <Badge variant={r.type === "profit" ? "default" : "secondary"}>
-                    {r.type}
+                    {t(`cashflowType.${r.type}`)}
                   </Badge>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
                   +{formatMoney(r.amount, settings.currency)}
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
                   <Badge variant={r.status === "received" ? "success" : "outline"}>
                     {t(`status.${r.status}`)}
                   </Badge>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">
                   {r.status === "pending" ? (
                     <Button size="sm" variant="outline" onClick={() => markReceived(r.id)}>
                       <CheckCircle2 className="me-1 h-4 w-4" />

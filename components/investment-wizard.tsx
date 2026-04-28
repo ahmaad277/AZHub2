@@ -417,8 +417,8 @@ export function InvestmentWizard({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="profit">profit</SelectItem>
-                    <SelectItem value="principal">principal</SelectItem>
+                    <SelectItem value="profit">{t("cashflowType.profit")}</SelectItem>
+                    <SelectItem value="principal">{t("cashflowType.principal")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button
@@ -499,7 +499,7 @@ export function InvestmentWizard({
                     <td className="p-2">{formatDate(r.dueDate, dateLocale)}</td>
                     <td className="p-2">
                       <Badge variant={r.type === "profit" ? "default" : "secondary"}>
-                        {r.type}
+                        {t(`cashflowType.${r.type}`)}
                       </Badge>
                     </td>
                     <td className="p-2 text-end font-semibold tabular-nums">

@@ -189,14 +189,14 @@ export default function InvestmentsPage() {
             </button>
           ))}
         </div>
-        <Button onClick={startAdd} className="gap-2">
-          <Plus className="h-4 w-4" />
-          {t("nav.investments")}
+        <Button onClick={startAdd} className="gap-2" aria-label={t("nav.investments")}>
+          <Plus className="h-4 w-4 shrink-0" />
+          <span className="hidden sm:inline">{t("nav.investments")}</span>
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card shadow-sm">
-        <table className="w-full text-sm">
+      <div className="rounded-2xl border border-border/40 bg-card shadow-sm max-md:overflow-x-auto max-md:overscroll-x-contain md:overflow-hidden">
+        <table className="w-full max-md:min-w-[44rem] text-sm md:min-w-0">
           <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
             <tr>
               <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("form.name")}</th>

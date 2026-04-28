@@ -429,7 +429,8 @@ export default function DashboardPage() {
                   {cf.investment.name}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {formatDate(cf.dueDate, dateLocale)} · {t(`status.${cf.type === "profit" ? "pending" : "pending"}`)} · {cf.type}
+                  {formatDate(cf.dueDate, dateLocale)} · {t(`status.${cf.type === "profit" ? "pending" : "pending"}`)} ·{" "}
+                  {t(`cashflowType.${cf.type}`)}
                 </div>
               </div>
               <div className="text-sm font-semibold tabular-nums">

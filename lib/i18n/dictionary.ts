@@ -63,6 +63,8 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "form.amount": { en: "Amount", ar: "المبلغ" },
   "form.date": { en: "Date", ar: "التاريخ" },
   "form.type": { en: "Type", ar: "النوع" },
+  "cashflowType.profit": { en: "Return", ar: "العائد" },
+  "cashflowType.principal": { en: "Principal", ar: "رأس المال" },
   "form.save": { en: "Save", ar: "حفظ" },
   "form.cancel": { en: "Cancel", ar: "إلغاء" },
   "form.delete": { en: "Delete", ar: "حذف" },
