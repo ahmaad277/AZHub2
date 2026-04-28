@@ -199,30 +199,33 @@ export default function InvestmentsPage() {
         <table className="w-full text-sm">
           <thead className="bg-transparent text-xs font-medium uppercase text-muted-foreground border-b border-border/40">
             <tr>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.name")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.platform")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.principalAmount")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("form.expectedProfit")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-end">{t("metric.realizedGains")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("form.endDate")}</th>
-              <th className="p-4 sm:px-6 sm:py-5 text-start">{t("common.status")}</th>
-              <th className="p-4 sm:px-6 sm:py-5"></th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("form.name")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("form.platform")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">{t("form.principalAmount")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">{t("form.expectedProfit")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">{t("metric.realizedGains")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("form.endDate")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-start">{t("common.status")}</th>
+              <th className="px-1.5 py-1.5 sm:px-3 sm:py-2"></th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((r) => (
               <tr key={r.id} className="border-t border-border/40 hover:bg-muted/30 transition-colors">
-                <td className="p-4 sm:px-6 sm:py-5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{r.name}</span>
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
+                  <div className="flex min-w-0 items-center gap-1.5">
+                    <span className="min-w-0 truncate font-medium">{r.name}</span>
                     {r.needsReview ? (
-                      <Badge variant="warning" className="h-5 px-1.5 text-[10px]">
-                        {t("common.needsReview")}
-                      </Badge>
+                      <span
+                        className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400 shadow-[0_0_0_1px_rgba(251,191,36,0.35)]"
+                        title={t("common.needsReview")}
+                        aria-label={t("common.needsReview")}
+                        role="img"
+                      />
                     ) : null}
                   </div>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-muted-foreground">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
                     <span
                       aria-hidden="true"
@@ -232,18 +235,18 @@ export default function InvestmentsPage() {
                     {r.platform?.name}
                   </span>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end font-semibold tabular-nums">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end font-semibold tabular-nums">
                   {formatMoney(r.principalAmount, settings.currency)}
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end tabular-nums">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end tabular-nums">
                   {formatMoney(r.expectedProfit, settings.currency)}
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end tabular-nums text-[hsl(var(--success))]">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end tabular-nums text-[hsl(var(--success))]">
                   {formatMoney(r.realizedProfit, settings.currency)}
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5">{formatDate(r.endDate, dateLocale)}</td>
-                <td className="p-4 sm:px-6 sm:py-5">
-                  <div className="inline-flex items-center gap-2">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">{formatDate(r.endDate, dateLocale)}</td>
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
+                  <div className="inline-flex items-center gap-1 sm:gap-1.5">
                     <Badge variant={STATUS_VARIANTS[r.derivedStatus]}>
                       {t(`status.${r.derivedStatus}`)}
                     </Badge>
@@ -253,7 +256,7 @@ export default function InvestmentsPage() {
                     />
                   </div>
                 </td>
-                <td className="p-4 sm:px-6 sm:py-5 text-end">
+                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">
                   <div className="flex justify-end gap-1">
                     <Button
                       variant="ghost"
