@@ -48,14 +48,9 @@ export async function GET(request: NextRequest) {
     const platformId = searchParams.get("platformId");
     const pid = platformId && platformId !== "all" ? platformId : undefined;
 
-    const [
-      platforms,
-      investments,
-      cashflowsUpcoming,
-      monthlySummary,
-      metrics,
-      breakdown,
-    ] = await Promise.all([
+    // Two concurrent DB operations at a time — matches postgres.js pool (max:2)
+    // and avoids starting all six fetches before any finish (pool queuing).
+    const [platforms, investments] = await Promise.all([
       timed("platforms", startedAt, fetchPlatformsList()),
       timed(
         "investments",
@@ -67,6 +62,10 @@ export async function GET(request: NextRequest) {
           page: 1,
         }),
       ),
+    ]);
+    logSummary("wave1_done", startedAt);
+
+    const [cashflowsUpcoming, monthlySummary] = await Promise.all([
       timed(
         "cashflows",
         startedAt,
@@ -84,9 +83,14 @@ export async function GET(request: NextRequest) {
         startedAt,
         fetchMonthlyCashflowSummary(platformId),
       ),
+    ]);
+    logSummary("wave2_done", startedAt);
+
+    const [metrics, breakdown] = await Promise.all([
       timed("metrics", startedAt, getCachedMetrics(pid)),
       timed("breakdown", startedAt, getCachedBreakdown()),
     ]);
+    logSummary("wave3_done", startedAt);
 
     logSummary("total_before_response", startedAt);
 
