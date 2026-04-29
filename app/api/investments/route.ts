@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { cashflows, investments, platforms } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
+import { createDbRouteTimer } from "@/lib/db-route-timing";
 import { requireOwner } from "@/lib/auth";
 import {
   createInvestmentWithSchedule,
@@ -26,7 +27,9 @@ function parsePage(value: string | null) {
 
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
+    const timer = createDbRouteTimer("GET /api/investments");
     await requireOwner();
+    timer.mark("after_requireOwner");
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const needsReviewOnly = searchParams.get("needsReview") === "true";
@@ -42,6 +45,7 @@ export async function GET(request: NextRequest) {
       .select({ count: sql<number>`cast(count(*) as integer)` })
       .from(investments)
       .where(baseWhere);
+    timer.mark("after_first_db_query");
 
     // 2. Fetch paginated rows
     let query = db

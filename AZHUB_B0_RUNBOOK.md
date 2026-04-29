@@ -44,11 +44,26 @@ Open *Project → Settings → Environment Variables* and confirm the following 
 | `NEXT_PUBLIC_BASE_URL` | `https://azhub.uk` |
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://uopqmvfbvbzyjndltctl.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | same publishable key currently in `.env.local` |
-| `DATABASE_URL` | production connection string (owner decides pooler vs direct) |
+| `DATABASE_URL` | production connection string (see **1.2.1** for Supabase pooler checks) |
 | `OWNER_EMAIL` | `ahmaaad277@gmail.com` |
 | `SHARE_LINK_SECRET` | **rotate** to a fresh 32+ byte random string; do NOT reuse the default placeholder |
 
 Rule: **DEP-R-005** — missing keys cause `/api/health` to fail; this is the gate.
+
+### 1.2.1 `DATABASE_URL` — Supabase Transaction Pooler (Vercel app runtime)
+
+Confirm the **Production** value in Vercel character-by-character (no truncation):
+
+- **Host:** `*.pooler.supabase.com` (pooler hostname from the Supabase dashboard, not the direct `db.<ref>.supabase.co` host unless you intentionally use direct mode).
+- **Port:** `6543` for **Transaction** mode pooler.
+- **User:** `postgres.<PROJECT_REF>` (pooler username format).
+- **Database:** `postgres`.
+- **TLS:** URI must include `sslmode=require`, or rely on the app’s `ssl: 'require'` in [`db/index.ts`](db/index.ts) as a backstop (still prefer the query string in the secret).
+- **Password:** URL-encode reserved characters (`@`, `#`, `%`, `?`, `/`, spaces, etc.).
+
+Optional diagnostics: set `DB_ROUTE_TIMING=1` on Vercel to log latency after auth vs first DB work on key API routes; owner-only `GET /api/health/db-ping` runs `SELECT 1`.
+
+For **`npm run db:migrate`**, if the transaction pooler rejects DDL, use a direct or session connection string from Supabase for that command only.
 
 ### 1.3 Supabase — Auth URL configuration
 Open Supabase → *Authentication → URL Configuration*:

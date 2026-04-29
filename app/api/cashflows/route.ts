@@ -3,8 +3,8 @@ import { and, asc, desc, eq, gte, inArray, lte, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { cashflows, investments, platforms } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
+import { createDbRouteTimer } from "@/lib/db-route-timing";
 import { requireOwner } from "@/lib/auth";
-import { sumMoney } from "@/lib/finance/money";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,9 @@ function parsePage(value: string | null) {
 
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
+    const timer = createDbRouteTimer("GET /api/cashflows");
     await requireOwner();
+    timer.mark("after_requireOwner");
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const status = searchParams.get("status"); // pending | received | all
@@ -47,6 +49,7 @@ export async function GET(request: NextRequest) {
       .from(cashflows)
       .innerJoin(investments, eq(cashflows.investmentId, investments.id))
       .where(baseWhere);
+    timer.mark("after_first_db_query");
 
     // 2. Fetch paginated rows
     let query = db

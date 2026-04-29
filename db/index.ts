@@ -11,10 +11,9 @@ if (!DATABASE_URL) {
 }
 
 /**
- * Single shared postgres client. max=1 limits each serverless instance to one
- * DB connection so many concurrent Lambdas do not exhaust Supabase session slots.
- * Use the transaction pooler (port 6543) in DATABASE_URL in production.
- * prepare=false stays compatible with PgBouncer transaction mode.
+ * Single shared postgres client for Drizzle. Small pool per serverless instance.
+ * Use Supabase transaction pooler (6543) in production DATABASE_URL; prepare=false
+ * matches PgBouncer transaction mode. connect_timeout bounds TCP/TLS handshake.
  */
 const globalForPg = globalThis as unknown as {
   pgClient?: ReturnType<typeof postgres>;
@@ -23,14 +22,20 @@ const globalForPg = globalThis as unknown as {
 const client =
   globalForPg.pgClient ??
   postgres(DATABASE_URL ?? "postgres://invalid", {
-    max: 1,
+    max: 2,
     prepare: false,
     idle_timeout: 30,
+    connect_timeout: 10,
+    ssl: "require",
+    debug: process.env.DB_DEBUG === "1",
   });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPg.pgClient = client;
 }
+
+/** Underlying postgres.js driver (tagged template) for ping/diagnostics only. */
+export const pgDriver = client;
 
 export const db = drizzle(client, { schema });
 export { schema };
