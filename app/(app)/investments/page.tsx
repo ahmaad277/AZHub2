@@ -152,6 +152,7 @@ export default function InvestmentsPage() {
       await api.del(`/api/investments/${id}`);
       toast.success(t("form.delete"));
       await Promise.all([
+        qc.invalidateQueries({ queryKey: ["dashboard-summary"] }),
         qc.invalidateQueries({ queryKey: ["investments"] }),
         qc.invalidateQueries({ queryKey: ["cashflows"] }),
         qc.invalidateQueries({ queryKey: ["cashflows-upcoming"] }),
@@ -315,6 +316,7 @@ export default function InvestmentsPage() {
                   "cashflows-upcoming",
                   "cashflows-monthly-summary",
                   "dashboard-metrics",
+                  "dashboard-summary",
                   "cashTxs",
                   "alerts",
                 ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),

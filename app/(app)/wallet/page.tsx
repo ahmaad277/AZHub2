@@ -136,6 +136,7 @@ export default function WalletPage() {
         [
           "cashTxs",
           "dashboard-metrics",
+          "dashboard-summary",
           "investments",
           "cashflows",
           "cashflows-upcoming",

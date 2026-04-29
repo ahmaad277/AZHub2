@@ -24,6 +24,7 @@ import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/fina
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Platform } from "@/db/schema";
 import { getPlatformColorOption } from "@/lib/platform-colors";
 
 const CollapsibleSection = dynamic(
@@ -41,21 +42,6 @@ const DashboardCharts = dynamic(
     loading: () => <DashboardChartsSkeleton />,
   },
 );
-
-interface MetricsResponse {
-  metrics: DashboardMetrics;
-  breakdown?: Array<{
-    platformId: string;
-    platformName: string;
-    activePrincipal: number;
-    realizedGains: number;
-    expectedProfit: number;
-    investmentsCount: number;
-    defaultedCount: number;
-    platformColor: string | null;
-    investmentsPrincipalTotal: number;
-  }>;
-}
 
 interface InvestmentRow {
   id: string;
@@ -100,60 +86,53 @@ interface MonthlyCashflowResponse {
   }>;
 }
 
+interface DashboardSummaryResponse {
+  platforms: Platform[];
+  investments: InvestmentRow[] | RowsResponse<InvestmentRow>;
+  cashflowsUpcoming: {
+    rows: CashflowRow[];
+    summary: { totalAmount: number };
+    totalCount: number;
+  };
+  monthlySummary: MonthlyCashflowResponse;
+  metrics: DashboardMetrics;
+  breakdown: Array<{
+    platformId: string;
+    platformName: string;
+    activePrincipal: number;
+    realizedGains: number;
+    expectedProfit: number;
+    investmentsCount: number;
+    defaultedCount: number;
+    platformColor: string | null;
+    investmentsPrincipalTotal: number;
+  }>;
+}
+
 export default function DashboardPage() {
   const { t, settings, platformFilter } = useApp();
   const isLite = settings.viewMode === "lite";
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
 
-  const platformQuery = platformFilter === "all" ? "" : `&platformId=${platformFilter}`;
+  const platformSummaryQuery =
+    platformFilter === "all" ? "" : `?platformId=${platformFilter}`;
 
-  const { data, isLoading: metricsLoading } = useQuery<MetricsResponse>({
-    queryKey: ["dashboard-metrics", platformFilter, "breakdown"],
+  const { data, isLoading } = useQuery<DashboardSummaryResponse>({
+    queryKey: ["dashboard-summary", platformFilter],
     queryFn: () =>
-      api.get<MetricsResponse>(`/api/dashboard/metrics?breakdown=true${platformQuery}`),
+      api.get<DashboardSummaryResponse>(`/api/dashboard/summary${platformSummaryQuery}`),
     placeholderData: (previousData) => previousData,
-    // Align with `QueryClient` default in `components/providers` (60s), not 5m — still invalidates on mutations
     staleTime: 60_000,
-  });
-
-  const { data: invsData = [], isLoading: invsLoading } = useQuery<
-    InvestmentRow[] | RowsResponse<InvestmentRow>
-  >({
-    queryKey: ["investments", platformFilter],
-    queryFn: () =>
-      api.get<InvestmentRow[] | RowsResponse<InvestmentRow>>(
-        `/api/investments?limit=6${platformFilter !== "all" ? `&platformId=${platformFilter}` : ""}`,
-      ),
-    placeholderData: (previousData) => previousData,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const { data: cfsData = [], isLoading: cfsLoading } = useQuery<
-    CashflowRow[] | RowsResponse<CashflowRow>
-  >({
-    queryKey: ["cashflows-upcoming", platformFilter],
-    queryFn: () =>
-      api.get<CashflowRow[] | RowsResponse<CashflowRow>>(
-        `/api/cashflows?status=pending&limit=6${platformQuery}`,
-      ),
-    placeholderData: (previousData) => previousData,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const { data: monthlyData, isLoading: monthlyLoading } = useQuery<MonthlyCashflowResponse>({
-    queryKey: ["cashflows-monthly-summary", platformFilter],
-    queryFn: () =>
-      api.get<MonthlyCashflowResponse>(
-        `/api/cashflows/monthly-summary${platformFilter !== "all" ? `?platformId=${platformFilter}` : ""}`,
-      ),
-    placeholderData: (previousData) => previousData,
-    staleTime: 5 * 60 * 1000,
   });
 
   const m = data?.metrics;
   const breakdown = data?.breakdown ?? [];
-  const invs = Array.isArray(invsData) ? invsData : (invsData.rows ?? []);
-  const cfs = Array.isArray(cfsData) ? cfsData : (cfsData.rows ?? []);
+  const invsPayload = data?.investments;
+  const invs = Array.isArray(invsPayload)
+    ? invsPayload
+    : (invsPayload?.rows ?? []);
+  const cfs = data?.cashflowsUpcoming?.rows ?? [];
+  const monthlyData = data?.monthlySummary;
 
   return (
     <div className="space-y-6">
@@ -247,7 +226,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      {metricsLoading || monthlyLoading ? (
+      {isLoading ? (
         <DashboardChartsSkeleton />
       ) : (
         <DashboardCharts
@@ -394,7 +373,7 @@ export default function DashboardPage() {
               </div>
             </Link>
           ))}
-          {invsLoading ? (
+          {isLoading ? (
             <ListSkeleton rows={3} />
           ) : invs.length === 0 ? (
             <div className="py-8 text-center text-sm text-muted-foreground">
@@ -438,7 +417,7 @@ export default function DashboardPage() {
               </div>
             </div>
           ))}
-          {cfsLoading ? (
+          {isLoading ? (
             <ListSkeleton rows={3} />
           ) : cfs.length === 0 ? (
             <div className="py-8 text-center text-sm text-muted-foreground">

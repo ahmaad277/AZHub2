@@ -64,6 +64,7 @@ export default function SnapshotsPage() {
         [
           "snapshots",
           "dashboard-metrics",
+          "dashboard-summary",
           "investments",
           "cashflows",
           "cashflows-upcoming",

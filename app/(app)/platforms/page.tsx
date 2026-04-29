@@ -82,6 +82,7 @@ export default function PlatformsPage() {
       setOpen(false);
       resetForm();
       await qc.invalidateQueries({ queryKey: ["platforms"] });
+      await qc.invalidateQueries({ queryKey: ["dashboard-summary"] });
     } catch (e) {
       toast.error((e as Error).message);
     }
@@ -92,6 +93,7 @@ export default function PlatformsPage() {
       await api.del(`/api/platforms/${id}`);
       toast.success(t("form.delete"));
       await qc.invalidateQueries({ queryKey: ["platforms"] });
+      await qc.invalidateQueries({ queryKey: ["dashboard-summary"] });
     } catch (e) {
       toast.error((e as Error).message);
     }
