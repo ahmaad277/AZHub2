@@ -11,9 +11,10 @@ if (!DATABASE_URL) {
 }
 
 /**
- * Single shared postgres client. We use a small connection pool (max=5) that
- * is friendly to Supabase's session pooler as well as to Vercel's serverless
- * runtime. Prepare = false keeps it compatible with the transaction pooler.
+ * Single shared postgres client. max=1 limits each serverless instance to one
+ * DB connection so many concurrent Lambdas do not exhaust Supabase session slots.
+ * Use the transaction pooler (port 6543) in DATABASE_URL in production.
+ * prepare=false stays compatible with PgBouncer transaction mode.
  */
 const globalForPg = globalThis as unknown as {
   pgClient?: ReturnType<typeof postgres>;
@@ -22,7 +23,7 @@ const globalForPg = globalThis as unknown as {
 const client =
   globalForPg.pgClient ??
   postgres(DATABASE_URL ?? "postgres://invalid", {
-    max: 5,
+    max: 1,
     prepare: false,
     idle_timeout: 30,
   });
