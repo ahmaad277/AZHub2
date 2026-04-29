@@ -3,6 +3,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Moon, Sun, Languages, Gauge, Menu, LogOut, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ import { api } from "@/lib/fetcher";
 import type { Platform } from "@/db/schema";
 
 export function AppTopbar() {
+  const pathname = usePathname();
   const { t, settings, setSettings, platformFilter, setPlatformFilter } = useApp();
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
@@ -36,10 +38,12 @@ export function AppTopbar() {
     setMounted(true);
   }, []);
 
+  /** On `/` the home dashboard fills `["platforms"]` from /api/dashboard/summary to avoid a second DB round-trip. */
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms"),
     staleTime: 5 * 60_000,
+    enabled: pathname !== "/",
   });
 
   const signOut = async () => {

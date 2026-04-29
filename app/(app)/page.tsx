@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Wallet,
   Briefcase,
@@ -111,6 +111,7 @@ interface DashboardSummaryResponse {
 
 export default function DashboardPage() {
   const { t, settings, platformFilter } = useApp();
+  const qc = useQueryClient();
   const isLite = settings.viewMode === "lite";
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
 
@@ -124,6 +125,12 @@ export default function DashboardPage() {
     placeholderData: (previousData) => previousData,
     staleTime: 60_000,
   });
+
+  React.useEffect(() => {
+    if (data && Array.isArray(data.platforms)) {
+      qc.setQueryData(["platforms"], data.platforms);
+    }
+  }, [data, qc]);
 
   const m = data?.metrics;
   const breakdown = data?.breakdown ?? [];
@@ -254,7 +261,7 @@ export default function DashboardPage() {
         description={settings.targetCapital2040 ? formatMoney(settings.targetCapital2040, settings.currency) : undefined}
         actions={
           <Button asChild variant="outline" size="sm">
-            <Link href="/vision">{t("common.viewAll")}</Link>
+            <Link href="/vision" prefetch={false}>{t("common.viewAll")}</Link>
           </Button>
         }
       >
@@ -324,7 +331,7 @@ export default function DashboardPage() {
         title={t("dash.recentInvestments")}
         actions={
           <Button asChild variant="outline" size="sm">
-            <Link href="/investments">{t("common.viewAll")}</Link>
+            <Link href="/investments" prefetch={false}>{t("common.viewAll")}</Link>
           </Button>
         }
       >
@@ -333,6 +340,7 @@ export default function DashboardPage() {
             <Link
               key={inv.id}
               href={`/investments?id=${inv.id}`}
+              prefetch={false}
               className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-border/80"
               style={{
                 borderInlineStartWidth: 4,
@@ -389,7 +397,7 @@ export default function DashboardPage() {
         title={t("dash.upcomingCashflows")}
         actions={
           <Button asChild variant="outline" size="sm">
-            <Link href="/cashflows">{t("common.viewAll")}</Link>
+            <Link href="/cashflows" prefetch={false}>{t("common.viewAll")}</Link>
           </Button>
         }
       >
