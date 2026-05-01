@@ -23,7 +23,7 @@ export function ShareLinksManager() {
   const { data = [] } = useQuery<ShareLink[]>({
     queryKey: ["share-links"],
     queryFn: () =>
-      api.get<ShareLink[]>("/api/share-links", "settings:share-links"),
+      api.get<ShareLink[]>("/api/share-links"),
     enabled: pathname === "/settings",
   });
 

@@ -33,7 +33,7 @@ export default function AlertsPage() {
 
   const { data = [] } = useQuery<Alert[]>({
     queryKey: ["alerts"],
-    queryFn: () => api.get<Alert[]>("/api/alerts", "alerts-page:list"),
+    queryFn: () => api.get<Alert[]>("/api/alerts"),
     staleTime: 5 * 60 * 1000,
     enabled: pathname === "/alerts",
   });

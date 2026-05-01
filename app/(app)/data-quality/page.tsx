@@ -29,7 +29,7 @@ export default function DataQualityPage() {
   const { data = [] } = useQuery<Issue[]>({
     queryKey: ["dq"],
     queryFn: () =>
-      api.get<Issue[]>("/api/data-quality/scan", "data-quality-page:scan"),
+      api.get<Issue[]>("/api/data-quality/scan"),
     staleTime: 5 * 60 * 1000,
     enabled: pathname === "/data-quality",
   });

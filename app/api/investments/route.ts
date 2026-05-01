@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { handleRoute } from "@/lib/api";
-import { createDbRouteTimer } from "@/lib/db-route-timing";
 import { requireOwner } from "@/lib/auth";
 import {
   createInvestmentWithSchedule,
@@ -18,9 +17,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
-    const timer = createDbRouteTimer("GET /api/investments");
     await requireOwner();
-    timer.mark("after_requireOwner");
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const needsReviewOnly = searchParams.get("needsReview") === "true";
@@ -32,7 +29,6 @@ export async function GET(request: NextRequest) {
       needsReviewOnly,
       limit,
       page,
-      timer,
     });
   });
 }

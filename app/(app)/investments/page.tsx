@@ -95,7 +95,6 @@ export default function InvestmentsPage() {
       params.set("limit", PAGE_SIZE.toString());
       return api.get<Row[] | InvestmentsResponse>(
         `/api/investments?${params.toString()}`,
-        "investments-page:list",
       );
     },
     staleTime: 5 * 60 * 1000,
@@ -134,10 +133,7 @@ export default function InvestmentsPage() {
 
   const startEdit = React.useCallback(async (id: string) => {
     try {
-      const investment = await api.get<Row>(
-        `/api/investments/${id}`,
-        "investments-page:detail",
-      );
+      const investment = await api.get<Row>(`/api/investments/${id}`);
       setEditingInvestment(investment);
       setOpen(true);
     } catch (e) {

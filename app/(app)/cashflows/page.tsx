@@ -58,7 +58,6 @@ export default function CashflowsPage() {
       params.set("limit", PAGE_SIZE.toString());
       return api.get<Row[] | CashflowsResponse>(
         `/api/cashflows?${params.toString()}`,
-        "cashflows-page:list",
       );
     },
     staleTime: 5 * 60 * 1000,

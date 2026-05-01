@@ -123,7 +123,6 @@ export default function DashboardPage() {
     queryFn: () =>
       api.get<DashboardSummaryResponse>(
         `/api/dashboard/summary${platformSummaryQuery}`,
-        "dashboard-summary",
       ),
     placeholderData: (previousData) => previousData,
     staleTime: 60_000,

@@ -4,8 +4,6 @@ import { resolveStatus } from "@/lib/finance/status-resolver";
 import { roundToMoney } from "@/lib/finance/money";
 import { and, asc, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 
-export type DashboardFetchTimer = { mark: (phase: string) => void };
-
 export function parseLimitParam(value: string | null) {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, 100) : undefined;
@@ -17,7 +15,11 @@ export function parsePageParam(value: string | null) {
 }
 
 export async function fetchPlatformsList() {
-  return db.select().from(platforms).orderBy(asc(platforms.name));
+  const rows = await db
+    .select()
+    .from(platforms)
+    .orderBy(asc(platforms.name));
+  return rows;
 }
 
 export async function fetchInvestmentsGet(options: {
@@ -25,9 +27,8 @@ export async function fetchInvestmentsGet(options: {
   needsReviewOnly: boolean;
   limit: number | undefined;
   page: number;
-  timer?: DashboardFetchTimer | null;
 }) {
-  const { platformId, needsReviewOnly, limit, page, timer } = options;
+  const { platformId, needsReviewOnly, limit, page } = options;
 
   const baseWhere =
     platformId && platformId !== "all"
@@ -38,7 +39,6 @@ export async function fetchInvestmentsGet(options: {
     .select({ count: sql<number>`cast(count(*) as integer)` })
     .from(investments)
     .where(baseWhere);
-  timer?.mark("after_first_db_query");
 
   let query = db
     .select({
@@ -120,9 +120,8 @@ export async function fetchCashflowsGet(options: {
   to: string | null | undefined;
   limit: number | undefined;
   page: number;
-  timer?: DashboardFetchTimer | null;
 }) {
-  const { platformId, status, from, to, limit, page, timer } = options;
+  const { platformId, status, from, to, limit, page } = options;
 
   const conds: any[] = [];
   if (status && status !== "all") conds.push(eq(cashflows.status, status as any));
@@ -141,7 +140,6 @@ export async function fetchCashflowsGet(options: {
     .from(cashflows)
     .innerJoin(investments, eq(cashflows.investmentId, investments.id))
     .where(baseWhere);
-  timer?.mark("after_first_db_query");
 
   let query = db
     .select({

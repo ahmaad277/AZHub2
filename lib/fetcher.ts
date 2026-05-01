@@ -1,26 +1,7 @@
-function traceApiRequest(path: string, traceLabel?: string) {
-  if (
-    typeof window === "undefined" ||
-    process.env.NEXT_PUBLIC_FETCH_TRACE !== "1" ||
-    !path.includes("/api/")
-  ) {
-    return;
-  }
-  console.groupCollapsed("[fetch-trace]", traceLabel ?? "(unlabeled)", path);
-  console.log("[fetch-trace] label:", traceLabel ?? "(none)");
-  console.log("[fetch-trace] path:", path);
-  console.log("[fetch-trace] pathname:", window.location.pathname);
-  console.trace();
-  console.groupEnd();
-}
-
 export async function fetcher<T = unknown>(
   path: string,
   init?: RequestInit,
-  traceLabel?: string,
 ): Promise<T> {
-  traceApiRequest(path, traceLabel);
-
   const res = await fetch(path, {
     ...init,
     headers: {
@@ -55,26 +36,21 @@ export async function fetcher<T = unknown>(
 }
 
 export const api = {
-  get: <T>(path: string, traceLabel?: string) =>
-    fetcher<T>(path, { method: "GET" }, traceLabel),
-  post: <T>(path: string, body?: unknown, traceLabel?: string) =>
-    fetcher<T>(
-      path,
-      { method: "POST", body: body ? JSON.stringify(body) : undefined },
-      traceLabel,
-    ),
-  patch: <T>(path: string, body?: unknown, traceLabel?: string) =>
-    fetcher<T>(
-      path,
-      { method: "PATCH", body: body ? JSON.stringify(body) : undefined },
-      traceLabel,
-    ),
-  put: <T>(path: string, body?: unknown, traceLabel?: string) =>
-    fetcher<T>(
-      path,
-      { method: "PUT", body: body ? JSON.stringify(body) : undefined },
-      traceLabel,
-    ),
-  del: <T>(path: string, traceLabel?: string) =>
-    fetcher<T>(path, { method: "DELETE" }, traceLabel),
+  get: <T>(path: string) => fetcher<T>(path, { method: "GET" }),
+  post: <T>(path: string, body?: unknown) =>
+    fetcher<T>(path, {
+      method: "POST",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
+  patch: <T>(path: string, body?: unknown) =>
+    fetcher<T>(path, {
+      method: "PATCH",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
+  put: <T>(path: string, body?: unknown) =>
+    fetcher<T>(path, {
+      method: "PUT",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
+  del: <T>(path: string) => fetcher<T>(path, { method: "DELETE" }),
 };

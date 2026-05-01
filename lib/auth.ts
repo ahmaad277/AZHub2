@@ -1,5 +1,4 @@
 import { createSupabaseServerClient } from "./supabase/server";
-import type { PageTiming } from "./page-timing";
 import type { User } from "@supabase/supabase-js";
 
 export type OwnerSessionState =
@@ -25,16 +24,11 @@ export function getConfiguredOwnerEmail() {
  * Returns the authenticated owner session (or null). Since this is a personal
  * single-user app, we additionally verify the email matches OWNER_EMAIL.
  */
-export async function getOwnerSessionState(
-  pageTiming?: PageTiming | null,
-): Promise<OwnerSessionState> {
-  pageTiming?.log("getOwnerSessionState_start");
+export async function getOwnerSessionState(): Promise<OwnerSessionState> {
   const supabase = await createSupabaseServerClient();
-  pageTiming?.log("getOwnerSessionState_after_createSupabaseClient");
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  pageTiming?.log("getOwnerSessionState_after_getUser");
 
   if (!user) return { status: "no_session" };
 

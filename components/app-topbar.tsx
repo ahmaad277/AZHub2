@@ -41,7 +41,7 @@ export function AppTopbar() {
   /** On `/` the home dashboard fills `["platforms"]` from /api/dashboard/summary to avoid a second DB round-trip. */
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
-    queryFn: () => api.get<Platform[]>("/api/platforms", "topbar:platforms"),
+    queryFn: () => api.get<Platform[]>("/api/platforms"),
     staleTime: 5 * 60_000,
     enabled: pathname !== "/",
   });

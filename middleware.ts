@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createPageTiming } from "@/lib/page-timing";
 
 /**
  * Refreshes the Supabase auth session on every request so Server Components
@@ -11,15 +10,11 @@ import { createPageTiming } from "@/lib/page-timing";
  * individual route handlers enforce the owner-only rule via `requireOwner()`.
  */
 export async function middleware(request: NextRequest) {
-  const pageTiming = createPageTiming();
-  pageTiming?.log("middleware_start");
   const response = NextResponse.next({ request });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseKey) {
-    pageTiming?.log("middleware_skip_missing_supabase_env");
-    pageTiming?.log("middleware_total");
     return response;
   }
 
@@ -37,10 +32,7 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  pageTiming?.log("middleware_before_getUser");
   await supabase.auth.getUser();
-  pageTiming?.log("middleware_after_getUser");
-  pageTiming?.log("middleware_total");
   return response;
 }
 

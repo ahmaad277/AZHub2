@@ -37,7 +37,7 @@ export default function VisionPage() {
   const { data: targets = [] } = useQuery<VisionTargetRow[]>({
     queryKey: ["visionTargets"],
     queryFn: () =>
-      api.get<VisionTargetRow[]>("/api/vision/targets", "vision-page:targets"),
+      api.get<VisionTargetRow[]>("/api/vision/targets"),
     staleTime: 5 * 60 * 1000,
     enabled: pathname === "/vision",
   });
@@ -45,10 +45,7 @@ export default function VisionPage() {
   const { data: metricsResp } = useQuery<{ metrics: DashboardMetrics }>({
     queryKey: ["dashboard-metrics", "all", "summary"],
     queryFn: () =>
-      api.get<{ metrics: DashboardMetrics }>(
-        "/api/dashboard/metrics",
-        "vision-page:dashboard-metrics",
-      ),
+      api.get<{ metrics: DashboardMetrics }>("/api/dashboard/metrics"),
     staleTime: 5 * 60 * 1000,
     enabled: pathname === "/vision",
   });

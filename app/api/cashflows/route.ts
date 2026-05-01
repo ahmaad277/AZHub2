@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { handleRoute } from "@/lib/api";
-import { createDbRouteTimer } from "@/lib/db-route-timing";
 import { requireOwner } from "@/lib/auth";
 import {
   fetchCashflowsGet,
@@ -12,9 +11,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   return handleRoute(async () => {
-    const timer = createDbRouteTimer("GET /api/cashflows");
     await requireOwner();
-    timer.mark("after_requireOwner");
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const status = searchParams.get("status");
@@ -30,7 +27,6 @@ export async function GET(request: NextRequest) {
       to,
       limit,
       page,
-      timer,
     });
   });
 }

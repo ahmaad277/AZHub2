@@ -61,7 +61,7 @@ Confirm the **Production** value in Vercel character-by-character (no truncation
 - **TLS:** URI must include `sslmode=require`, or rely on the app’s `ssl: 'require'` in [`db/index.ts`](db/index.ts) as a backstop (still prefer the query string in the secret).
 - **Password:** URL-encode reserved characters (`@`, `#`, `%`, `?`, `/`, spaces, etc.).
 
-Optional diagnostics: set `DB_ROUTE_TIMING=1` on Vercel to log latency after auth vs first DB work on key API routes; owner-only `GET /api/health/db-ping` runs `SELECT 1`.
+For a lightweight DB connectivity check, owner-only `GET /api/health/db-ping` runs `SELECT 1`.
 
 For **`npm run db:migrate`**, if the transaction pooler rejects DDL, use a direct or session connection string from Supabase for that command only.
 

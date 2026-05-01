@@ -70,7 +70,7 @@ export default function WalletPage() {
 
   const { data: platforms = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
-    queryFn: () => api.get<Platform[]>("/api/platforms", "wallet-page:platforms"),
+    queryFn: () => api.get<Platform[]>("/api/platforms"),
     staleTime: 5 * 60_000,
     enabled: pathname === "/wallet",
   });
@@ -82,7 +82,6 @@ export default function WalletPage() {
         `/api/cash-transactions${
           platformFilter !== "all" ? `?platformId=${platformFilter}` : ""
         }`,
-        "wallet-page:cash-transactions",
       ),
     staleTime: 5 * 60 * 1000,
     enabled: pathname === "/wallet",
