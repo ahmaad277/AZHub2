@@ -11,7 +11,7 @@ if (!DATABASE_URL) {
 }
 
 /**
- * Single shared postgres client for Drizzle. Small pool per serverless instance.
+ * Single shared postgres client for Drizzle. Limited pool per serverless instance.
  * Use Supabase transaction pooler (6543) in production DATABASE_URL; prepare=false
  * matches PgBouncer transaction mode. connect_timeout bounds TCP/TLS handshake.
  */
@@ -22,7 +22,8 @@ const globalForPg = globalThis as unknown as {
 const client =
   globalForPg.pgClient ??
   postgres(DATABASE_URL ?? "postgres://invalid", {
-    max: 2,
+    // Transaction pooler (6543): modest parallelism; too low caused long queues on /api/dashboard/summary.
+    max: 4,
     prepare: false,
     idle_timeout: 30,
     connect_timeout: 10,

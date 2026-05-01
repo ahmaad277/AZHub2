@@ -3,5 +3,10 @@
   "framework": "nextjs",
   "regions": ["sin1"],
   "installCommand": "npm install",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "functions": {
+    "app/api/dashboard/summary/route.ts": {
+      "maxDuration": 60
+    }
+  }
 }

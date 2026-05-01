@@ -160,12 +160,10 @@ export async function loadDashboardMetricsCoreFromDb(): Promise<DashboardMetrics
   return { investmentRows, cashflowRows, cashRows };
 }
 
-/** Core rows + platform list in one wave (four pool slots max). */
+/** Core rows then platform list — avoids a fourth concurrent query vs core's three. */
 export async function loadDashboardAggregatesFromDb(): Promise<DashboardAggregates> {
-  const [core, platformRows] = await Promise.all([
-    loadDashboardMetricsCoreFromDb(),
-    db.select().from(platforms).where(sql`true`),
-  ]);
+  const core = await loadDashboardMetricsCoreFromDb();
+  const platformRows = await db.select().from(platforms).where(sql`true`);
   return { ...core, platformRows };
 }
 

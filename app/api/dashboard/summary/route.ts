@@ -19,31 +19,31 @@ export async function GET(request: NextRequest) {
     const platformId = searchParams.get("platformId");
     const pid = platformId && platformId !== "all" ? platformId : undefined;
 
-    const [
-      { metrics, breakdown },
-      platforms,
-      investments,
-      cashflowsUpcoming,
-      monthlySummary,
-    ] = await Promise.all([
-      computeSummaryMetricsAndBreakdown({ platformId: pid }),
-      fetchPlatformsList(),
-      fetchInvestmentsGet({
-        platformId,
-        needsReviewOnly: false,
-        limit: 6,
-        page: 1,
-      }),
-      fetchCashflowsGet({
-        platformId,
-        status: "pending",
-        from: null,
-        to: null,
-        limit: 6,
-        page: 1,
-      }),
-      fetchMonthlyCashflowSummary(platformId),
-    ]);
+    // Run heavy metrics+ breakdown first so it does not compete with preview queries
+    // for the small postgres pool (see db/index.ts).
+    const { metrics, breakdown } = await computeSummaryMetricsAndBreakdown({
+      platformId: pid,
+    });
+
+    const [platforms, investments, cashflowsUpcoming, monthlySummary] =
+      await Promise.all([
+        fetchPlatformsList(),
+        fetchInvestmentsGet({
+          platformId,
+          needsReviewOnly: false,
+          limit: 6,
+          page: 1,
+        }),
+        fetchCashflowsGet({
+          platformId,
+          status: "pending",
+          from: null,
+          to: null,
+          limit: 6,
+          page: 1,
+        }),
+        fetchMonthlyCashflowSummary(platformId),
+      ]);
 
     return {
       platforms,
