@@ -1,12 +1,11 @@
 import { NextRequest } from "next/server";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import { getCachedSummaryCompute } from "@/lib/server/dashboard-metrics-cache";
 import {
-  fetchCashflowsGet,
-  fetchInvestmentsGet,
-  fetchMonthlyCashflowSummary,
-} from "@/lib/server/dashboard-summary-data";
+  getCachedMonthlyCashflowSummary,
+  getCachedSummaryCompute,
+} from "@/lib/server/dashboard-metrics-cache";
+import { fetchCashflowsGet, fetchInvestmentsGet } from "@/lib/server/dashboard-summary-data";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +16,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const pid = platformId && platformId !== "all" ? platformId : undefined;
+    const monthlyScope = platformId && platformId !== "all" ? platformId : "all";
+    const monthKeyUtc = new Date().toISOString().slice(0, 7);
 
     // Cached metrics+breakdown (same tag as /api/dashboard/metrics invalidations) runs in
     // parallel with dashboard previews so wall time ≈ max(branch) not sum(branch).
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
           page: 1,
           skipAggregate: true,
         }),
-        fetchMonthlyCashflowSummary(platformId),
+        getCachedMonthlyCashflowSummary(monthlyScope, monthKeyUtc),
       ]);
 
     return {
