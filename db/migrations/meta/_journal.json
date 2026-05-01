@@ -29,6 +29,13 @@
       "when": 1777468800000,
       "tag": "0003_perf_dashboard_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777555200000,
+      "tag": "0004_cashflows_pending_due_partial_idx",
+      "breakpoints": true
     }
   ]
 }
