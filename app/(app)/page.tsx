@@ -168,7 +168,10 @@ export default function DashboardPage() {
     if (data && Array.isArray(data.platforms)) {
       qc.setQueryData(["platforms"], data.platforms);
     }
-  }, [data, qc]);
+    if (data?.metrics && platformFilter === "all") {
+      qc.setQueryData(["dashboard-metrics", "all", "summary"], { metrics: data.metrics });
+    }
+  }, [data, qc, platformFilter]);
 
   const m = data?.metrics;
   const breakdown = data?.breakdown ?? [];

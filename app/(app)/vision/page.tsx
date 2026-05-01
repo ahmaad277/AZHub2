@@ -44,8 +44,20 @@ export default function VisionPage() {
 
   const { data: metricsResp } = useQuery<{ metrics: DashboardMetrics }>({
     queryKey: ["dashboard-metrics", "all", "summary"],
-    queryFn: () =>
-      api.get<{ metrics: DashboardMetrics }>("/api/dashboard/metrics"),
+    queryFn: async () => {
+      const cached = qc.getQueryData<unknown>(["dashboard-summary", "all"]);
+      if (
+        cached &&
+        typeof cached === "object" &&
+        "metrics" in cached &&
+        (cached as { metrics?: DashboardMetrics }).metrics
+      ) {
+        return {
+          metrics: (cached as { metrics: DashboardMetrics }).metrics,
+        };
+      }
+      return api.get<{ metrics: DashboardMetrics }>("/api/dashboard/metrics");
+    },
     staleTime: 5 * 60 * 1000,
     enabled: pathname === "/vision",
   });
