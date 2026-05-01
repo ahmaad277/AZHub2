@@ -67,7 +67,13 @@ export function AppTopbar() {
         </Button>
 
         <div className="w-9 shrink-0 md:w-auto md:min-w-[10rem] md:max-w-[14rem]">
-          <Select value={platformFilter} onValueChange={setPlatformFilter}>
+          <Select
+            value={platformFilter}
+            onValueChange={(next) => {
+              if (!next || next === platformFilter) return;
+              setPlatformFilter(next);
+            }}
+          >
             <SelectTrigger
               className="h-9 w-9 justify-center px-0 md:w-auto md:justify-between md:px-3 [&>svg:last-child]:hidden md:[&>svg:last-child]:block"
               aria-label={t("form.platform")}

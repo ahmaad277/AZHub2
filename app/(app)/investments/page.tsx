@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Pencil, Plus, Search, Trash2 } from "lucide-react";
@@ -74,6 +74,7 @@ const STATUS_VARIANTS: Record<string, "default" | "warning" | "destructive" | "s
 const PAGE_SIZE = 50;
 
 export default function InvestmentsPage() {
+  const pathname = usePathname();
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
   const searchParams = useSearchParams();
@@ -98,13 +99,14 @@ export default function InvestmentsPage() {
       );
     },
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/investments",
   });
 
   const allRows = React.useMemo(
     () => (Array.isArray(data) ? data : (data?.rows ?? [])),
     [data],
   );
-  
+
   const totalCount = Array.isArray(data) ? allRows.length : (data?.totalCount ?? 0);
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
