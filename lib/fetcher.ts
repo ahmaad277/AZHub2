@@ -1,7 +1,23 @@
+function traceApiRequest(path: string) {
+  if (
+    typeof window === "undefined" ||
+    process.env.NEXT_PUBLIC_FETCH_TRACE !== "1" ||
+    !path.includes("/api/")
+  ) {
+    return;
+  }
+  console.groupCollapsed("[fetch-trace]", path);
+  console.log("[fetch-trace] pathname:", window.location.pathname);
+  console.trace();
+  console.groupEnd();
+}
+
 export async function fetcher<T = unknown>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
+  traceApiRequest(path);
+
   const res = await fetch(path, {
     ...init,
     headers: {
