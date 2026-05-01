@@ -17,7 +17,7 @@
  * `/api/dashboard/metrics` and displays whatever comes back.
  */
 
-import { sql } from "drizzle-orm";
+import { asc, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   cashTransactions,
@@ -160,11 +160,46 @@ export async function loadDashboardMetricsCoreFromDb(): Promise<DashboardMetrics
   return { investmentRows, cashflowRows, cashRows };
 }
 
-/** Core rows then platform list — avoids a fourth concurrent query vs core's three. */
+/** Four parallel reads (core + platforms) — same rows as sequential; lower wall time. */
 export async function loadDashboardAggregatesFromDb(): Promise<DashboardAggregates> {
-  const core = await loadDashboardMetricsCoreFromDb();
-  const platformRows = await db.select().from(platforms).where(sql`true`);
-  return { ...core, platformRows };
+  const [investmentRows, cashflowRows, cashRows, platformRows] = await Promise.all([
+    db
+      .select({
+        id: investments.id,
+        principal: investments.principalAmount,
+        expectedProfit: investments.expectedProfit,
+        startDate: investments.startDate,
+        endDate: investments.endDate,
+        platformId: investments.platformId,
+      })
+      .from(investments)
+      .where(sql`true`),
+    db
+      .select({
+        id: cashflows.id,
+        investmentId: cashflows.investmentId,
+        dueDate: cashflows.dueDate,
+        amount: cashflows.amount,
+        type: cashflows.type,
+        status: cashflows.status,
+      })
+      .from(cashflows)
+      .where(sql`true`),
+    db
+      .select({
+        amount: cashTransactions.amount,
+        platformId: cashTransactions.platformId,
+      })
+      .from(cashTransactions)
+      .where(sql`true`),
+    db
+      .select()
+      .from(platforms)
+      .where(sql`true`)
+      .orderBy(asc(platforms.name)),
+  ]);
+
+  return { investmentRows, cashflowRows, cashRows, platformRows };
 }
 
 export async function getDashboardMetrics(
@@ -221,6 +256,24 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
   const graceDays = DEFAULT_GRACE_DAYS;
   const { investmentRows, cashflowRows, cashRows, platformRows: plats } = agg;
 
+  const investmentsByPlatform = new Map<string, RawInvestment[]>();
+  const invIdToPlatformId = new Map<string, string>();
+  for (const i of investmentRows) {
+    invIdToPlatformId.set(i.id, i.platformId);
+    const list = investmentsByPlatform.get(i.platformId) ?? [];
+    list.push(i);
+    investmentsByPlatform.set(i.platformId, list);
+  }
+
+  const cashflowsByPlatform = new Map<string, RawCashflow[]>();
+  for (const cf of cashflowRows) {
+    const pid = invIdToPlatformId.get(cf.investmentId);
+    if (pid === undefined) continue;
+    const list = cashflowsByPlatform.get(pid) ?? [];
+    list.push(cf);
+    cashflowsByPlatform.set(pid, list);
+  }
+
   const results = [] as Array<{
     platformId: string;
     platformName: string;
@@ -234,11 +287,8 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
   }>;
 
   for (const p of plats) {
-    const platformInvestments = investmentRows.filter((i) => i.platformId === p.id);
-    const platformInvestmentIds = new Set(platformInvestments.map((i) => i.id));
-    const platformCashflows = cashflowRows.filter((cf) =>
-      platformInvestmentIds.has(cf.investmentId),
-    );
+    const platformInvestments = investmentsByPlatform.get(p.id) ?? [];
+    const platformCashflows = cashflowsByPlatform.get(p.id) ?? [];
     const platformCashRows = cashRows.filter(
       (cr) => cr.platformId === p.id || cr.platformId === null,
     );
@@ -264,7 +314,7 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
   return results;
 }
 
-/** One DB load, then metrics + full breakdown — for `/api/dashboard/summary` cache entry. */
+/** One DB load, then metrics + full breakdown (+ platform rows for summary to avoid a duplicate query). */
 export async function computeSummaryMetricsAndBreakdown(options: {
   platformId?: string;
 }) {
@@ -272,7 +322,7 @@ export async function computeSummaryMetricsAndBreakdown(options: {
   const now = new Date();
   const metrics = computeMetricsFromAggregates(agg, { platformId: options.platformId, now });
   const breakdown = computePlatformBreakdownFromAggregates(agg, now);
-  return { metrics, breakdown };
+  return { metrics, breakdown, platforms: agg.platformRows };
 }
 
 /**

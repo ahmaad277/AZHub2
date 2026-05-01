@@ -22,8 +22,9 @@ const globalForPg = globalThis as unknown as {
 const client =
   globalForPg.pgClient ??
   postgres(DATABASE_URL ?? "postgres://invalid", {
-    // Transaction pooler (6543): modest parallelism; too low caused long queues on /api/dashboard/summary.
-    max: 4,
+    // Transaction pooler (6543): summary runs cached compute + 3 preview branches in parallel;
+    // each branch may issue concurrent queries — too low queues requests.
+    max: 8,
     prepare: false,
     idle_timeout: 30,
     connect_timeout: 10,

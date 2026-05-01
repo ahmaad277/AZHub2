@@ -1,12 +1,11 @@
 import { NextRequest } from "next/server";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import { computeSummaryMetricsAndBreakdown } from "@/lib/finance/metrics";
+import { getCachedSummaryCompute } from "@/lib/server/dashboard-metrics-cache";
 import {
   fetchCashflowsGet,
   fetchInvestmentsGet,
   fetchMonthlyCashflowSummary,
-  fetchPlatformsList,
 } from "@/lib/server/dashboard-summary-data";
 
 export const dynamic = "force-dynamic";
@@ -19,15 +18,11 @@ export async function GET(request: NextRequest) {
     const platformId = searchParams.get("platformId");
     const pid = platformId && platformId !== "all" ? platformId : undefined;
 
-    // Run heavy metrics+ breakdown first so it does not compete with preview queries
-    // for the small postgres pool (see db/index.ts).
-    const { metrics, breakdown } = await computeSummaryMetricsAndBreakdown({
-      platformId: pid,
-    });
-
-    const [platforms, investments, cashflowsUpcoming, monthlySummary] =
+    // Cached metrics+breakdown (same tag as /api/dashboard/metrics invalidations) runs in
+    // parallel with dashboard previews so wall time ≈ max(branch) not sum(branch).
+    const [{ metrics, breakdown, platforms }, investments, cashflowsUpcoming, monthlySummary] =
       await Promise.all([
-        fetchPlatformsList(),
+        getCachedSummaryCompute(pid),
         fetchInvestmentsGet({
           platformId,
           needsReviewOnly: false,

@@ -35,12 +35,7 @@ export async function fetchInvestmentsGet(options: {
       ? eq(investments.platformId, platformId)
       : undefined;
 
-  const [{ count }] = await db
-    .select({ count: sql<number>`cast(count(*) as integer)` })
-    .from(investments)
-    .where(baseWhere);
-
-  let query = db
+  let listQuery = db
     .select({
       investment: investments,
       platform: platforms,
@@ -51,11 +46,21 @@ export async function fetchInvestmentsGet(options: {
     .orderBy(desc(investments.createdAt))
     .$dynamic();
 
-  if (limit) {
-    query = query.limit(limit).offset((page - 1) * limit);
-  }
+  let rows: Awaited<ReturnType<typeof listQuery.execute>>;
+  let count = 0;
 
-  const rows = await query;
+  if (limit) {
+    listQuery = listQuery.limit(limit).offset((page - 1) * limit);
+    const countQuery = db
+      .select({ count: sql<number>`cast(count(*) as integer)` })
+      .from(investments)
+      .where(baseWhere);
+    const [countRow, pageRows] = await Promise.all([countQuery, listQuery]);
+    count = countRow[0]?.count ?? 0;
+    rows = pageRows;
+  } else {
+    rows = await listQuery;
+  }
 
   const ids = rows.map((r) => r.investment.id);
   const cfs = ids.length
@@ -132,7 +137,7 @@ export async function fetchCashflowsGet(options: {
   }
   const baseWhere = conds.length ? and(...conds) : undefined;
 
-  const [{ count, totalAmount }] = await db
+  const aggregateQuery = db
     .select({
       count: sql<number>`cast(count(*) as integer)`,
       totalAmount: sql<string>`sum(${cashflows.amount})`,
@@ -141,7 +146,7 @@ export async function fetchCashflowsGet(options: {
     .innerJoin(investments, eq(cashflows.investmentId, investments.id))
     .where(baseWhere);
 
-  let query = db
+  let listQuery = db
     .select({
       cashflow: cashflows,
       investment: investments,
@@ -155,10 +160,13 @@ export async function fetchCashflowsGet(options: {
     .$dynamic();
 
   if (limit) {
-    query = query.limit(limit).offset((page - 1) * limit);
+    listQuery = listQuery.limit(limit).offset((page - 1) * limit);
   }
 
-  const rows = await query;
+  const [[{ count, totalAmount }], rows] = await Promise.all([
+    aggregateQuery,
+    listQuery,
+  ]);
 
   const normalizedRows = rows.map((r) => ({
     ...r.cashflow,
