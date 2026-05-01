@@ -125,7 +125,9 @@ export default function DashboardPage() {
         `/api/dashboard/summary${platformSummaryQuery}`,
       ),
     placeholderData: (previousData) => previousData,
-    staleTime: 60_000,
+    // Server caches summary math up to 1h; keep client calm for ~3m to cut duplicate network.
+    staleTime: 180_000,
+    gcTime: 900_000,
   });
 
   const [canMountCharts, setCanMountCharts] = React.useState(false);

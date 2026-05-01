@@ -7,6 +7,15 @@
   "functions": {
     "app/api/dashboard/summary/route.ts": {
       "maxDuration": 60
+    },
+    "app/api/dashboard/metrics/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/investments/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/cashflows/route.ts": {
+      "maxDuration": 60
     }
   }
 }
