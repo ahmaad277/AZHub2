@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
           needsReviewOnly: false,
           limit: 6,
           page: 1,
+          skipTotalCount: true,
         }),
         fetchCashflowsGet({
           platformId,
@@ -36,6 +37,7 @@ export async function GET(request: NextRequest) {
           to: null,
           limit: 6,
           page: 1,
+          skipAggregate: true,
         }),
         fetchMonthlyCashflowSummary(platformId),
       ]);

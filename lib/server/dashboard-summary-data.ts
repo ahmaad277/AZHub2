@@ -27,8 +27,13 @@ export async function fetchInvestmentsGet(options: {
   needsReviewOnly: boolean;
   limit: number | undefined;
   page: number;
+  /**
+   * With `limit`, skips `COUNT(*)` over the filtered investments table (expensive at scale).
+   * Use only when `totalCount` is not needed (e.g. dashboard summary strip). Then `totalCount` reflects preview rows only.
+   */
+  skipTotalCount?: boolean;
 }) {
-  const { platformId, needsReviewOnly, limit, page } = options;
+  const { platformId, needsReviewOnly, limit, page, skipTotalCount } = options;
 
   const baseWhere =
     platformId && platformId !== "all"
@@ -51,13 +56,17 @@ export async function fetchInvestmentsGet(options: {
 
   if (limit) {
     listQuery = listQuery.limit(limit).offset((page - 1) * limit);
-    const countQuery = db
-      .select({ count: sql<number>`cast(count(*) as integer)` })
-      .from(investments)
-      .where(baseWhere);
-    const [countRow, pageRows] = await Promise.all([countQuery, listQuery]);
-    count = countRow[0]?.count ?? 0;
-    rows = pageRows;
+    if (skipTotalCount) {
+      rows = await listQuery;
+    } else {
+      const countQuery = db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(investments)
+        .where(baseWhere);
+      const [countRow, pageRows] = await Promise.all([countQuery, listQuery]);
+      count = countRow[0]?.count ?? 0;
+      rows = pageRows;
+    }
   } else {
     rows = await listQuery;
   }
@@ -111,7 +120,7 @@ export async function fetchInvestmentsGet(options: {
   if (limit) {
     return {
       rows: finalRows,
-      totalCount: count,
+      totalCount: skipTotalCount ? finalRows.length : count,
     };
   }
 
@@ -125,8 +134,13 @@ export async function fetchCashflowsGet(options: {
   to: string | null | undefined;
   limit: number | undefined;
   page: number;
+  /**
+   * With `limit`, skips global aggregate (count + sum) over all matching cashflows.
+   * Use when only the preview rows matter; `summary.totalAmount` and `totalCount` are derived from the returned page only.
+   */
+  skipAggregate?: boolean;
 }) {
-  const { platformId, status, from, to, limit, page } = options;
+  const { platformId, status, from, to, limit, page, skipAggregate } = options;
 
   const conds: any[] = [];
   if (status && status !== "all") conds.push(eq(cashflows.status, status as any));
@@ -163,10 +177,22 @@ export async function fetchCashflowsGet(options: {
     listQuery = listQuery.limit(limit).offset((page - 1) * limit);
   }
 
-  const [[{ count, totalAmount }], rows] = await Promise.all([
-    aggregateQuery,
-    listQuery,
-  ]);
+  let rows: Awaited<ReturnType<typeof listQuery.execute>>;
+  let count: number;
+  let totalAmount: number;
+
+  if (limit && skipAggregate) {
+    rows = await listQuery;
+    count = rows.length;
+    totalAmount = roundToMoney(
+      rows.reduce((acc, r) => acc + Number(r.cashflow.amount), 0),
+    );
+  } else {
+    const [[aggRow], pageRows] = await Promise.all([aggregateQuery, listQuery]);
+    rows = pageRows;
+    count = aggRow.count;
+    totalAmount = Number(aggRow.totalAmount ?? 0);
+  }
 
   const normalizedRows = rows.map((r) => ({
     ...r.cashflow,
@@ -176,7 +202,7 @@ export async function fetchCashflowsGet(options: {
   return {
     rows: normalizedRows,
     summary: {
-      totalAmount: Number(totalAmount ?? 0),
+      totalAmount,
     },
     totalCount: count,
   };
