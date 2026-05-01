@@ -92,7 +92,10 @@ export default function InvestmentsPage() {
       if (platformFilter !== "all") params.set("platformId", platformFilter);
       params.set("page", page.toString());
       params.set("limit", PAGE_SIZE.toString());
-      return api.get<Row[] | InvestmentsResponse>(`/api/investments?${params.toString()}`);
+      return api.get<Row[] | InvestmentsResponse>(
+        `/api/investments?${params.toString()}`,
+        "investments-page:list",
+      );
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -129,7 +132,10 @@ export default function InvestmentsPage() {
 
   const startEdit = React.useCallback(async (id: string) => {
     try {
-      const investment = await api.get<Row>(`/api/investments/${id}`);
+      const investment = await api.get<Row>(
+        `/api/investments/${id}`,
+        "investments-page:detail",
+      );
       setEditingInvestment(investment);
       setOpen(true);
     } catch (e) {

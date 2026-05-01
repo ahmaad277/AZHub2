@@ -87,7 +87,8 @@ export function InvestmentWizard({
 
   const platformsQuery = useQuery<Platform[]>({
     queryKey: ["platforms"],
-    queryFn: () => api.get<Platform[]>("/api/platforms"),
+    queryFn: () =>
+      api.get<Platform[]>("/api/platforms", "investment-wizard:platforms"),
     enabled: !availablePlatforms,
     staleTime: 5 * 60_000,
   });

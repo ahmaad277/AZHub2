@@ -54,7 +54,10 @@ export default function CashflowsPage() {
       if (platformFilter !== "all") params.set("platformId", platformFilter);
       params.set("page", page.toString());
       params.set("limit", PAGE_SIZE.toString());
-      return api.get<Row[] | CashflowsResponse>(`/api/cashflows?${params.toString()}`);
+      return api.get<Row[] | CashflowsResponse>(
+        `/api/cashflows?${params.toString()}`,
+        "cashflows-page:list",
+      );
     },
     staleTime: 5 * 60 * 1000,
   });

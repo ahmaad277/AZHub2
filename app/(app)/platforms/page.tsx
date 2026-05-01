@@ -44,7 +44,7 @@ export default function PlatformsPage() {
 
   const { data = [] } = useQuery<Platform[]>({
     queryKey: ["platforms"],
-    queryFn: () => api.get<Platform[]>("/api/platforms"),
+    queryFn: () => api.get<Platform[]>("/api/platforms", "platforms-page:list"),
     staleTime: 5 * 60 * 1000,
   });
 

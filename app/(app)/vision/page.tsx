@@ -34,13 +34,18 @@ export default function VisionPage() {
 
   const { data: targets = [] } = useQuery<VisionTargetRow[]>({
     queryKey: ["visionTargets"],
-    queryFn: () => api.get<VisionTargetRow[]>("/api/vision/targets"),
+    queryFn: () =>
+      api.get<VisionTargetRow[]>("/api/vision/targets", "vision-page:targets"),
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: metricsResp } = useQuery<{ metrics: DashboardMetrics }>({
     queryKey: ["dashboard-metrics", "all", "summary"],
-    queryFn: () => api.get<{ metrics: DashboardMetrics }>("/api/dashboard/metrics"),
+    queryFn: () =>
+      api.get<{ metrics: DashboardMetrics }>(
+        "/api/dashboard/metrics",
+        "vision-page:dashboard-metrics",
+      ),
     staleTime: 5 * 60 * 1000,
   });
 

@@ -121,7 +121,10 @@ export default function DashboardPage() {
   const { data, isLoading } = useQuery<DashboardSummaryResponse>({
     queryKey: ["dashboard-summary", platformFilter],
     queryFn: () =>
-      api.get<DashboardSummaryResponse>(`/api/dashboard/summary${platformSummaryQuery}`),
+      api.get<DashboardSummaryResponse>(
+        `/api/dashboard/summary${platformSummaryQuery}`,
+        "dashboard-summary",
+      ),
     placeholderData: (previousData) => previousData,
     staleTime: 60_000,
   });
