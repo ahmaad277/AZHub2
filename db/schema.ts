@@ -199,6 +199,8 @@ export const investments = pgTable(
   (t) => ({
     platformIdx: index("investments_platform_idx").on(t.platformId),
     endDateIdx: index("investments_end_date_idx").on(t.endDate),
+    /** List/sort recent investments (dashboard preview, /investments default sort). */
+    createdAtIdx: index("investments_created_at_idx").on(t.createdAt),
     principalPositive: check(
       "investments_principal_positive",
       sql`${t.principalAmount}::numeric > 0`,
@@ -258,6 +260,11 @@ export const cashflows = pgTable(
     investmentIdx: index("cashflows_investment_idx").on(t.investmentId),
     dueDateIdx: index("cashflows_due_date_idx").on(t.dueDate),
     statusIdx: index("cashflows_status_idx").on(t.status),
+    /** Pending cashflows in a due-date window (monthly summary, upcoming lists). */
+    statusDueDateIdx: index("cashflows_status_due_date_idx").on(
+      t.status,
+      t.dueDate,
+    ),
     amountPositive: check(
       "cashflows_amount_positive",
       sql`${t.amount}::numeric > 0`,
