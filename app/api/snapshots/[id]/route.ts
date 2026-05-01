@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { portfolioSnapshots } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
+import { revalidateTag } from "next/cache";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -30,6 +31,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await requireOwner();
     const { id } = await params;
     await db.delete(portfolioSnapshots).where(eq(portfolioSnapshots.id, id));
+    revalidateTag("snapshots-list");
     return { ok: true };
   });
 }

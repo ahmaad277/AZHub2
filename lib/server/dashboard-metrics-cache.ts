@@ -4,7 +4,10 @@ import {
   getPlatformBreakdown,
 } from "@/lib/finance/metrics";
 import { fetchMonthlyCashflowSummary } from "@/lib/server/dashboard-summary-data";
+import { desc } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
+import { db } from "@/db";
+import { alerts } from "@/db/schema";
 
 export const getCachedMetrics = unstable_cache(
   async (platformId?: string) =>
@@ -38,5 +41,12 @@ export const getCachedMonthlyCashflowSummary = unstable_cache(
     return fetchMonthlyCashflowSummary(platformId);
   },
   ["dashboard-monthly-cashflow-summary"],
+  { tags: ["dashboard-metrics"], revalidate: 3600 },
+);
+
+/** Alerts list — same invalidation tag as dashboard metrics when portfolio data changes. */
+export const getCachedAlertsList = unstable_cache(
+  async () => db.select().from(alerts).orderBy(desc(alerts.createdAt)),
+  ["alerts-list"],
   { tags: ["dashboard-metrics"], revalidate: 3600 },
 );

@@ -1,17 +1,19 @@
 import { NextRequest } from "next/server";
-import { asc, desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { alerts, cashflows, investments, userSettings } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
+import { getCachedAlertsList } from "@/lib/server/dashboard-metrics-cache";
 import { daysBetween } from "@/lib/finance/date-smart";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
-    return db.select().from(alerts).orderBy(desc(alerts.createdAt));
+    return getCachedAlertsList();
   });
 }
 
@@ -83,6 +85,7 @@ export async function POST() {
         // ignore dedupe collisions
       }
     }
+    revalidateTag("dashboard-metrics");
     return { generated };
   });
 }

@@ -5,6 +5,7 @@ import { alerts } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
 import { z } from "zod";
+import { revalidateTag } from "next/cache";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -20,6 +21,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       .set({ read: body.read })
       .where(eq(alerts.id, id))
       .returning();
+    revalidateTag("dashboard-metrics");
     return row;
   });
 }
@@ -29,6 +31,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await requireOwner();
     const { id } = await params;
     await db.delete(alerts).where(eq(alerts.id, id));
+    revalidateTag("dashboard-metrics");
     return { ok: true };
   });
 }

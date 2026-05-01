@@ -3,14 +3,15 @@ import { db } from "@/db";
 import { platforms, insertPlatformSchema } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import { fetchPlatformsList } from "@/lib/server/dashboard-summary-data";
+import { getCachedPlatformsList } from "@/lib/server/platforms-list-cache";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
-    return fetchPlatformsList();
+    return getCachedPlatformsList();
   });
 }
 
@@ -20,6 +21,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const parsed = insertPlatformSchema.parse(body);
     const [row] = await db.insert(platforms).values(parsed).returning();
+    revalidateTag("platforms-list");
     return row;
   });
 }

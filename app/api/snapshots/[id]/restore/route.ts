@@ -20,6 +20,7 @@ import {
 } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
+import { revalidateTag } from "next/cache";
 
 type Ctx = { params: Promise<{ id: string }> };
 const RESET_SNAPSHOT_ID = "__reset__";
@@ -69,6 +70,8 @@ export async function POST(_req: NextRequest, { params }: Ctx) {
       await db.transaction(async (tx) => {
         await clearPortfolioData(tx);
       });
+      revalidateTag("dashboard-metrics");
+      revalidateTag("platforms-list");
       return { ok: true, reset: true };
     }
     const [snap] = await db
@@ -134,6 +137,9 @@ export async function POST(_req: NextRequest, { params }: Ctx) {
         }
       }
     });
+
+    revalidateTag("dashboard-metrics");
+    revalidateTag("platforms-list");
 
     return { ok: true };
   });

@@ -4,6 +4,7 @@ import { platforms, insertPlatformSchema } from "@/db/schema";
 import { handleRoute, jsonError } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -36,6 +37,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       .set(parsed)
       .where(eq(platforms.id, id))
       .returning();
+    revalidateTag("platforms-list");
     return row;
   });
 }
@@ -45,6 +47,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await requireOwner();
     const { id } = await params;
     await db.delete(platforms).where(eq(platforms.id, id));
+    revalidateTag("platforms-list");
     return { ok: true };
   });
 }

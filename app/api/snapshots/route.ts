@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { desc } from "drizzle-orm";
 import { db } from "@/db";
 import {
   alerts,
@@ -14,6 +13,8 @@ import {
 } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
+import { getCachedSnapshotsList } from "@/lib/server/snapshots-list-cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -25,16 +26,7 @@ const createSchema = z.object({
 export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
-    return db
-      .select({
-        id: portfolioSnapshots.id,
-        name: portfolioSnapshots.name,
-        entityCounts: portfolioSnapshots.entityCounts,
-        byteSize: portfolioSnapshots.byteSize,
-        createdAt: portfolioSnapshots.createdAt,
-      })
-      .from(portfolioSnapshots)
-      .orderBy(desc(portfolioSnapshots.createdAt));
+    return getCachedSnapshotsList();
   });
 }
 
@@ -88,6 +80,7 @@ export async function POST(request: NextRequest) {
         byteSize,
       })
       .returning();
+    revalidateTag("snapshots-list");
     return row;
   });
 }
