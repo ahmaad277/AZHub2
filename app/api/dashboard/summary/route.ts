@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import { getCachedSummaryMetricsAndBreakdown } from "@/lib/server/dashboard-metrics-cache";
+import { computeSummaryMetricsAndBreakdown } from "@/lib/finance/metrics";
 import {
   fetchCashflowsGet,
   fetchInvestmentsGet,
@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
     const pid = platformId && platformId !== "all" ? platformId : undefined;
-    const platformKey = pid ?? "all";
 
     const [
       { metrics, breakdown },
@@ -27,7 +26,7 @@ export async function GET(request: NextRequest) {
       cashflowsUpcoming,
       monthlySummary,
     ] = await Promise.all([
-      getCachedSummaryMetricsAndBreakdown(platformKey),
+      computeSummaryMetricsAndBreakdown({ platformId: pid }),
       fetchPlatformsList(),
       fetchInvestmentsGet({
         platformId,
