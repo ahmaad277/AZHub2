@@ -126,6 +126,42 @@ export default function DashboardPage() {
     staleTime: 60_000,
   });
 
+  const [canMountCharts, setCanMountCharts] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setCanMountCharts(false);
+      return;
+    }
+
+    let cancelled = false;
+    const enable = () => {
+      if (!cancelled) setCanMountCharts(true);
+    };
+
+    let idleHandle: number | undefined;
+    let timeoutHandle: number | undefined;
+
+    if (typeof requestIdleCallback !== "undefined") {
+      idleHandle = requestIdleCallback(enable, { timeout: 2000 });
+    } else {
+      timeoutHandle = window.setTimeout(enable, 1);
+    }
+
+    return () => {
+      cancelled = true;
+      if (
+        idleHandle !== undefined &&
+        typeof cancelIdleCallback !== "undefined"
+      ) {
+        cancelIdleCallback(idleHandle);
+      }
+      if (timeoutHandle !== undefined) {
+        clearTimeout(timeoutHandle);
+      }
+    };
+  }, [isLoading]);
+
   React.useEffect(() => {
     if (data && Array.isArray(data.platforms)) {
       qc.setQueryData(["platforms"], data.platforms);
@@ -233,7 +269,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      {isLoading ? (
+      {isLoading || !canMountCharts ? (
         <DashboardChartsSkeleton />
       ) : (
         <DashboardCharts
