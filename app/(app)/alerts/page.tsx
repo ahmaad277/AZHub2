@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { BellRing, Check, RefreshCw, Trash2 } from "lucide-react";
@@ -26,6 +27,7 @@ const VARIANT: Record<string, "default" | "warning" | "destructive" | "success">
 };
 
 export default function AlertsPage() {
+  const pathname = usePathname();
   const { t } = useApp();
   const qc = useQueryClient();
 
@@ -33,6 +35,7 @@ export default function AlertsPage() {
     queryKey: ["alerts"],
     queryFn: () => api.get<Alert[]>("/api/alerts", "alerts-page:list"),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/alerts",
   });
 
   const regenerate = async () => {

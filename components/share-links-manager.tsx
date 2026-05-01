@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Copy, Plus, Trash2, ExternalLink } from "lucide-react";
@@ -13,6 +14,7 @@ import { api } from "@/lib/fetcher";
 import type { ShareLink } from "@/db/schema";
 
 export function ShareLinksManager() {
+  const pathname = usePathname();
   const { t } = useApp();
   const qc = useQueryClient();
   const [label, setLabel] = React.useState("Data Entry Link");
@@ -22,6 +24,7 @@ export function ShareLinksManager() {
     queryKey: ["share-links"],
     queryFn: () =>
       api.get<ShareLink[]>("/api/share-links", "settings:share-links"),
+    enabled: pathname === "/settings",
   });
 
   const create = async () => {

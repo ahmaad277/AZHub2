@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Target, Wand2 } from "lucide-react";
@@ -22,6 +23,7 @@ interface VisionTargetRow {
 const PAGE_SIZE = 50;
 
 export default function VisionPage() {
+  const pathname = usePathname();
   const { t, settings, setSettings } = useApp();
   const qc = useQueryClient();
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
@@ -37,6 +39,7 @@ export default function VisionPage() {
     queryFn: () =>
       api.get<VisionTargetRow[]>("/api/vision/targets", "vision-page:targets"),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/vision",
   });
 
   const { data: metricsResp } = useQuery<{ metrics: DashboardMetrics }>({
@@ -47,6 +50,7 @@ export default function VisionPage() {
         "vision-page:dashboard-metrics",
       ),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/vision",
   });
 
   const pageCount = Math.max(1, Math.ceil(targets.length / PAGE_SIZE));

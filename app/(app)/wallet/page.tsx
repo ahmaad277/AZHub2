@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ArrowDownToLine, ArrowUpFromLine, Plus } from "lucide-react";
@@ -55,6 +56,7 @@ const NO_PLATFORM = "__none__";
 const PAGE_SIZE = 50;
 
 export default function WalletPage() {
+  const pathname = usePathname();
   const { t, settings, platformFilter } = useApp();
   const qc = useQueryClient();
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
@@ -70,6 +72,7 @@ export default function WalletPage() {
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms", "wallet-page:platforms"),
     staleTime: 5 * 60_000,
+    enabled: pathname === "/wallet",
   });
 
   const { data } = useQuery<TxRow[] | CashTransactionsResponse>({
@@ -82,6 +85,7 @@ export default function WalletPage() {
         "wallet-page:cash-transactions",
       ),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/wallet",
   });
 
   const txs = React.useMemo(

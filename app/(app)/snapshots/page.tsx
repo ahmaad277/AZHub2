@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Archive, RotateCcw, Trash2 } from "lucide-react";
@@ -21,6 +22,7 @@ interface Snapshot {
 const RESET_SNAPSHOT_ID = "__reset__";
 
 export default function SnapshotsPage() {
+  const pathname = usePathname();
   const { t, settings } = useApp();
   const qc = useQueryClient();
   const dateLocale = settings.language === "ar" ? "ar-SA" : "en-US";
@@ -30,6 +32,7 @@ export default function SnapshotsPage() {
     queryKey: ["snapshots"],
     queryFn: () => api.get<Snapshot[]>("/api/snapshots", "snapshots-page:list"),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/snapshots",
   });
 
   const create = async () => {

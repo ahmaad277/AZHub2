@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ShieldCheck, RefreshCw } from "lucide-react";
@@ -21,6 +22,7 @@ interface Issue {
 }
 
 export default function DataQualityPage() {
+  const pathname = usePathname();
   const { t } = useApp();
   const qc = useQueryClient();
 
@@ -29,6 +31,7 @@ export default function DataQualityPage() {
     queryFn: () =>
       api.get<Issue[]>("/api/data-quality/scan", "data-quality-page:scan"),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/data-quality",
   });
 
   const scan = async () => {

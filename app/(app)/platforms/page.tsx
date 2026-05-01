@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -36,6 +37,7 @@ const emptyForm = {
 };
 
 export default function PlatformsPage() {
+  const pathname = usePathname();
   const { t } = useApp();
   const qc = useQueryClient();
   const [open, setOpen] = React.useState(false);
@@ -46,6 +48,7 @@ export default function PlatformsPage() {
     queryKey: ["platforms"],
     queryFn: () => api.get<Platform[]>("/api/platforms", "platforms-page:list"),
     staleTime: 5 * 60 * 1000,
+    enabled: pathname === "/platforms",
   });
 
   const resetForm = () => {
