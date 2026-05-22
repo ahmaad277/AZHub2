@@ -70,6 +70,22 @@ export default function DataQualityPage() {
     }
   };
 
+  const renderMessage = (msg: string) => {
+    try {
+      const parsed = JSON.parse(msg);
+      if (parsed.key) {
+        let translated = t(parsed.key);
+        if (parsed.name) translated = translated.replace("{name}", parsed.name);
+        if (parsed.expected) translated = translated.replace("{expected}", String(parsed.expected));
+        if (parsed.actual) translated = translated.replace("{actual}", String(parsed.actual));
+        return translated;
+      }
+    } catch {
+      // Not JSON, return as is
+    }
+    return msg;
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -86,18 +102,18 @@ export default function DataQualityPage() {
           <div key={i.id} className="rounded-xl border p-4">
             <div className="flex items-center gap-2">
               <Badge variant={i.severity === "error" ? "destructive" : "warning"}>
-                {i.severity}
+                {t(`severity.${i.severity}`)}
               </Badge>
               <span className="text-xs font-medium text-muted-foreground">
-                {i.entityType} · {i.issueType}
+                {t(`dq.entity.${i.entityType}`)} · {t(`dq.type.${i.issueType}`)}
               </span>
             </div>
-            <div className="mt-1 text-sm">{i.message}</div>
+            <div className="mt-1 text-sm">{renderMessage(i.message)}</div>
             {i.suggestedFix ? (
               <div className="mt-3 flex items-center justify-between rounded-lg bg-muted/50 p-3">
                 <div className="text-xs">
                   <span className="font-semibold text-foreground">{t("dataQuality.suggestedFix")}:</span>{" "}
-                  <span className="text-muted-foreground">{i.suggestedFix}</span>
+                  <span className="text-muted-foreground">{t(i.suggestedFix)}</span>
                 </div>
                 <Button 
                   size="sm" 

@@ -51,8 +51,8 @@ export async function POST() {
           entityId: inv.id,
           issueType: "no_cashflows",
           severity: "warning",
-          message: `Investment "${inv.name}" has no cashflow schedule`,
-          suggestedFix: "Open the investment and regenerate the schedule",
+          message: JSON.stringify({ key: "dq.no_cashflows", name: inv.name }),
+          suggestedFix: "dq.fix_open_regenerate",
         });
       } else {
         const profitSum = list
@@ -64,8 +64,8 @@ export async function POST() {
             entityId: inv.id,
             issueType: "profit_mismatch",
             severity: "warning",
-            message: `Expected profit (${inv.expectedProfit}) ≠ sum of profit cashflows (${roundToMoney(profitSum)})`,
-            suggestedFix: "Regenerate schedule or adjust expected profit",
+            message: JSON.stringify({ key: "dq.profit_mismatch", expected: inv.expectedProfit, actual: roundToMoney(profitSum) }),
+            suggestedFix: "dq.fix_regenerate_schedule",
           });
         }
         const principalSum = list
@@ -77,7 +77,7 @@ export async function POST() {
             entityId: inv.id,
             issueType: "principal_mismatch",
             severity: "error",
-            message: `Principal amount (${inv.principalAmount}) ≠ sum of principal cashflows (${roundToMoney(principalSum)})`,
+            message: JSON.stringify({ key: "dq.principal_mismatch", expected: inv.principalAmount, actual: roundToMoney(principalSum) }),
           });
         }
       }
@@ -100,8 +100,8 @@ export async function POST() {
             entityId: cf.id,
             issueType: "missing_ledger_entry",
             severity: "error",
-            message: `Cashflow marked as received but no ledger entry found`,
-            suggestedFix: "Undo the receipt and re-apply it",
+            message: JSON.stringify({ key: "dq.missing_ledger_entry" }),
+            suggestedFix: "dq.fix_undo_receipt",
           });
         }
       }

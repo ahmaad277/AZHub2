@@ -108,6 +108,27 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "dataQuality.fixError": { en: "Failed to apply fix", ar: "فشل تطبيق الإصلاح" },
   "dataQuality.redirecting": { en: "Redirecting...", ar: "جاري التوجيه..." },
 
+  "dq.no_cashflows": { en: 'Investment "{name}" has no cashflow schedule', ar: 'الاستثمار "{name}" ليس له جدول تدفقات نقدية' },
+  "dq.profit_mismatch": { en: "Expected profit ({expected}) ≠ sum of profit cashflows ({actual})", ar: "الربح المتوقع ({expected}) ≠ مجموع تدفقات الأرباح ({actual})" },
+  "dq.principal_mismatch": { en: "Principal amount ({expected}) ≠ sum of principal cashflows ({actual})", ar: "رأس المال ({expected}) ≠ مجموع تدفقات رأس المال ({actual})" },
+  "dq.missing_ledger_entry": { en: "Cashflow marked as received but no ledger entry found", ar: "تم تعليم التدفق كمستلم ولكن لم يتم العثور على قيد في السجل" },
+  
+  "dq.fix_regenerate_schedule": { en: "Regenerate schedule or adjust expected profit", ar: "أعد توليد الجدول أو قم بتعديل الربح المتوقع" },
+  "dq.fix_open_regenerate": { en: "Open the investment and regenerate the schedule", ar: "افتح الاستثمار وأعد توليد الجدول" },
+  "dq.fix_undo_receipt": { en: "Undo the receipt and re-apply it", ar: "تراجع عن الاستلام وقم بتطبيقه مرة أخرى" },
+  
+  "dq.entity.investment": { en: "investment", ar: "استثمار" },
+  "dq.entity.cashflow": { en: "cashflow", ar: "تدفق نقدي" },
+
+  "dq.type.no_cashflows": { en: "no_cashflows", ar: "لا_يوجد_تدفقات" },
+  "dq.type.profit_mismatch": { en: "profit_mismatch", ar: "عدم_تطابق_الأرباح" },
+  "dq.type.principal_mismatch": { en: "principal_mismatch", ar: "عدم_تطابق_رأس_المال" },
+  "dq.type.missing_ledger_entry": { en: "missing_ledger_entry", ar: "قيد_سجل_مفقود" },
+
+  "severity.info": { en: "info", ar: "معلومة" },
+  "severity.warning": { en: "warning", ar: "تحذير" },
+  "severity.error": { en: "error", ar: "خطأ" },
+
   // Common
   "common.proMode": { en: "Pro Mode", ar: "الوضع الاحترافي" },
   "common.liteMode": { en: "Lite Mode", ar: "الوضع المبسط" },
