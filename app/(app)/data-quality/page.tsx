@@ -1,13 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ShieldCheck, RefreshCw } from "lucide-react";
+import { ShieldCheck, RefreshCw, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
+import React from "react";
 
 interface Issue {
   id: string;
@@ -23,8 +24,10 @@ interface Issue {
 
 export default function DataQualityPage() {
   const pathname = usePathname();
+  const router = useRouter();
   const { t } = useApp();
   const qc = useQueryClient();
+  const [fixingId, setFixingId] = React.useState<string | null>(null);
 
   const { data = [] } = useQuery<Issue[]>({
     queryKey: ["dq"],
@@ -44,11 +47,34 @@ export default function DataQualityPage() {
     }
   };
 
+  const applyFix = async (issueId: string) => {
+    try {
+      setFixingId(issueId);
+      const res = await api.post<{ success: boolean; action: string; redirectUrl: string | null }>(
+        "/api/data-quality/fix",
+        { issueId }
+      );
+      
+      if (res.action === "redirect" && res.redirectUrl) {
+        toast.info(t("dataQuality.redirecting"));
+        router.push(res.redirectUrl);
+      } else {
+        toast.success(t("dataQuality.fixSuccess"));
+        await qc.invalidateQueries({ queryKey: ["dq"] });
+        await qc.invalidateQueries({ queryKey: ["dashboard-metrics"] });
+      }
+    } catch (e) {
+      toast.error(t("dataQuality.fixError") + ": " + (e as Error).message);
+    } finally {
+      setFixingId(null);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <ShieldCheck className="h-4 w-4" /> {data.length} open issues
+          <ShieldCheck className="h-4 w-4" /> {data.length} {t("dataQuality.openIssues")}
         </div>
         <Button onClick={scan} variant="outline" className="gap-2">
           <RefreshCw className="h-4 w-4" /> {t("common.scan")}
@@ -68,8 +94,21 @@ export default function DataQualityPage() {
             </div>
             <div className="mt-1 text-sm">{i.message}</div>
             {i.suggestedFix ? (
-              <div className="mt-1 text-xs text-muted-foreground">
-                → {i.suggestedFix}
+              <div className="mt-3 flex items-center justify-between rounded-lg bg-muted/50 p-3">
+                <div className="text-xs">
+                  <span className="font-semibold text-foreground">{t("dataQuality.suggestedFix")}:</span>{" "}
+                  <span className="text-muted-foreground">{i.suggestedFix}</span>
+                </div>
+                <Button 
+                  size="sm" 
+                  variant="secondary" 
+                  onClick={() => applyFix(i.id)}
+                  disabled={fixingId === i.id}
+                  className="gap-1.5 h-8"
+                >
+                  <Wrench className="h-3.5 w-3.5" />
+                  {t("dataQuality.applyFix")}
+                </Button>
               </div>
             ) : null}
           </div>

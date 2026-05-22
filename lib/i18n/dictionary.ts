@@ -100,6 +100,14 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
     ar: "التدفقات القادمة من الشهر الحالي وما بعده، مقسمة حسب المنصة.",
   },
 
+  // Data Quality
+  "dataQuality.openIssues": { en: "open issues", ar: "مشاكل مفتوحة" },
+  "dataQuality.suggestedFix": { en: "Suggested Fix", ar: "الحل المقترح" },
+  "dataQuality.applyFix": { en: "Apply Fix", ar: "تطبيق الإصلاح" },
+  "dataQuality.fixSuccess": { en: "Issue resolved successfully", ar: "تم حل المشكلة بنجاح" },
+  "dataQuality.fixError": { en: "Failed to apply fix", ar: "فشل تطبيق الإصلاح" },
+  "dataQuality.redirecting": { en: "Redirecting...", ar: "جاري التوجيه..." },
+
   // Common
   "common.proMode": { en: "Pro Mode", ar: "الوضع الاحترافي" },
   "common.liteMode": { en: "Lite Mode", ar: "الوضع المبسط" },
