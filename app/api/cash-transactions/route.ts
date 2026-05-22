@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     return {
       rows: normalizedRows,
       summary: {
-        balance: sumMoney(normalizedRows.map((row) => row.amount)),
+        balance: Math.max(0, sumMoney(normalizedRows.map((row) => row.amount))),
         deposits: sumMoney(
           normalizedRows
             .filter((row) => row.type === "deposit")

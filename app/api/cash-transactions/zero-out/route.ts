@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
           platformId: platformId,
           notes: "تصفير الرصيد النقدي",
         });
+      } else if (balance < 0) {
+        transactionsToInsert.push({
+          type: "deposit" as const,
+          amount: Math.abs(balance).toString(),
+          platformId: platformId,
+          notes: "تسوية رصيد نقدي سالب",
+        });
       }
     } else {
       // تصفير جميع المنصات
@@ -47,6 +54,13 @@ export async function POST(request: NextRequest) {
             amount: (-1 * roundedBalance).toString(),
             platformId: pid,
             notes: "تصفير الرصيد النقدي",
+          });
+        } else if (roundedBalance < 0) {
+          transactionsToInsert.push({
+            type: "deposit" as const,
+            amount: Math.abs(roundedBalance).toString(),
+            platformId: pid,
+            notes: "تسوية رصيد نقدي سالب",
           });
         }
       }

@@ -153,6 +153,22 @@ export default function WalletPage() {
     }
   };
 
+  const handleZeroOutCash = async () => {
+    if (!confirm("هل أنت متأكد من تصفير الرصيد النقدي؟ لن تتأثر قيمة الأصول الأخرى.")) return;
+    
+    try {
+      const params = new URLSearchParams();
+      if (platformFilter !== "all") params.set("platformId", platformFilter);
+      
+      await api.post(`/api/cash-transactions/zero-out?${params.toString()}`, {});
+      toast.success("تم تصفير الرصيد النقدي بنجاح");
+      qc.invalidateQueries({ queryKey: ["dashboard-metrics"] });
+      qc.invalidateQueries({ queryKey: ["cashTxs"] });
+    } catch (error) {
+      toast.error("حدث خطأ أثناء تصفير الرصيد");
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-4">
@@ -164,9 +180,14 @@ export default function WalletPage() {
 
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">{txs.length} records</div>
-        <Button onClick={() => setOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" /> {t("cash.deposit")} / {t("cash.withdrawal")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={handleZeroOutCash}>
+            تصفير الكاش {platformFilter !== "all" ? "للمنصة المحددة" : "لجميع المنصات"}
+          </Button>
+          <Button onClick={() => setOpen(true)} className="gap-2">
+            <Plus className="h-4 w-4" /> {t("cash.deposit")} / {t("cash.withdrawal")}
+          </Button>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-xl border">

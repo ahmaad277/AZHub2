@@ -401,7 +401,8 @@ function computeMetrics(
   );
 
   // Metric 1: Total Cash Balance (from the ledger, always).
-  const totalCashBalance = sumMoney(cashRows.map((r) => r.amount));
+  // Clamp to 0 to prevent negative balances from affecting metrics
+  const totalCashBalance = Math.max(0, sumMoney(cashRows.map((r) => r.amount)));
 
   // Metric 2: Active Principal.
   const activePrincipal = roundToMoney(
