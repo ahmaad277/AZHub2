@@ -154,7 +154,7 @@ export default function WalletPage() {
   };
 
   const handleZeroOutCash = async () => {
-    if (!confirm("هل أنت متأكد من تصفير الرصيد النقدي؟ لن تتأثر قيمة الأصول الأخرى.")) return;
+    if (!confirm("هل أنت متأكد من تصفير الرصيد النقدي؟ سيتم حذف جميع الإيداعات والسحوبات اليدوية للمنصة المحددة مع الاحتفاظ بأرباح الاستثمارات.")) return;
     
     try {
       const params = new URLSearchParams();
@@ -181,8 +181,8 @@ export default function WalletPage() {
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">{txs.length} records</div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleZeroOutCash}>
-            تصفير الكاش {platformFilter !== "all" ? "للمنصة المحددة" : "لجميع المنصات"}
+          <Button variant="outline" size="icon" onClick={handleZeroOutCash} title="تصفير الكاش (حذف الإيداعات والسحوبات اليدوية)">
+            <ArrowDownToLine className="h-4 w-4" />
           </Button>
           <Button onClick={() => setOpen(true)} className="gap-2">
             <Plus className="h-4 w-4" /> {t("cash.deposit")} / {t("cash.withdrawal")}

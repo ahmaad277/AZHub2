@@ -3,8 +3,8 @@ import { db } from "@/db";
 import { cashTransactions } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import { sumMoney } from "@/lib/finance/money";
 import { revalidateTag } from "next/cache";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 
 export async function POST(request: NextRequest) {
   return handleRoute(async () => {
@@ -12,65 +12,23 @@ export async function POST(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const platformId = searchParams.get("platformId");
 
-    // جلب جميع حركات الكاش
-    const rows = await db
-      .select({ amount: cashTransactions.amount, platformId: cashTransactions.platformId })
-      .from(cashTransactions);
-
-    const transactionsToInsert = [];
+    const conditions = [
+      inArray(cashTransactions.type, ["deposit", "withdrawal"])
+    ];
 
     if (platformId && platformId !== "all") {
-      // تصفير منصة محددة
-      const platformRows = rows.filter(r => r.platformId === platformId);
-      const balance = sumMoney(platformRows.map(r => r.amount));
-      if (balance > 0) {
-        transactionsToInsert.push({
-          type: "withdrawal" as const,
-          amount: (-1 * balance).toString(),
-          platformId: platformId,
-          notes: "تصفير الرصيد النقدي",
-        });
-      } else if (balance < 0) {
-        transactionsToInsert.push({
-          type: "deposit" as const,
-          amount: Math.abs(balance).toString(),
-          platformId: platformId,
-          notes: "تسوية رصيد نقدي سالب",
-        });
-      }
-    } else {
-      // تصفير جميع المنصات
-      const balancesByPlatform = new Map<string | null, number>();
-      for (const row of rows) {
-        const current = balancesByPlatform.get(row.platformId) || 0;
-        balancesByPlatform.set(row.platformId, current + parseFloat(row.amount));
-      }
-
-      for (const [pid, balance] of balancesByPlatform.entries()) {
-        const roundedBalance = sumMoney([balance]);
-        if (roundedBalance > 0) {
-          transactionsToInsert.push({
-            type: "withdrawal" as const,
-            amount: (-1 * roundedBalance).toString(),
-            platformId: pid,
-            notes: "تصفير الرصيد النقدي",
-          });
-        } else if (roundedBalance < 0) {
-          transactionsToInsert.push({
-            type: "deposit" as const,
-            amount: Math.abs(roundedBalance).toString(),
-            platformId: pid,
-            notes: "تسوية رصيد نقدي سالب",
-          });
-        }
-      }
+      conditions.push(eq(cashTransactions.platformId, platformId));
     }
 
-    if (transactionsToInsert.length > 0) {
-      await db.insert(cashTransactions).values(transactionsToInsert);
+    const result = await db
+      .delete(cashTransactions)
+      .where(and(...conditions))
+      .returning({ id: cashTransactions.id });
+
+    if (result.length > 0) {
       revalidateTag("dashboard-metrics");
     }
 
-    return { success: true, zeroedCount: transactionsToInsert.length };
+    return { success: true, deletedCount: result.length };
   });
 }
