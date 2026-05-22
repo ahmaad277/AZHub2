@@ -160,51 +160,73 @@ export default function CashflowsPage() {
             </tr>
           </thead>
           <tbody>
-            {allRows.map((r) => (
-              <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
-                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">{formatDate(r.dueDate, dateLocale)}</td>
-                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
-                  <div>{r.investment.name}</div>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <span
-                      aria-hidden="true"
-                      className="inline-block h-2 w-2 rounded-full border"
-                      style={{
-                        backgroundColor: getPlatformColorOption(r.investment.platform?.color)
-                          .chartColor,
-                      }}
-                    />
-                    {r.investment.platform?.name}
-                  </div>
-                </td>
-                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
-                  <Badge variant={r.type === "profit" ? "default" : "secondary"}>
-                    {t(`cashflowType.${r.type}`)}
-                  </Badge>
-                </td>
-                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
-                  +{formatMoney(r.amount, settings.currency)}
-                </td>
-                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
-                  <Badge variant={r.status === "received" ? "success" : "outline"}>
-                    {t(`status.${r.status}`)}
-                  </Badge>
-                </td>
-                <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">
-                  {r.status === "pending" ? (
-                    <Button size="sm" variant="outline" onClick={() => markReceived(r.id)}>
-                      <CheckCircle2 className="me-1 h-4 w-4" />
-                      {t("common.markReceived")}
-                    </Button>
-                  ) : (
-                    <Button size="sm" variant="ghost" onClick={() => undoReceived(r.id)}>
-                      <Undo2 className="me-1 h-4 w-4" />
-                      {t("common.undo")}
-                    </Button>
+            {allRows.map((r, index) => {
+              const isPastOrToday = new Date(r.dueDate).getTime() <= new Date().setHours(23, 59, 59, 999);
+              const nextRow = allRows[index + 1];
+              const isNextFuture = nextRow && new Date(nextRow.dueDate).getTime() > new Date().setHours(23, 59, 59, 999);
+              const showSeparator = status === "pending" && isPastOrToday && isNextFuture;
+
+              return (
+                <React.Fragment key={r.id}>
+                  <tr className="border-b border-border/40 hover:bg-muted/20 transition-colors last:border-0">
+                    <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">{formatDate(r.dueDate, dateLocale)}</td>
+                    <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
+                      <div>{r.investment.name}</div>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <span
+                          aria-hidden="true"
+                          className="inline-block h-2 w-2 rounded-full border"
+                          style={{
+                            backgroundColor: getPlatformColorOption(r.investment.platform?.color)
+                              .chartColor,
+                          }}
+                        />
+                        {r.investment.platform?.name}
+                      </div>
+                    </td>
+                    <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
+                      <Badge variant={r.type === "profit" ? "default" : "secondary"}>
+                        {t(`cashflowType.${r.type}`)}
+                      </Badge>
+                    </td>
+                    <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end font-semibold tabular-nums text-[hsl(var(--success))]">
+                      +{formatMoney(r.amount, settings.currency)}
+                    </td>
+                    <td className="px-1.5 py-1.5 sm:px-3 sm:py-2">
+                      <Badge variant={r.status === "received" ? "success" : "outline"}>
+                        {t(`status.${r.status}`)}
+                      </Badge>
+                    </td>
+                    <td className="px-1.5 py-1.5 sm:px-3 sm:py-2 text-end">
+                      {r.status === "pending" ? (
+                        <Button size="sm" variant="outline" onClick={() => markReceived(r.id)}>
+                          <CheckCircle2 className="me-1 h-4 w-4" />
+                          <span className="hidden sm:inline">{t("common.markReceived")}</span>
+                        </Button>
+                      ) : (
+                        <Button size="sm" variant="ghost" onClick={() => undoReceived(r.id)}>
+                          <Undo2 className="me-1 h-4 w-4" />
+                          <span className="hidden sm:inline">{t("common.undo")}</span>
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                  {showSeparator && (
+                    <tr>
+                      <td colSpan={6} className="p-0">
+                        <div className="flex items-center gap-4 py-4 px-2">
+                          <div className="h-px flex-1 bg-border/60" />
+                          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                            {t("dash.upcomingCashflows")}
+                          </span>
+                          <div className="h-px flex-1 bg-border/60" />
+                        </div>
+                      </td>
+                    </tr>
                   )}
-                </td>
-              </tr>
-            ))}
+                </React.Fragment>
+              );
+            })}
             {allRows.length === 0 ? (
               <tr>
                 <td colSpan={6} className="p-8 text-center text-sm text-muted-foreground">
