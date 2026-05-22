@@ -268,7 +268,16 @@ function PlatformPieCard({
                     <Cell key={entry.id} fill={entry.fill} />
                   ))}
                 </Pie>
-                <Tooltip formatter={tooltipFormatter} />
+                <Tooltip 
+                  formatter={tooltipFormatter}
+                  contentStyle={{
+                    backgroundColor: "hsl(var(--card))",
+                    borderColor: "hsl(var(--border))",
+                    color: "hsl(var(--foreground))",
+                    borderRadius: "0.5rem",
+                  }}
+                  itemStyle={{ color: "hsl(var(--foreground))" }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -405,7 +414,16 @@ function StatusPieCard({
                     <Cell key={entry.id} fill={STATUS_COLORS[entry.id]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={tooltipFormatter} />
+                <Tooltip 
+                  formatter={tooltipFormatter}
+                  contentStyle={{
+                    backgroundColor: "hsl(var(--card))",
+                    borderColor: "hsl(var(--border))",
+                    color: "hsl(var(--foreground))",
+                    borderRadius: "0.5rem",
+                  }}
+                  itemStyle={{ color: "hsl(var(--foreground))" }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -487,8 +505,8 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
   }, [rows]);
 
   const visualChartRows = React.useMemo(
-    () => (isRtl ? [...prepared.chartRows].reverse() : prepared.chartRows),
-    [isRtl, prepared.chartRows],
+    () => (isRtl ? [...prepared.lineChartRows].reverse() : prepared.lineChartRows),
+    [isRtl, prepared.lineChartRows],
   );
   const visualLineChartRows = React.useMemo(
     () => (isRtl ? [...prepared.lineChartRows].reverse() : prepared.lineChartRows),
@@ -557,6 +575,13 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
                   <Tooltip
                     formatter={tooltipFormatter}
                     labelFormatter={labelFormatter}
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--card))",
+                      borderColor: "hsl(var(--border))",
+                      color: "hsl(var(--foreground))",
+                      borderRadius: "0.5rem",
+                    }}
+                    itemStyle={{ color: "hsl(var(--foreground))" }}
                   />
                   <Line
                     type="monotone"
@@ -587,6 +612,13 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
                   <Tooltip
                     formatter={tooltipFormatter}
                     labelFormatter={labelFormatter}
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--card))",
+                      borderColor: "hsl(var(--border))",
+                      color: "hsl(var(--foreground))",
+                      borderRadius: "0.5rem",
+                    }}
+                    itemStyle={{ color: "hsl(var(--foreground))" }}
                   />
                   <Legend />
                   {prepared.seriesList.map((platform) => (
@@ -596,7 +628,6 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
                       name={platform.name}
                       stackId="cashflows"
                       fill={getPlatformColorOption(platform.color).chartColor}
-                      radius={[4, 4, 0, 0]}
                       isAnimationActive={false}
                     />
                   ))}
