@@ -234,7 +234,7 @@ export function sliceAggregatesForMetrics(
   const idSet = new Set(investmentRows.map((i) => i.id));
   const cashflowRows = agg.cashflowRows.filter((cf) => idSet.has(cf.investmentId));
   const cashRows = agg.cashRows.filter(
-    (r) => r.platformId === platformId || r.platformId === null,
+    (r) => r.platformId === platformId,
   );
   return { investmentRows, cashflowRows, cashRows };
 }
@@ -290,7 +290,7 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
     const platformInvestments = investmentsByPlatform.get(p.id) ?? [];
     const platformCashflows = cashflowsByPlatform.get(p.id) ?? [];
     const platformCashRows = cashRows.filter(
-      (cr) => cr.platformId === p.id || cr.platformId === null,
+      (cr) => cr.platformId === p.id,
     );
 
     const m = computeMetrics(platformInvestments, platformCashflows, platformCashRows, now, graceDays);

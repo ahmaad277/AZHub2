@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { and, desc, eq, gte, lte } from "drizzle-orm";
+import { and, desc, eq, gte, lte, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { cashTransactions, platforms } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
@@ -76,10 +76,36 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const parsed = createSchema.parse(body);
 
+    let finalAmount = roundToMoney(parsed.amount);
+
+    if (parsed.type === "withdrawal") {
+      const conds = [];
+      if (parsed.platformId) {
+        conds.push(eq(cashTransactions.platformId, parsed.platformId));
+      } else {
+        conds.push(isNull(cashTransactions.platformId));
+      }
+
+      const rows = await db
+        .select({ amount: cashTransactions.amount })
+        .from(cashTransactions)
+        .where(conds.length ? and(...conds) : undefined);
+
+      const currentBalance = sumMoney(rows.map((r) => r.amount));
+
+      if (currentBalance <= 0) {
+        throw new Error("لا يوجد رصيد كافي للسحب");
+      }
+
+      if (finalAmount > currentBalance) {
+        finalAmount = currentBalance;
+      }
+    }
+
     const signedAmount =
       parsed.type === "deposit"
-        ? roundToMoney(parsed.amount)
-        : -1 * roundToMoney(parsed.amount);
+        ? finalAmount
+        : -1 * finalAmount;
 
     const [row] = await db
       .insert(cashTransactions)

@@ -125,6 +125,22 @@ export default function CashflowsPage() {
     }
   };
 
+  const handleZeroOutCash = async () => {
+    if (!confirm("هل أنت متأكد من تصفير الرصيد النقدي؟ لن تتأثر قيمة الأصول الأخرى.")) return;
+    
+    try {
+      const params = new URLSearchParams();
+      if (platformFilter !== "all") params.set("platformId", platformFilter);
+      
+      await api.post(`/api/cash-transactions/zero-out?${params.toString()}`, {});
+      toast.success("تم تصفير الرصيد النقدي بنجاح");
+      qc.invalidateQueries({ queryKey: ["dashboard-metrics"] });
+      qc.invalidateQueries({ queryKey: ["cashTxs"] });
+    } catch (error) {
+      toast.error("حدث خطأ أثناء تصفير الرصيد");
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -142,8 +158,13 @@ export default function CashflowsPage() {
             </button>
           ))}
         </div>
-        <div className="text-sm text-muted-foreground">
-          {totalCount} · <span className="font-semibold text-foreground tabular-nums">{formatMoney(total, settings.currency)}</span>
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <Button variant="outline" size="sm" onClick={handleZeroOutCash}>
+            تصفير الكاش {platformFilter !== "all" ? "للمنصة المحددة" : "لجميع المنصات"}
+          </Button>
+          <div>
+            {totalCount} · <span className="font-semibold text-foreground tabular-nums">{formatMoney(total, settings.currency)}</span>
+          </div>
         </div>
       </div>
 
