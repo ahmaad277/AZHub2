@@ -70,20 +70,25 @@ export default function DataQualityPage() {
     }
   };
 
-  const renderMessage = (msg: string) => {
+  const parseIssueData = (msg: string) => {
     try {
       const parsed = JSON.parse(msg);
+      let message = msg;
       if (parsed.key) {
         let translated = t(parsed.key);
         if (parsed.name) translated = translated.replace("{name}", parsed.name);
         if (parsed.expected) translated = translated.replace("{expected}", String(parsed.expected));
         if (parsed.actual) translated = translated.replace("{actual}", String(parsed.actual));
-        return translated;
+        message = translated;
       }
+      return {
+        message,
+        investmentName: parsed.investmentName,
+        platformName: parsed.platformName
+      };
     } catch {
-      // Not JSON, return as is
+      return { message: msg };
     }
-    return msg;
   };
 
   return (
@@ -98,37 +103,41 @@ export default function DataQualityPage() {
       </div>
 
       <div className="space-y-2">
-        {data.map((i) => (
-          <div key={i.id} className="rounded-xl border p-4">
-            <div className="flex items-center gap-2">
-              <Badge variant={i.severity === "error" ? "destructive" : "warning"}>
-                {t(`severity.${i.severity}`)}
-              </Badge>
-              <span className="text-xs font-medium text-muted-foreground">
-                {t(`dq.entity.${i.entityType}`)} · {t(`dq.type.${i.issueType}`)}
-              </span>
-            </div>
-            <div className="mt-1 text-sm">{renderMessage(i.message)}</div>
-            {i.suggestedFix ? (
-              <div className="mt-3 flex items-center justify-between rounded-lg bg-muted/50 p-3">
-                <div className="text-xs">
-                  <span className="font-semibold text-foreground">{t("dataQuality.suggestedFix")}:</span>{" "}
-                  <span className="text-muted-foreground">{t(i.suggestedFix)}</span>
-                </div>
-                <Button 
-                  size="sm" 
-                  variant="secondary" 
-                  onClick={() => applyFix(i.id)}
-                  disabled={fixingId === i.id}
-                  className="gap-1.5 h-8"
-                >
-                  <Wrench className="h-3.5 w-3.5" />
-                  {t("dataQuality.applyFix")}
-                </Button>
+        {data.map((i) => {
+          const { message, investmentName, platformName } = parseIssueData(i.message);
+          return (
+            <div key={i.id} className="rounded-xl border p-4">
+              <div className="flex items-center gap-2">
+                <Badge variant={i.severity === "error" ? "destructive" : "warning"}>
+                  {t(`severity.${i.severity}`)}
+                </Badge>
+                <span className="text-xs font-medium text-muted-foreground">
+                  {t(`dq.entity.${i.entityType}`)} · {t(`dq.type.${i.issueType}`)}
+                  {platformName && investmentName ? ` · ${platformName} (${investmentName})` : ""}
+                </span>
               </div>
-            ) : null}
-          </div>
-        ))}
+              <div className="mt-1 text-sm">{message}</div>
+              {i.suggestedFix ? (
+                <div className="mt-3 flex items-center justify-between rounded-lg bg-muted/50 p-3">
+                  <div className="text-xs">
+                    <span className="font-semibold text-foreground">{t("dataQuality.suggestedFix")}:</span>{" "}
+                    <span className="text-muted-foreground">{t(i.suggestedFix)}</span>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="secondary" 
+                    onClick={() => applyFix(i.id)}
+                    disabled={fixingId === i.id}
+                    className="gap-1.5 h-8"
+                  >
+                    <Wrench className="h-3.5 w-3.5" />
+                    {t("dataQuality.applyFix")}
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
         {data.length === 0 ? (
           <div className="py-8 text-center text-sm text-muted-foreground">
             {t("common.empty")}

@@ -5,6 +5,7 @@ import {
   cashflows,
   dataQualityIssues,
   investments,
+  platforms,
 } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
@@ -31,7 +32,17 @@ export async function POST() {
     }> = [];
 
     // 1) Investments with no cashflows
-    const invs = await db.select().from(investments);
+    const invs = await db
+      .select({
+        id: investments.id,
+        name: investments.name,
+        expectedProfit: investments.expectedProfit,
+        principalAmount: investments.principalAmount,
+        platformName: platforms.name,
+      })
+      .from(investments)
+      .leftJoin(platforms, eq(investments.platformId, platforms.id));
+
     const invIds = invs.map((i) => i.id);
     const cfs = invIds.length
       ? await db.select().from(cashflows).where(inArray(cashflows.investmentId, invIds))
@@ -43,6 +54,8 @@ export async function POST() {
       cfByInv.set(cf.investmentId, list);
     }
 
+    const invMap = new Map(invs.map(i => [i.id, i]));
+
     for (const inv of invs) {
       const list = cfByInv.get(inv.id) ?? [];
       if (list.length === 0) {
@@ -51,7 +64,7 @@ export async function POST() {
           entityId: inv.id,
           issueType: "no_cashflows",
           severity: "warning",
-          message: JSON.stringify({ key: "dq.no_cashflows", name: inv.name }),
+          message: JSON.stringify({ key: "dq.no_cashflows", name: inv.name, investmentName: inv.name, platformName: inv.platformName }),
           suggestedFix: "dq.fix_open_regenerate",
         });
       } else {
@@ -64,7 +77,7 @@ export async function POST() {
             entityId: inv.id,
             issueType: "profit_mismatch",
             severity: "warning",
-            message: JSON.stringify({ key: "dq.profit_mismatch", expected: inv.expectedProfit, actual: roundToMoney(profitSum) }),
+            message: JSON.stringify({ key: "dq.profit_mismatch", expected: inv.expectedProfit, actual: roundToMoney(profitSum), investmentName: inv.name, platformName: inv.platformName }),
             suggestedFix: "dq.fix_regenerate_schedule",
           });
         }
@@ -77,7 +90,7 @@ export async function POST() {
             entityId: inv.id,
             issueType: "principal_mismatch",
             severity: "error",
-            message: JSON.stringify({ key: "dq.principal_mismatch", expected: inv.principalAmount, actual: roundToMoney(principalSum) }),
+            message: JSON.stringify({ key: "dq.principal_mismatch", expected: inv.principalAmount, actual: roundToMoney(principalSum), investmentName: inv.name, platformName: inv.platformName }),
           });
         }
       }
@@ -95,12 +108,13 @@ export async function POST() {
       );
       for (const cf of receivedCfs) {
         if (!refSet.has(cf.id)) {
+          const inv = invMap.get(cf.investmentId);
           issues.push({
             entityType: "cashflow",
             entityId: cf.id,
             issueType: "missing_ledger_entry",
             severity: "error",
-            message: JSON.stringify({ key: "dq.missing_ledger_entry" }),
+            message: JSON.stringify({ key: "dq.missing_ledger_entry", investmentName: inv?.name, platformName: inv?.platformName }),
             suggestedFix: "dq.fix_undo_receipt",
           });
         }
