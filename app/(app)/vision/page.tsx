@@ -13,6 +13,8 @@ import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
 import { formatDate, formatMoney, formatPercent } from "@/lib/finance/money";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
+import { VisionProgressChart } from "@/components/vision-progress-chart";
+import type { PlanTargetInput } from "@/lib/finance/projection";
 
 interface VisionTargetRow {
   id: string;
@@ -33,6 +35,8 @@ export default function VisionPage() {
   const [startAmount, setStartAmount] = React.useState("100000");
   const [months, setMonths] = React.useState(180); // 15 years
   const [page, setPage] = React.useState(1);
+  // Session-only what-if annual yield (percent string). Empty = hidden series.
+  const [whatIfRate, setWhatIfRate] = React.useState<string>("");
 
   const { data: targets = [] } = useQuery<VisionTargetRow[]>({
     queryKey: ["visionTargets"],
@@ -69,8 +73,20 @@ export default function VisionPage() {
     [page, targets],
   );
   const nav = metricsResp?.metrics.nav ?? 0;
+  const historicalApyPct = metricsResp?.metrics.historicalAnnualYieldPercent ?? 0;
   const target = Number(targetCapital || 0);
   const pct = target > 0 ? Math.min(100, (nav / target) * 100) : 0;
+
+  const planTargets = React.useMemo<PlanTargetInput[]>(
+    () => targets.map((row) => ({ month: row.month, value: row.targetValue })),
+    [targets],
+  );
+
+  const whatIfApyPct = React.useMemo<number | null>(() => {
+    if (whatIfRate.trim() === "") return null;
+    const n = Number(whatIfRate);
+    return Number.isFinite(n) ? n : null;
+  }, [whatIfRate]);
 
   React.useEffect(() => {
     setPage((current) => Math.min(current, pageCount));
@@ -123,24 +139,57 @@ export default function VisionPage() {
   return (
     <div className="space-y-4">
       <div className="rounded-xl border p-5">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Target className="h-4 w-4" /> {t("dash.vision2040")}
-        </div>
-        <div className="mt-2 flex items-end gap-3">
-          <div className="text-3xl font-semibold tabular-nums">
-            {formatMoney(nav, settings.currency)}
-          </div>
-          {target > 0 ? (
-            <div className="text-sm text-muted-foreground">
-              / {formatMoney(target, settings.currency)} · {formatPercent(pct, 1)}
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Target className="h-4 w-4" /> {t("dash.vision2040")}
             </div>
-          ) : null}
+            <div className="mt-2 flex items-end gap-3">
+              <div className="text-3xl font-semibold tabular-nums">
+                {formatMoney(nav, settings.currency, dateLocale)}
+              </div>
+              {target > 0 ? (
+                <div className="text-sm text-muted-foreground tabular-nums">
+                  / {formatMoney(target, settings.currency, dateLocale)} ·{" "}
+                  {formatPercent(pct, 1, dateLocale)}
+                </div>
+              ) : null}
+            </div>
+          </div>
         </div>
-        <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-secondary">
+        <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-secondary">
           <div
             className="h-full rounded-full bg-primary transition-all"
             style={{ width: `${pct}%` }}
           />
+        </div>
+      </div>
+
+      <VisionProgressChart
+        nav={nav}
+        target={target}
+        historicalApyPct={historicalApyPct}
+        whatIfApyPct={whatIfApyPct}
+        planTargets={planTargets}
+      />
+
+      <div className="rounded-xl border p-5">
+        <div className="mb-3 text-sm font-semibold">{t("vision.scenarioTitle")}</div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="whatif-rate">{t("vision.annualRate")}</Label>
+            <Input
+              id="whatif-rate"
+              type="number"
+              inputMode="decimal"
+              step="0.01"
+              min={-100}
+              max={1000}
+              value={whatIfRate}
+              onChange={(e) => setWhatIfRate(e.target.value)}
+              placeholder={t("vision.annualRate.placeholder")}
+            />
+          </div>
         </div>
       </div>
 
@@ -153,7 +202,7 @@ export default function VisionPage() {
               type="number"
               min={0}
               step="1"
-              value={targetCapital as any}
+              value={targetCapital as string}
               onChange={(e) => setTargetCapital(e.target.value)}
             />
           </div>
@@ -181,7 +230,7 @@ export default function VisionPage() {
             <Label>{t("settings.target2040")}</Label>
             <Input
               type="number"
-              value={targetCapital as any}
+              value={targetCapital as string}
               onChange={(e) => setTargetCapital(e.target.value)}
             />
           </div>

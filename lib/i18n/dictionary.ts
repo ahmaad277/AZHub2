@@ -226,6 +226,23 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "vision.months": { en: "Months", ar: "الأشهر" },
   "vision.month": { en: "Month", ar: "الشهر" },
   "vision.target": { en: "Target", ar: "الهدف" },
+  "vision.chart.title": { en: "Path to Vision 2040", ar: "الطريق إلى رؤية 2040" },
+  "vision.chart.required": { en: "Required Path (CAGR)", ar: "الطريق المطلوب (CAGR)" },
+  "vision.chart.current": { en: "Current Path (Historical)", ar: "الطريق الحالي (التاريخي)" },
+  "vision.chart.whatIf": { en: "What-If Scenario", ar: "سيناريو ماذا لو" },
+  "vision.chart.plan": { en: "Saved Plan", ar: "الخطة المحفوظة" },
+  "vision.chart.empty": {
+    en: "Set a target and ensure NAV > 0 to see the chart",
+    ar: "حدد هدف 2040 وتأكد أن صافي الأصول أكبر من صفر لعرض الرسم",
+  },
+  "vision.annualRate": { en: "Annual Yield (What-If) %", ar: "العائد السنوي (ماذا لو) %" },
+  "vision.annualRate.placeholder": {
+    en: "e.g. 18 — leave empty to hide",
+    ar: "مثال 18 — اتركه فارغاً للإخفاء",
+  },
+  "vision.requiredCagr": { en: "Required CAGR", ar: "العائد المركّب المطلوب" },
+  "vision.gap": { en: "Performance Gap", ar: "فجوة الأداء" },
+  "vision.scenarioTitle": { en: "Scenario Inputs", ar: "مدخلات السيناريو" },
 
   // Investments
   "investment.isReinvestment": { en: "Is reinvestment", ar: "إعادة استثمار" },

@@ -21,6 +21,7 @@ import { ResolvedIssueBadge } from "@/components/resolved-issue-badge";
 import { api } from "@/lib/fetcher";
 import type { DashboardMetrics } from "@/lib/finance/metrics";
 import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
+import type { PlanTargetInput } from "@/lib/finance/projection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,6 +43,23 @@ const DashboardCharts = dynamic(
     loading: () => <DashboardChartsSkeleton />,
   },
 );
+
+const VisionProgressChart = dynamic(
+  () =>
+    import("@/components/vision-progress-chart").then(
+      (mod) => mod.VisionProgressChart,
+    ),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-56 rounded-2xl" />,
+  },
+);
+
+interface VisionTargetRow {
+  id: string;
+  month: string;
+  targetValue: string;
+}
 
 interface InvestmentRow {
   id: string;
@@ -185,6 +203,22 @@ export default function DashboardPage() {
     : (invsPayload?.rows ?? []);
   const cfs = data?.cashflowsUpcoming?.rows ?? [];
   const monthlyData = data?.monthlySummary;
+
+  // Saved monthly plan targets — shared cache key with /vision page.
+  const { data: visionTargetRows = [] } = useQuery<VisionTargetRow[]>({
+    queryKey: ["visionTargets"],
+    queryFn: () => api.get<VisionTargetRow[]>("/api/vision/targets"),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const visionPlanTargets = React.useMemo<PlanTargetInput[]>(
+    () =>
+      visionTargetRows.map((row) => ({
+        month: row.month,
+        value: row.targetValue,
+      })),
+    [visionTargetRows],
+  );
 
   return (
     <div className="space-y-6">
@@ -344,6 +378,14 @@ export default function DashboardPage() {
         }
       >
         <VisionProgress nav={m?.nav ?? 0} />
+        <VisionProgressChart
+          nav={m?.nav ?? 0}
+          target={Number(settings.targetCapital2040 ?? 0)}
+          historicalApyPct={m?.historicalAnnualYieldPercent ?? 0}
+          whatIfApyPct={null}
+          planTargets={visionPlanTargets}
+          compact
+        />
       </CollapsibleSection>
 
       {/* Platform overview */}
@@ -543,7 +585,7 @@ function VisionProgress({ nav }: { nav: number }) {
   const target = Number(settings.targetCapital2040 ?? 0);
   const pct = target > 0 ? Math.min(100, (nav / target) * 100) : 0;
   return (
-    <div>
+    <div className="mb-4">
       <div className="mb-3 flex items-center justify-between text-sm">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Target className="h-4 w-4" /> {t("metric.nav")}
