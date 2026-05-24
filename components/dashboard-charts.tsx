@@ -111,12 +111,12 @@ function PieToggle({
 }) {
   const { t } = useApp();
   return (
-    <div className="flex rounded-lg border p-0.5 text-xs">
+    <div className="flex shrink-0 rounded-lg border p-0.5 text-xs">
       {(["percent", "count"] as const).map((value) => (
         <button
           key={value}
           type="button"
-          className={`rounded px-1.5 py-0.5 transition-colors ${
+          className={`rounded px-1.5 py-0.5 transition-colors whitespace-nowrap ${
             mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground"
           }`}
           onClick={() => onChange(value)}
@@ -164,18 +164,18 @@ function PieLegend({
   mode: PieMode;
 }) {
   return (
-    <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs [@media(orientation:landscape)_and_(max-height:500px)]:flex [@media(orientation:landscape)_and_(max-height:500px)]:flex-wrap [@media(orientation:landscape)_and_(max-height:500px)]:justify-center">
+    <ul className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 text-xs [@media(orientation:landscape)_and_(max-height:500px)]:flex [@media(orientation:landscape)_and_(max-height:500px)]:flex-wrap [@media(orientation:landscape)_and_(max-height:500px)]:justify-center">
       {items.map((item) => (
-        <li key={item.id} className="flex items-center justify-between gap-2 [@media(orientation:landscape)_and_(max-height:500px)]:justify-center">
+        <li key={item.id} className="flex items-center justify-between gap-1 [@media(orientation:landscape)_and_(max-height:500px)]:justify-center">
           <span className="flex min-w-0 items-center gap-1.5">
             <span
               aria-hidden="true"
               className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border"
               style={{ backgroundColor: item.color }}
             />
-            <span className="truncate [@media(orientation:landscape)_and_(max-height:500px)]:hidden">{item.name}</span>
+            <span className="truncate whitespace-nowrap [@media(orientation:landscape)_and_(max-height:500px)]:hidden">{item.name}</span>
           </span>
-          <span className="tabular-nums text-muted-foreground [@media(orientation:landscape)_and_(max-height:500px)]:hidden">
+          <span className="tabular-nums text-muted-foreground whitespace-nowrap [@media(orientation:landscape)_and_(max-height:500px)]:hidden">
             {mode === "percent" && total > 0
               ? formatPercent((item.value / total) * 100, 0)
               : formatNumber(item.value)}
@@ -242,8 +242,8 @@ function PlatformPieCard({
 
   return (
     <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm">
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm font-medium">{title}</div>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div className="text-sm font-medium whitespace-nowrap">{title}</div>
         <PieToggle mode={mode} onChange={setMode} />
       </div>
       {filtered.length === 0 ? (
@@ -388,8 +388,8 @@ function StatusPieCard({
 
   return (
     <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm">
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm font-medium">{title}</div>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div className="text-sm font-medium whitespace-nowrap">{title}</div>
         <PieToggle mode={mode} onChange={setMode} />
       </div>
       {data.length === 0 ? (
