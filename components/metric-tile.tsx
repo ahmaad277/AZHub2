@@ -8,14 +8,15 @@ import { formatMoney, formatPercent, formatNumber } from "@/lib/finance/money";
 interface Props {
   label: string;
   value: number | string | null | undefined;
-  format?: "money" | "percent" | "number" | "days" | "text";
+  format?: "money" | "percent" | "number" | "days" | "months" | "text";
   valueLabel?: React.ReactNode;
   secondaryLabel?: React.ReactNode;
   secondaryValue?: number | string | null | undefined;
-  secondaryFormat?: "money" | "percent" | "number" | "days" | "text";
+  secondaryFormat?: "money" | "percent" | "number" | "days" | "months" | "text";
   sublabel?: React.ReactNode;
   icon?: React.ReactNode;
   accent?: "primary" | "success" | "warning" | "destructive" | "muted";
+  secondaryAccent?: "primary" | "success" | "warning" | "destructive" | "muted";
   hidden?: boolean;
   className?: string;
 }
@@ -39,6 +40,7 @@ export function MetricTile({
   sublabel,
   icon,
   accent = "primary",
+  secondaryAccent,
   hidden,
   className,
 }: Props) {
@@ -54,6 +56,10 @@ export function MetricTile({
     if (valueFormat === "money") return formatMoney(rawValue as number, settings.currency, localeCode);
     if (valueFormat === "percent") return formatPercent(Number(rawValue), 2, localeCode);
     if (valueFormat === "days") return `${formatNumber(Number(rawValue), localeCode, 0)} d`;
+    if (valueFormat === "months") {
+      const months = Math.round(Number(rawValue) / 30);
+      return new Intl.NumberFormat(localeCode, { style: "unit", unit: "month" }).format(months);
+    }
     if (valueFormat === "number") return formatNumber(Number(rawValue), localeCode, 0);
     return String(rawValue);
   };
@@ -89,7 +95,7 @@ export function MetricTile({
           </div>
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-xs text-muted-foreground">{secondaryLabel}</span>
-            <span className={cn("text-xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
+            <span className={cn("text-xl font-bold tracking-tight tabular-nums", ACCENT[secondaryAccent ?? accent])}>
               {secondaryDisplay}
             </span>
           </div>

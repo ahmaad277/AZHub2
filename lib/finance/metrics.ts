@@ -46,6 +46,7 @@ export interface DashboardMetrics {
   weightedOriginalDurationDays: number;
   defaultRatePercent: number;
   activeAnnualYieldPercent: number;
+  historicalAnnualYieldPercent: number;
   // Helpful extras (not required by the prompt but cheap to compute):
   activeCount: number;
   lateCount: number;
@@ -79,6 +80,7 @@ interface InvestmentComputedRow {
   id: string;
   principal: number;
   expectedProfit: number;
+  expectedIrr: number;
   startDate: Date;
   endDate: Date;
   derivedStatus: DerivedStatus;
@@ -90,6 +92,7 @@ interface RawInvestment {
   id: string;
   principal: string;
   expectedProfit: string;
+  expectedIrr: string;
   startDate: Date;
   endDate: Date;
   platformId: string;
@@ -132,6 +135,7 @@ export async function loadDashboardMetricsCoreFromDb(): Promise<DashboardMetrics
         id: investments.id,
         principal: investments.principalAmount,
         expectedProfit: investments.expectedProfit,
+        expectedIrr: investments.expectedIrr,
         startDate: investments.startDate,
         endDate: investments.endDate,
         platformId: investments.platformId,
@@ -169,6 +173,7 @@ export async function loadDashboardAggregatesFromDb(): Promise<DashboardAggregat
         id: investments.id,
         principal: investments.principalAmount,
         expectedProfit: investments.expectedProfit,
+        expectedIrr: investments.expectedIrr,
         startDate: investments.startDate,
         endDate: investments.endDate,
         platformId: investments.platformId,
@@ -388,6 +393,7 @@ function computeMetrics(
       id: i.id,
       principal: Number(i.principal),
       expectedProfit: Number(i.expectedProfit),
+      expectedIrr: Number(i.expectedIrr),
       startDate: i.startDate,
       endDate: i.endDate,
       derivedStatus: derived,
@@ -495,16 +501,28 @@ function computeMetrics(
       ? roundToMoney((defaultedPrincipal / totalPrincipalExposure) * 100)
       : 0;
 
-  // Metric 9: Active Annual Yield (principal-weighted; contract start→end).
+  // Metric 9: Active Annual Yield (principal-weighted using expectedIrr).
   let aprWeightedNumerator = 0;
   for (const r of activeSet) {
-    const durationDays = Math.max(1, daysBetween(r.startDate, r.endDate));
-    const annualReturn = (r.expectedProfit / r.principal) * (365 / durationDays);
+    const annualReturn = r.expectedIrr / 100;
     aprWeightedNumerator += r.principal * annualReturn;
   }
   const activeAnnualYieldPercent =
     activePrincipal > 0
       ? roundToMoney((aprWeightedNumerator / activePrincipal) * 100)
+      : 0;
+
+  // Historical Annual Yield (principal-weighted using expectedIrr for ALL investments).
+  let historicalAprWeightedNumerator = 0;
+  let totalPrincipalAll = 0;
+  for (const r of computed) {
+    const annualReturn = r.expectedIrr / 100;
+    historicalAprWeightedNumerator += r.principal * annualReturn;
+    totalPrincipalAll += r.principal;
+  }
+  const historicalAnnualYieldPercent =
+    totalPrincipalAll > 0
+      ? roundToMoney((historicalAprWeightedNumerator / totalPrincipalAll) * 100)
       : 0;
 
   // Next upcoming payment (helpful for Lite mode).
@@ -541,6 +559,7 @@ function computeMetrics(
     weightedOriginalDurationDays,
     defaultRatePercent,
     activeAnnualYieldPercent,
+    historicalAnnualYieldPercent,
     activeCount: computed.filter((r) => r.derivedStatus === "active").length,
     lateCount: computed.filter((r) => r.derivedStatus === "late").length,
     defaultedCount: computed.filter((r) => r.derivedStatus === "defaulted").length,

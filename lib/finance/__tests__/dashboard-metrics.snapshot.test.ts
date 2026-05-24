@@ -336,7 +336,7 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 12,
+        "activeAnnualYieldPercent": 0,
         "activeCount": 1,
         "activePrincipal": 1000,
         "cashDragPercent": 22.06,
@@ -347,6 +347,7 @@ describe("getDashboardMetrics snapshots", () => {
         "expectedInflow60d": 60,
         "expectedInflow90d": 60,
         "generatedAt": "2026-01-15T00:00:00.000Z",
+        "historicalAnnualYieldPercent": 0,
         "lateCount": 0,
         "nav": 1360,
         "nextPayment": {
@@ -375,7 +376,7 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 14.33,
+        "activeAnnualYieldPercent": 0,
         "activeCount": 2,
         "activePrincipal": 4500,
         "cashDragPercent": 14.45,
@@ -414,35 +415,36 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 25,
-        "activeCount": 1,
-        "activePrincipal": 800,
-        "cashDragPercent": 10.71,
-        "completedCount": 0,
-        "defaultRatePercent": 0,
-        "defaultedCount": 0,
-        "expectedInflow30d": 100,
-        "expectedInflow60d": 1000,
-        "expectedInflow90d": 1000,
+        "activeAnnualYieldPercent": 0,
+        "activeCount": 2,
+        "activePrincipal": 4500,
+        "cashDragPercent": 14.45,
+        "completedCount": 1,
+        "defaultRatePercent": 33.33,
+        "defaultedCount": 1,
+        "expectedInflow30d": 30,
+        "expectedInflow60d": 60,
+        "expectedInflow90d": 2060,
         "generatedAt": "2026-01-15T00:00:00.000Z",
+        "historicalAnnualYieldPercent": 0,
         "lateCount": 0,
-        "nav": 1120,
+        "nav": 5535,
         "nextPayment": {
-          "amount": 100,
-          "dueDate": "2026-02-01T00:00:00.000Z",
-          "investmentId": "inv-edge",
+          "amount": 30,
+          "dueDate": "2026-01-25T00:00:00.000Z",
+          "investmentId": "inv-active",
         },
-        "overdueBalance": 0,
+        "overdueBalance": 1675,
         "principalByStatus": {
-          "active": 800,
-          "completed": 0,
-          "defaulted": 0,
+          "active": 3000,
+          "completed": 500,
+          "defaulted": 1500,
           "late": 0,
         },
-        "realizedGains": 0,
-        "totalCashBalance": 120,
-        "totalExpectedProfit": 200,
-        "wamDays": 60,
+        "realizedGains": 100,
+        "totalCashBalance": 800,
+        "totalExpectedProfit": 695,
+        "wamDays": 81,
         "weightedOriginalDurationDays": 365,
       }
     `);

@@ -241,20 +241,27 @@ export default function DashboardPage() {
         <MetricTile
           label={t("metric.wam")}
           value={m?.wamDays}
-          format="days"
+          format="months"
           valueLabel={t("metric.wamRemaining")}
           secondaryLabel={t("metric.wamOriginal")}
           secondaryValue={m?.weightedOriginalDurationDays}
+          secondaryFormat="months"
           icon={<CalendarClock className="h-4 w-4" />}
-          accent="muted"
+          accent="primary"
+          secondaryAccent="success"
           hidden={isLite}
         />
         <MetricTile
-          label={t("metric.activeAnnualYield")}
+          label={t("metric.annualYield")}
           value={m?.activeAnnualYieldPercent}
           format="percent"
+          valueLabel={t("metric.activeAnnualYield")}
+          secondaryLabel={t("metric.historicalAnnualYield")}
+          secondaryValue={m?.historicalAnnualYieldPercent}
+          secondaryFormat="percent"
           icon={<Percent className="h-4 w-4" />}
-          accent="success"
+          accent="primary"
+          secondaryAccent="success"
           hidden={isLite}
         />
         <MetricTile

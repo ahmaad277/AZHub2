@@ -5,6 +5,7 @@ type FixtureInvestment = {
   platformId: string;
   principalAmount: string;
   expectedProfit: string;
+  expectedIrr: string;
   startDate: Date;
   endDate: Date;
 };
@@ -58,6 +59,7 @@ const { dbState, dbMock } = vi.hoisted(() => {
           id: investment.id,
           principal: investment.principalAmount,
           expectedProfit: investment.expectedProfit,
+          expectedIrr: investment.expectedIrr,
           startDate: investment.startDate,
           endDate: investment.endDate,
           platformId: investment.platformId,
@@ -118,6 +120,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-a",
       principalAmount: "1000.00",
       expectedProfit: "120.00",
+      expectedIrr: "12.00",
       startDate: new Date(Date.UTC(2025, 6, 15)),
       endDate: new Date(Date.UTC(2026, 6, 15)),
     },
@@ -126,6 +129,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-b",
       principalAmount: "2000.00",
       expectedProfit: "300.00",
+      expectedIrr: "15.00",
       startDate: new Date(Date.UTC(2025, 3, 15)),
       endDate: new Date(Date.UTC(2026, 3, 15)),
     },
@@ -134,6 +138,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-c",
       principalAmount: "1500.00",
       expectedProfit: "225.00",
+      expectedIrr: "15.00",
       startDate: new Date(Date.UTC(2024, 9, 1)),
       endDate: new Date(Date.UTC(2025, 9, 1)),
     },
@@ -142,6 +147,7 @@ const mediumFixture: DashboardFixture = {
       platformId: "platform-d",
       principalAmount: "500.00",
       expectedProfit: "50.00",
+      expectedIrr: "10.00",
       startDate: new Date(Date.UTC(2024, 11, 1)),
       endDate: new Date(Date.UTC(2025, 11, 1)),
     },
@@ -243,6 +249,7 @@ const edgeStrictFixture: DashboardFixture = {
       platformId: "platform-a",
       principalAmount: "800.00",
       expectedProfit: "200.00",
+      expectedIrr: "25.00",
       startDate: new Date(Date.UTC(2025, 2, 16)),
       endDate: new Date(Date.UTC(2026, 2, 16)),
     },
@@ -371,7 +378,7 @@ describe("getDashboardMetrics invariants", () => {
     expect(metrics.defaultRatePercent).toBe(expectedDefaultRate);
   });
 
-  it("keeps active annual yield tied to contract tenor and principal weights", async () => {
+  it("keeps active annual yield tied to expectedIrr and principal weights", async () => {
     dbState.fixture = mediumFixture;
     const metrics = await getDashboardMetrics({ now: NOW });
 
@@ -380,14 +387,28 @@ describe("getDashboardMetrics invariants", () => {
     );
     let aprNum = 0;
     for (const inv of activeAndLate) {
-      const d = Math.max(1, daysBetween(inv.startDate, inv.endDate));
-      const annualReturn =
-        (Number(inv.expectedProfit) / Number(inv.principalAmount)) * (365 / d);
+      const annualReturn = Number(inv.expectedIrr) / 100;
       aprNum += Number(inv.principalAmount) * annualReturn;
     }
     const expectedYield = roundToMoney((aprNum / metrics.activePrincipal) * 100);
 
     expect(metrics.activeAnnualYieldPercent).toBe(expectedYield);
+  });
+
+  it("calculates historical annual yield tied to expectedIrr and principal weights for all investments", async () => {
+    dbState.fixture = mediumFixture;
+    const metrics = await getDashboardMetrics({ now: NOW });
+
+    let aprNum = 0;
+    let totalPrincipal = 0;
+    for (const inv of mediumFixture.investments) {
+      const annualReturn = Number(inv.expectedIrr) / 100;
+      aprNum += Number(inv.principalAmount) * annualReturn;
+      totalPrincipal += Number(inv.principalAmount);
+    }
+    const expectedYield = roundToMoney((aprNum / totalPrincipal) * 100);
+
+    expect(metrics.historicalAnnualYieldPercent).toBe(expectedYield);
   });
 
   it("partitions book principal across principalByStatus for pie weighting", async () => {
