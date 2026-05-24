@@ -87,15 +87,15 @@ export function MetricTile({
       </div>
       {hasSecondary ? (
         <div className="mt-3 space-y-2">
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="text-xs text-muted-foreground">{valueLabel}</span>
-            <span className={cn("text-xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-xs text-muted-foreground whitespace-nowrap">{valueLabel}</span>
+            <span className={cn("text-lg font-bold tracking-tight tabular-nums", ACCENT[accent])}>
               {display}
             </span>
           </div>
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="text-xs text-muted-foreground">{secondaryLabel}</span>
-            <span className={cn("text-xl font-bold tracking-tight tabular-nums", ACCENT[secondaryAccent ?? accent])}>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-xs text-muted-foreground whitespace-nowrap">{secondaryLabel}</span>
+            <span className={cn("text-lg font-bold tracking-tight tabular-nums", ACCENT[secondaryAccent ?? accent])}>
               {secondaryDisplay}
             </span>
           </div>
