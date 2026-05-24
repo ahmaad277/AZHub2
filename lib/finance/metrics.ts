@@ -290,6 +290,7 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
     defaultedCount: number;
     platformColor: string | null;
     investmentsPrincipalTotal: number;
+    investmentsPrincipalActive: number;
   }>;
 
   for (const p of plats) {

@@ -45,6 +45,7 @@ const breakdownFixture = [
     defaultedCount: 0,
     platformColor: null,
     investmentsPrincipalTotal: 5000,
+    investmentsPrincipalActive: 4500,
   },
 ];
 
@@ -133,6 +134,7 @@ describe("dashboard metrics route contract", () => {
         defaultedCount: expect.any(Number),
         platformColor: expect.anything(),
         investmentsPrincipalTotal: expect.any(Number),
+        investmentsPrincipalActive: expect.any(Number),
       },
     ]);
   });

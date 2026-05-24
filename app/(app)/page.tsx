@@ -106,6 +106,7 @@ interface DashboardSummaryResponse {
     defaultedCount: number;
     platformColor: string | null;
     investmentsPrincipalTotal: number;
+    investmentsPrincipalActive: number;
   }>;
 }
 
