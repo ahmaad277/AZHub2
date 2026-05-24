@@ -20,7 +20,7 @@ import { useApp } from "@/components/providers";
 import { formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import { getPlatformColorOption } from "@/lib/platform-colors";
 
-type PieMode = "percent" | "count";
+type PieMode = "current" | "historical" | "count";
 type MonthlyChartMode = "bar" | "line";
 
 export interface DashboardBreakdownRow {
@@ -34,6 +34,8 @@ export interface DashboardBreakdownRow {
   platformColor: string | null;
   /** Sum of principal_amount for all investments on this platform (pie «percent» weight). */
   investmentsPrincipalTotal: number;
+  /** Sum of principal_amount for active+late+defaulted investments on this platform (current exposure). */
+  investmentsPrincipalActive: number;
 }
 
 export interface MonthlyCashflowRow {
@@ -78,7 +80,8 @@ export function DashboardCharts({
         id: row.platformId,
         name: row.platformName,
         count: row.investmentsCount,
-        weight: row.investmentsPrincipalTotal,
+        weight: row.investmentsPrincipalActive,
+        historicalWeight: row.investmentsPrincipalTotal,
         color: row.platformColor,
       })),
     [breakdown],
@@ -111,8 +114,8 @@ function PieToggle({
 }) {
   const { t } = useApp();
   return (
-    <div className="flex shrink-0 rounded-lg border p-0.5 text-xs">
-      {(["percent", "count"] as const).map((value) => (
+    <div className="flex shrink-0 rounded-lg border p-0.5 text-[10px] sm:text-xs">
+      {(["current", "historical", "count"] as const).map((value) => (
         <button
           key={value}
           type="button"
@@ -176,8 +179,8 @@ function PieLegend({
             <span className="truncate whitespace-nowrap [@media(orientation:landscape)_and_(max-height:500px)]:hidden">{item.name}</span>
           </span>
           <span className="tabular-nums text-muted-foreground whitespace-nowrap [@media(orientation:landscape)_and_(max-height:500px)]:hidden">
-            {mode === "percent" && total > 0
-              ? formatPercent((item.value / total) * 100, 0)
+            {mode === "current" || mode === "historical"
+              ? (total > 0 ? formatPercent((item.value / total) * 100, 0) : "0%")
               : formatNumber(item.value)}
           </span>
         </li>
@@ -196,20 +199,26 @@ function PlatformPieCard({
     name: string;
     count: number;
     weight: number;
+    historicalWeight: number;
     color: string | null;
   }>;
 }) {
   const { t } = useApp();
-  const [mode, setMode] = React.useState<PieMode>("percent");
+  const [mode, setMode] = React.useState<PieMode>("current");
   const filtered = React.useMemo(() => {
     return data
       .map((item) => {
-        const value = mode === "percent" ? item.weight : item.count;
+        let value = 0;
+        if (mode === "current") value = item.weight;
+        else if (mode === "historical") value = item.historicalWeight;
+        else if (mode === "count") value = item.count;
+        
         return {
           id: item.id,
           name: item.name,
           count: item.count,
           weight: item.weight,
+          historicalWeight: item.historicalWeight,
           value,
           fill: getPlatformColorOption(item.color).chartColor,
         };
@@ -232,8 +241,8 @@ function PlatformPieCard({
   );
   const tooltipFormatter = React.useCallback(
     (value: number, name: string) => [
-      mode === "percent" && total > 0
-        ? formatPercent((Number(value) / total) * 100, 1)
+      mode === "current" || mode === "historical"
+        ? (total > 0 ? formatPercent((Number(value) / total) * 100, 1) : "0%")
         : formatNumber(value),
       name,
     ],
@@ -316,7 +325,7 @@ function StatusPieCard({
   };
 }) {
   const { t } = useApp();
-  const [mode, setMode] = React.useState<PieMode>("percent");
+  const [mode, setMode] = React.useState<PieMode>("current");
   const data = React.useMemo(() => {
     const rows = [
       {
@@ -324,31 +333,42 @@ function StatusPieCard({
         name: t("status.active"),
         count: activeCount,
         weight: principalByStatus.active,
+        historicalWeight: principalByStatus.active,
       },
       {
         id: "late",
         name: t("status.late"),
         count: lateCount,
         weight: principalByStatus.late,
+        historicalWeight: principalByStatus.late,
       },
       {
         id: "defaulted",
         name: t("status.defaulted"),
         count: defaultedCount,
         weight: principalByStatus.defaulted,
+        historicalWeight: principalByStatus.defaulted,
       },
       {
         id: "completed",
         name: t("status.completed"),
         count: completedCount,
-        weight: principalByStatus.completed,
+        weight: 0, // Excluded from "current" mode
+        historicalWeight: principalByStatus.completed,
       },
     ];
     return rows
-      .map((item) => ({
-        ...item,
-        value: mode === "percent" ? item.weight : item.count,
-      }))
+      .map((item) => {
+        let value = 0;
+        if (mode === "current") value = item.weight;
+        else if (mode === "historical") value = item.historicalWeight;
+        else if (mode === "count") value = item.count;
+        
+        return {
+          ...item,
+          value,
+        };
+      })
       .filter((item) => item.value > 0);
   }, [
     activeCount,
@@ -378,8 +398,8 @@ function StatusPieCard({
   );
   const tooltipFormatter = React.useCallback(
     (value: number, name: string) => [
-      mode === "percent" && total > 0
-        ? formatPercent((Number(value) / total) * 100, 1)
+      mode === "current" || mode === "historical"
+        ? (total > 0 ? formatPercent((Number(value) / total) * 100, 1) : "0%")
         : formatNumber(value),
       name,
     ],

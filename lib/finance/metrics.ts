@@ -315,6 +315,7 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
       defaultedCount: m.defaultedCount,
       platformColor: p.color ?? null,
       investmentsPrincipalTotal,
+      investmentsPrincipalActive: m.principalByStatus.active + m.principalByStatus.late + m.principalByStatus.defaulted,
     });
   }
   return results;

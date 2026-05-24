@@ -159,7 +159,9 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
 
   // Charts
   "chart.percent": { en: "Percent", ar: "النسبة" },
-  "chart.count": { en: "Count", ar: "العدد" },
+  "chart.current": { en: "Current", ar: "الحالي" },
+  "chart.historical": { en: "Historical", ar: "التاريخي" },
+  "chart.count": { en: "Count", ar: "عدد" },
   "chart.bar": { en: "Bars", ar: "أعمدة" },
   "chart.line": { en: "Line", ar: "خطي" },
 
