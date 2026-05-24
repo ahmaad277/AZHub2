@@ -18,6 +18,7 @@ interface Props {
   accent?: "primary" | "success" | "warning" | "destructive" | "muted";
   secondaryAccent?: "primary" | "success" | "warning" | "destructive" | "muted";
   hidden?: boolean;
+  maskable?: boolean;
   className?: string;
 }
 
@@ -42,6 +43,7 @@ export function MetricTile({
   accent = "primary",
   secondaryAccent,
   hidden,
+  maskable,
   className,
 }: Props) {
   const { settings, locale } = useApp();
@@ -52,6 +54,7 @@ export function MetricTile({
     rawValue: number | string | null | undefined,
     valueFormat: Props["format"] = "money",
   ) => {
+    if (maskable && settings.hideValues) return "****";
     if (rawValue === null || rawValue === undefined || rawValue === "") return "—";
     if (valueFormat === "money") return formatMoney(rawValue as number, settings.currency, localeCode);
     if (valueFormat === "percent") return formatPercent(Number(rawValue), 2, localeCode);

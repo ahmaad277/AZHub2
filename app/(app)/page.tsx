@@ -194,18 +194,21 @@ export default function DashboardPage() {
           value={m?.nav}
           icon={<TrendingUp className="h-4 w-4" />}
           accent="primary"
+          maskable
         />
         <MetricTile
           label={t("metric.totalCashBalance")}
           value={m?.totalCashBalance}
           icon={<Wallet className="h-4 w-4" />}
           accent="success"
+          maskable
         />
         <MetricTile
           label={t("metric.activePrincipal")}
           value={m?.activePrincipal}
           icon={<Briefcase className="h-4 w-4" />}
           accent="primary"
+          maskable
         />
         <MetricTile
           label={t("metric.realizedGains")}
@@ -219,6 +222,7 @@ export default function DashboardPage() {
           icon={<CalendarClock className="h-4 w-4" />}
           accent="primary"
           hidden={isLite}
+          maskable
         />
         <MetricTile
           label={t("metric.nextPayment")}
@@ -264,6 +268,7 @@ export default function DashboardPage() {
           icon={<AlertTriangle className="h-4 w-4" />}
           accent={(m?.overdueBalance ?? 0) > 0 ? "destructive" : "muted"}
           hidden={isLite}
+          maskable
         />
         <MetricTile
           label={t("metric.defaultRate")}
@@ -287,6 +292,7 @@ export default function DashboardPage() {
           icon={<TrendingUp className="h-4 w-4" />}
           accent="muted"
           hidden={isLite}
+          maskable
         />
       </div>
 

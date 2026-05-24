@@ -134,6 +134,8 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "severity.error": { en: "error", ar: "خطأ" },
 
   // Common
+  "common.hideValues": { en: "Hide values", ar: "إخفاء الأرقام" },
+  "common.showValues": { en: "Show values", ar: "إظهار الأرقام" },
   "common.proMode": { en: "Pro Mode", ar: "الوضع الاحترافي" },
   "common.liteMode": { en: "Lite Mode", ar: "الوضع المبسط" },
   "common.needsReview": { en: "Needs Review", ar: "يحتاج مراجعة" },

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Languages, Gauge, Menu, LogOut, Filter } from "lucide-react";
+import { Moon, Sun, Eye, EyeOff, Gauge, Menu, LogOut, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -124,10 +124,10 @@ export function AppTopbar() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setSettings({ language: settings.language === "ar" ? "en" : "ar" })}
-          title={t("settings.language")}
+          onClick={() => setSettings({ hideValues: !settings.hideValues })}
+          title={settings.hideValues ? t("common.showValues") : t("common.hideValues")}
         >
-          <Languages className="h-4 w-4" />
+          {settings.hideValues ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </Button>
 
         <Button

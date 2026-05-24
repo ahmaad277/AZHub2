@@ -17,6 +17,7 @@ interface SettingsShape {
   collapsedSections: string[];
   alertsEnabled: boolean;
   alertDaysBefore: number;
+  hideValues?: boolean;
 }
 
 const DEFAULT_SETTINGS: SettingsShape = {
@@ -30,6 +31,7 @@ const DEFAULT_SETTINGS: SettingsShape = {
   collapsedSections: [],
   alertsEnabled: true,
   alertDaysBefore: 7,
+  hideValues: false,
 };
 
 interface AppContextValue {
