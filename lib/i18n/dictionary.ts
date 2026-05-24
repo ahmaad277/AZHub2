@@ -43,7 +43,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "metric.historicalAnnualYield": { en: "Historical Annual Yield", ar: "السنوي التاريخي" },
   "metric.nextPayment": { en: "Next Payment", ar: "الدفعة القادمة" },
   "metric.totalExpectedProfit": { en: "Expected Profit", ar: "الربح المتوقع" },
-  "metric.overdueBalance": { en: "Overdue", ar: "متأخرات" },
+  "metric.overdueBalance": { en: "Overdue", ar: "المتأخرات" },
 
   // Status
   "status.active": { en: "Active", ar: "نشط" },

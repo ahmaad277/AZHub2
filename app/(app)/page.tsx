@@ -257,11 +257,10 @@ export default function DashboardPage() {
           hidden={isLite}
         />
         <MetricTile
-          label={t("metric.cashDrag")}
-          value={m?.cashDragPercent}
-          format="percent"
-          icon={<Gauge className="h-4 w-4" />}
-          accent={(m?.cashDragPercent ?? 0) > 30 ? "warning" : "muted"}
+          label={t("metric.overdueBalance")}
+          value={m?.overdueBalance}
+          icon={<AlertTriangle className="h-4 w-4" />}
+          accent={(m?.overdueBalance ?? 0) > 0 ? "destructive" : "muted"}
           hidden={isLite}
         />
         <MetricTile
@@ -273,10 +272,11 @@ export default function DashboardPage() {
           hidden={isLite}
         />
         <MetricTile
-          label={t("metric.overdueBalance")}
-          value={m?.overdueBalance}
-          icon={<AlertTriangle className="h-4 w-4" />}
-          accent={(m?.overdueBalance ?? 0) > 0 ? "destructive" : "muted"}
+          label={t("metric.cashDrag")}
+          value={m?.cashDragPercent}
+          format="percent"
+          icon={<Gauge className="h-4 w-4" />}
+          accent={(m?.cashDragPercent ?? 0) > 30 ? "warning" : "muted"}
           hidden={isLite}
         />
         <MetricTile
