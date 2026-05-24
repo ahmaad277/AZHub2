@@ -374,9 +374,9 @@ describe("getDashboardMetrics snapshots", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
     expect(metrics).toMatchInlineSnapshot(`
       {
-        "activeAnnualYieldPercent": 14,
+        "activeAnnualYieldPercent": 14.33,
         "activeCount": 2,
-        "activePrincipal": 3000,
+        "activePrincipal": 4500,
         "cashDragPercent": 15.09,
         "completedCount": 1,
         "defaultRatePercent": 33.33,
@@ -402,7 +402,7 @@ describe("getDashboardMetrics snapshots", () => {
         "realizedGains": 100,
         "totalCashBalance": 800,
         "totalExpectedProfit": 695,
-        "wamDays": 120,
+        "wamDays": 81,
       }
     `);
   });

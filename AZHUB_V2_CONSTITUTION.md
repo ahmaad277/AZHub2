@@ -131,7 +131,7 @@ This is the highest-severity section. Violations here are automatically release-
 | # | Metric | Definition |
 |---|---|---|
 | 1 | Total Cash Balance | `SUM(cash_transactions.amount)` |
-| 2 | Active Principal | `SUM(principal_amount)` where `derived_status ∈ {active, late}` |
+| 2 | Active Principal | `SUM(principal_amount)` where `derived_status ∈ {active, late, defaulted}` |
 | 3 | NAV | Total Principal Exposure + Cash Balance |
 | 4 | Cash Drag % | Cash / NAV × 100 |
 | 5 | Realized Gains | `SUM(cashflows.amount)` where `type='profit' AND status='received'` — **strict**, no fallbacks |

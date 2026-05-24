@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const metricsFixture = {
   totalCashBalance: 800,
-  activePrincipal: 3000,
+  activePrincipal: 4500,
   nav: 5300,
   cashDragPercent: 21.05,
   realizedGains: 100,
@@ -36,7 +36,7 @@ const breakdownFixture = [
   {
     platformId: "platform-a",
     platformName: "Platform A",
-    activePrincipal: 3000,
+    activePrincipal: 4500,
     realizedGains: 100,
     expectedProfit: 695,
     investmentsCount: 4,

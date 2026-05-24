@@ -310,7 +310,7 @@ describe("getDashboardMetrics invariants", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
 
     const activeAndLate = mediumFixture.investments.filter((investment) =>
-      investment.id === "inv-active" || investment.id === "inv-late",
+      investment.id === "inv-active" || investment.id === "inv-late" || investment.id === "inv-defaulted",
     );
     const expectedWam = Math.round(
       activeAndLate.reduce(
@@ -345,7 +345,7 @@ describe("getDashboardMetrics invariants", () => {
     const metrics = await getDashboardMetrics({ now: NOW });
 
     const activeAndLate = mediumFixture.investments.filter(
-      (inv) => inv.id === "inv-active" || inv.id === "inv-late",
+      (inv) => inv.id === "inv-active" || inv.id === "inv-late" || inv.id === "inv-defaulted",
     );
     let aprNum = 0;
     for (const inv of activeAndLate) {

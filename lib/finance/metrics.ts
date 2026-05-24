@@ -395,9 +395,12 @@ function computeMetrics(
     };
   });
 
-  // Active set = active + late (i.e., not completed, not defaulted).
+  // Active set = active + late + defaulted (i.e., not completed).
   const activeSet = computed.filter(
-    (r) => r.derivedStatus === "active" || r.derivedStatus === "late",
+    (r) =>
+      r.derivedStatus === "active" ||
+      r.derivedStatus === "late" ||
+      r.derivedStatus === "defaulted",
   );
 
   // Metric 1: Total Cash Balance (from the ledger, always).
