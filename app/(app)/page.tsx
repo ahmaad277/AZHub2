@@ -215,6 +215,7 @@ export default function DashboardPage() {
           value={m?.realizedGains}
           icon={<ArrowDownCircle className="h-4 w-4" />}
           accent="success"
+          maskable
         />
         <MetricTile
           label={t("metric.expectedInflow30")}
@@ -235,6 +236,7 @@ export default function DashboardPage() {
           icon={<CalendarClock className="h-4 w-4" />}
           accent="muted"
           hidden={isLite}
+          maskable
         />
         <MetricTile
           label={t("metric.annualYield")}
