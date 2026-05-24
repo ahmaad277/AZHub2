@@ -282,12 +282,18 @@ describe("getDashboardMetrics invariants", () => {
     vi.clearAllMocks();
   });
 
-  it("keeps nav equal to active principal plus total cash balance", async () => {
+  it("keeps nav equal to total principal exposure plus total cash balance", async () => {
     dbState.fixture = mediumFixture;
     const metrics = await getDashboardMetrics({ now: NOW });
 
+    const exposure = roundToMoney(
+      metrics.principalByStatus.active +
+        metrics.principalByStatus.late +
+        metrics.principalByStatus.defaulted,
+    );
+
     expect(metrics.nav).toBe(
-      roundToMoney(metrics.activePrincipal + metrics.totalCashBalance),
+      roundToMoney(exposure + metrics.totalCashBalance),
     );
   });
 

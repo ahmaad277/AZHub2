@@ -4,7 +4,7 @@
  * The nine canonical metrics (1-9) match the Master Build Prompt exactly:
  *   1. Total Cash Balance   = SUM(cash_transactions.amount)
  *   2. Active Principal     = SUM(principal_amount) where derived_status in (active, late)
- *   3. NAV                  = Active Principal + Cash Balance
+ *   3. NAV                  = Total Principal Exposure + Cash Balance
  *   4. Cash Drag            = Cash / NAV * 100
  *   5. Realized Gains       = SUM(cashflows.amount) where type=profit AND status=received
  *                             (STRICT — no fallback logic)
@@ -409,8 +409,25 @@ function computeMetrics(
     activeSet.reduce((acc, r) => acc + r.principal, 0),
   );
 
+  const defaultedPrincipal = roundToMoney(
+    computed
+      .filter((r) => r.derivedStatus === "defaulted")
+      .reduce((acc, r) => acc + r.principal, 0),
+  );
+
+  const totalPrincipalExposure = roundToMoney(
+    computed
+      .filter(
+        (r) =>
+          r.derivedStatus === "active" ||
+          r.derivedStatus === "late" ||
+          r.derivedStatus === "defaulted",
+      )
+      .reduce((acc, r) => acc + r.principal, 0),
+  );
+
   // Metric 3: NAV.
-  const nav = roundToMoney(activePrincipal + totalCashBalance);
+  const nav = roundToMoney(totalPrincipalExposure + totalCashBalance);
 
   // Metric 4: Cash Drag.
   const cashDragPercent =
@@ -459,21 +476,6 @@ function computeMetrics(
     wamDenominator > 0 ? Math.round(wamNumerator / wamDenominator) : 0;
 
   // Metric 8: Default Rate.
-  const defaultedPrincipal = roundToMoney(
-    computed
-      .filter((r) => r.derivedStatus === "defaulted")
-      .reduce((acc, r) => acc + r.principal, 0),
-  );
-  const totalPrincipalExposure = roundToMoney(
-    computed
-      .filter(
-        (r) =>
-          r.derivedStatus === "active" ||
-          r.derivedStatus === "late" ||
-          r.derivedStatus === "defaulted",
-      )
-      .reduce((acc, r) => acc + r.principal, 0),
-  );
   const defaultRatePercent =
     totalPrincipalExposure > 0
       ? roundToMoney((defaultedPrincipal / totalPrincipalExposure) * 100)

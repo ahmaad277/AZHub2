@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const metricsFixture = {
   totalCashBalance: 800,
   activePrincipal: 3000,
-  nav: 3800,
+  nav: 5300,
   cashDragPercent: 21.05,
   realizedGains: 100,
   expectedInflow30d: 30,

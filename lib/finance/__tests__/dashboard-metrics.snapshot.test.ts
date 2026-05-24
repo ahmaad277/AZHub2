@@ -377,7 +377,7 @@ describe("getDashboardMetrics snapshots", () => {
         "activeAnnualYieldPercent": 14,
         "activeCount": 2,
         "activePrincipal": 3000,
-        "cashDragPercent": 21.05,
+        "cashDragPercent": 15.09,
         "completedCount": 1,
         "defaultRatePercent": 33.33,
         "defaultedCount": 1,
@@ -386,7 +386,7 @@ describe("getDashboardMetrics snapshots", () => {
         "expectedInflow90d": 2060,
         "generatedAt": "2026-01-15T00:00:00.000Z",
         "lateCount": 0,
-        "nav": 3800,
+        "nav": 5300,
         "nextPayment": {
           "amount": 30,
           "dueDate": "2026-01-25T00:00:00.000Z",
