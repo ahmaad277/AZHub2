@@ -231,11 +231,16 @@ export default function DashboardPage() {
           accent="muted"
         />
         <MetricTile
-          label={t("metric.cashDrag")}
-          value={m?.cashDragPercent}
+          label={t("metric.annualYield")}
+          value={m?.activeAnnualYieldPercent}
           format="percent"
-          icon={<Gauge className="h-4 w-4" />}
-          accent={(m?.cashDragPercent ?? 0) > 30 ? "warning" : "muted"}
+          valueLabel={t("metric.activeAnnualYield")}
+          secondaryLabel={t("metric.historicalAnnualYield")}
+          secondaryValue={m?.historicalAnnualYieldPercent}
+          secondaryFormat="percent"
+          icon={<Percent className="h-4 w-4" />}
+          accent="primary"
+          secondaryAccent="success"
           hidden={isLite}
         />
         <MetricTile
@@ -252,16 +257,11 @@ export default function DashboardPage() {
           hidden={isLite}
         />
         <MetricTile
-          label={t("metric.annualYield")}
-          value={m?.activeAnnualYieldPercent}
+          label={t("metric.cashDrag")}
+          value={m?.cashDragPercent}
           format="percent"
-          valueLabel={t("metric.activeAnnualYield")}
-          secondaryLabel={t("metric.historicalAnnualYield")}
-          secondaryValue={m?.historicalAnnualYieldPercent}
-          secondaryFormat="percent"
-          icon={<Percent className="h-4 w-4" />}
-          accent="primary"
-          secondaryAccent="success"
+          icon={<Gauge className="h-4 w-4" />}
+          accent={(m?.cashDragPercent ?? 0) > 30 ? "warning" : "muted"}
           hidden={isLite}
         />
         <MetricTile

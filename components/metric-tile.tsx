@@ -76,7 +76,7 @@ export function MetricTile({
       )}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="text-xs font-medium uppercase tracking-wide text-foreground">
           {label}
         </div>
         {icon ? (
