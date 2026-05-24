@@ -58,7 +58,7 @@ export function MetricTile({
     if (valueFormat === "days") return `${formatNumber(Number(rawValue), localeCode, 0)} d`;
     if (valueFormat === "months") {
       const months = Math.round(Number(rawValue) / 30);
-      return new Intl.NumberFormat(localeCode, { style: "unit", unit: "month" }).format(months);
+      return formatNumber(months, localeCode, 0);
     }
     if (valueFormat === "number") return formatNumber(Number(rawValue), localeCode, 0);
     return String(rawValue);

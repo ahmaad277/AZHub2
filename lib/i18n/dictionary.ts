@@ -34,7 +34,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "metric.cashDrag": { en: "Cash Drag", ar: "نسبة الكاش المعطل" },
   "metric.realizedGains": { en: "Realized Gains", ar: "الأرباح المحققة" },
   "metric.expectedInflow30": { en: "Inflow (30d)", ar: "الداخل خلال 30 يوم" },
-  "metric.wam": { en: "WAM", ar: "متوسط الاستحقاق المرجح" },
+  "metric.wam": { en: "WAM (Months)", ar: "متوسط الاستحقاق المرجح بالاشهر" },
   "metric.wamRemaining": { en: "Remaining weighted", ar: "المتوسط المتبقي" },
   "metric.wamOriginal": { en: "Original weighted", ar: "المتوسط التاريخي" },
   "metric.defaultRate": { en: "Default Rate", ar: "معدل التعثر" },
