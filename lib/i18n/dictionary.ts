@@ -45,6 +45,23 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "metric.totalExpectedProfit": { en: "Expected Profit", ar: "الربح المتوقع" },
   "metric.overdueBalance": { en: "Overdue", ar: "المتأخرات" },
 
+  // Explanations
+  "explain.totalCashBalance": { en: "The total amount of uninvested liquid cash currently available in your wallet.", ar: "إجمالي النقد السائل غير المستثمر والمتاح حالياً في محفظتك." },
+  "explain.activePrincipal": { en: "The total original capital currently deployed in active, late, or defaulted investments, excluding completed ones.", ar: "إجمالي رأس المال الأساسي المستثمر حالياً في الفرص النشطة، المتأخرة، أو المتعثرة، باستثناء الفرص المكتملة." },
+  "explain.nav": { en: "Net Asset Value: The total value of your portfolio, combining uninvested cash and the principal of all active, late, and defaulted investments.", ar: "صافي قيمة الأصول: القيمة الإجمالية لمحفظتك، وتجمع بين النقد غير المستثمر ورأس مال جميع الاستثمارات النشطة، المتأخرة، والمتعثرة." },
+  "explain.cashDrag": { en: "The percentage of your total portfolio (NAV) that is held in cash. High cash drag lowers your overall portfolio yield.", ar: "النسبة المئوية من إجمالي محفظتك (صافي قيمة الأصول) المحتفظ بها كنقد. ارتفاع هذه النسبة يقلل من العائد الإجمالي للمحفظة." },
+  "explain.realizedGains": { en: "The total actual profit received to date from all investments, excluding returned principal.", ar: "إجمالي الأرباح الفعلية المستلمة حتى الآن من جميع الاستثمارات، باستثناء رأس المال المسترد." },
+  "explain.expectedInflow30": { en: "The total projected cash inflows (both principal and profit) expected to be received within the next 30 days.", ar: "إجمالي التدفقات النقدية المتوقعة (رأس المال والأرباح) والمقرر استلامها خلال الـ 30 يوماً القادمة." },
+  "explain.wam": { en: "Weighted Average Maturity: The average time remaining (or historical duration) for your investments, weighted by the principal amount of each investment.", ar: "متوسط الاستحقاق المرجح: متوسط الوقت المتبقي (أو المدة التاريخية) لاستثماراتك، مرجحاً بحجم رأس المال لكل استثمار." },
+  "explain.defaultRate": { en: "The percentage of your active principal that is currently classified as defaulted.", ar: "النسبة المئوية من رأس مالك النشط المصنفة حالياً كاستثمارات متعثرة." },
+  "explain.annualYield": { en: "The principal-weighted average of the expected annual returns (IRR) across your active or historical investments.", ar: "المتوسط المرجح برأس المال للعوائد السنوية المتوقعة عبر استثماراتك النشطة أو التاريخية." },
+  "explain.nextPayment": { en: "The amount and date of the very next scheduled cashflow (profit or principal) across all active investments.", ar: "مبلغ وتاريخ الدفعة النقدية المجدولة القادمة (ربح أو رأس مال) عبر جميع الاستثمارات النشطة." },
+  "explain.totalExpectedProfit": { en: "The total projected profit from all investments over their entire lifespans, assuming all payments are received as scheduled.", ar: "إجمالي الأرباح المتوقعة من جميع الاستثمارات طوال فترة حياتها، بافتراض استلام جميع الدفعات في موعدها." },
+  "explain.overdueBalance": { en: "The total amount of scheduled payments (principal and profit) that have passed their due date and remain unpaid.", ar: "إجمالي مبالغ الدفعات المجدولة (رأس المال والأرباح) التي تجاوزت تاريخ استحقاقها ولم يتم سدادها بعد." },
+  "explain.platformDistribution": { en: "A breakdown of your portfolio allocation across different investment platforms, helping you assess concentration risk.", ar: "توزيع محفظتك الاستثمارية عبر منصات الاستثمار المختلفة، مما يساعدك على تقييم مخاطر التركز." },
+  "explain.platformStatus": { en: "The current health of your investments, categorizing your principal into active, late, defaulted, or completed statuses.", ar: "الحالة الصحية الحالية لاستثماراتك، حيث تصنف رأس مالك إلى حالات: نشط، متأخر، متعثر، أو مكتمل." },
+  "explain.monthlyCashflows": { en: "A forward-looking projection of expected cash inflows month by month, useful for liquidity planning.", ar: "توقع مستقبلي للتدفقات النقدية الداخلة شهراً بشهر، وهو مفيد لتخطيط السيولة." },
+
   // Status
   "status.active": { en: "Active", ar: "نشط" },
   "status.late": { en: "Late", ar: "متأخر" },

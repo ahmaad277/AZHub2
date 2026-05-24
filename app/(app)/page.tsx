@@ -196,6 +196,7 @@ export default function DashboardPage() {
           icon={<TrendingUp className="h-4 w-4" />}
           accent="primary"
           maskable
+          explanation={t("explain.nav")}
         />
         <MetricTile
           label={t("metric.totalCashBalance")}
@@ -203,6 +204,7 @@ export default function DashboardPage() {
           icon={<Wallet className="h-4 w-4" />}
           accent="success"
           maskable
+          explanation={t("explain.totalCashBalance")}
         />
         <MetricTile
           label={t("metric.activePrincipal")}
@@ -210,6 +212,7 @@ export default function DashboardPage() {
           icon={<Briefcase className="h-4 w-4" />}
           accent="primary"
           maskable
+          explanation={t("explain.activePrincipal")}
         />
         <MetricTile
           label={t("metric.realizedGains")}
@@ -217,6 +220,7 @@ export default function DashboardPage() {
           icon={<ArrowDownCircle className="h-4 w-4" />}
           accent="success"
           maskable
+          explanation={t("explain.realizedGains")}
         />
         <MetricTile
           label={t("metric.expectedInflow30")}
@@ -225,6 +229,7 @@ export default function DashboardPage() {
           accent="primary"
           hidden={isLite}
           maskable
+          explanation={t("explain.expectedInflow30")}
         />
         <MetricTile
           label={t("metric.nextPayment")}
@@ -238,6 +243,7 @@ export default function DashboardPage() {
           accent="muted"
           hidden={isLite}
           maskable
+          explanation={t("explain.nextPayment")}
         />
         <MetricTile
           label={t("metric.annualYield")}
@@ -251,6 +257,7 @@ export default function DashboardPage() {
           accent="primary"
           secondaryAccent="success"
           hidden={isLite}
+          explanation={t("explain.annualYield")}
         />
         <MetricTile
           label={t("metric.wam")}
@@ -264,6 +271,7 @@ export default function DashboardPage() {
           accent="primary"
           secondaryAccent="success"
           hidden={isLite}
+          explanation={t("explain.wam")}
         />
         <MetricTile
           label={t("metric.overdueBalance")}
@@ -272,6 +280,7 @@ export default function DashboardPage() {
           accent={(m?.overdueBalance ?? 0) > 0 ? "destructive" : "muted"}
           hidden={isLite}
           maskable
+          explanation={t("explain.overdueBalance")}
         />
         <MetricTile
           label={t("metric.defaultRate")}
@@ -280,6 +289,7 @@ export default function DashboardPage() {
           icon={<AlertTriangle className="h-4 w-4" />}
           accent={(m?.defaultRatePercent ?? 0) > 0 ? "destructive" : "muted"}
           hidden={isLite}
+          explanation={t("explain.defaultRate")}
         />
         <MetricTile
           label={t("metric.cashDrag")}
@@ -288,6 +298,7 @@ export default function DashboardPage() {
           icon={<Gauge className="h-4 w-4" />}
           accent={(m?.cashDragPercent ?? 0) > 30 ? "warning" : "muted"}
           hidden={isLite}
+          explanation={t("explain.cashDrag")}
         />
         <MetricTile
           label={t("metric.totalExpectedProfit")}
@@ -296,6 +307,7 @@ export default function DashboardPage() {
           accent="muted"
           hidden={isLite}
           maskable
+          explanation={t("explain.totalExpectedProfit")}
         />
       </div>
 

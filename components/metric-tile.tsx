@@ -4,6 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useApp } from "./providers";
 import { formatMoney, formatPercent, formatNumber } from "@/lib/finance/money";
+import { FlipCard } from "./ui/flip-card";
 
 interface Props {
   label: string;
@@ -19,6 +20,7 @@ interface Props {
   secondaryAccent?: "primary" | "success" | "warning" | "destructive" | "muted";
   hidden?: boolean;
   maskable?: boolean;
+  explanation?: string;
   className?: string;
 }
 
@@ -44,6 +46,7 @@ export function MetricTile({
   secondaryAccent,
   hidden,
   maskable,
+  explanation,
   className,
 }: Props) {
   const { settings, locale } = useApp();
@@ -71,13 +74,8 @@ export function MetricTile({
   const secondaryDisplay = formatDisplay(secondaryValue, secondaryFormat ?? format);
   const hasSecondary = secondaryLabel !== undefined || secondaryValue !== undefined;
 
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm transition-all hover:shadow-md hover:border-border/80",
-        className,
-      )}
-    >
+  const content = (
+    <>
       <div className="flex items-start justify-between gap-2">
         <div className="text-xs font-medium uppercase tracking-wide text-foreground">
           {label}
@@ -111,6 +109,33 @@ export function MetricTile({
       {sublabel ? (
         <div className="mt-1 text-xs text-muted-foreground">{sublabel}</div>
       ) : null}
+    </>
+  );
+
+  const containerClass = cn(
+    "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm transition-all hover:shadow-md hover:border-border/80",
+    className,
+  );
+
+  if (explanation) {
+    return (
+      <FlipCard
+        className="h-full"
+        frontClassName={containerClass}
+        backClassName={cn(containerClass, "flex flex-col items-center justify-center text-center")}
+        front={content}
+        back={
+          <div className="text-sm text-muted-foreground">
+            {explanation}
+          </div>
+        }
+      />
+    );
+  }
+
+  return (
+    <div className={containerClass}>
+      {content}
     </div>
   );
 }

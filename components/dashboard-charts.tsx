@@ -20,6 +20,8 @@ import { useApp } from "@/components/providers";
 import { formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import { getPlatformColorOption } from "@/lib/platform-colors";
 import { Activity, History, Hash } from "lucide-react";
+import { FlipCard } from "./ui/flip-card";
+import { cn } from "@/lib/utils";
 
 type PieMode = "current" | "historical" | "count";
 type MonthlyChartMode = "bar" | "line";
@@ -91,7 +93,11 @@ export function DashboardCharts({
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <PlatformPieCard title={t("dash.platformDistribution")} data={platformPieData} />
+        <PlatformPieCard 
+          title={t("dash.platformDistribution")} 
+          data={platformPieData} 
+          explanation={t("explain.platformDistribution")}
+        />
         <StatusPieCard
           title={t("dash.platformStatus")}
           activeCount={activeCount}
@@ -99,9 +105,13 @@ export function DashboardCharts({
           defaultedCount={defaultedCount}
           completedCount={completedCount}
           principalByStatus={principalByStatus}
+          explanation={t("explain.platformStatus")}
         />
       </div>
-      <MonthlyCashflowChart rows={monthlyRows} />
+      <MonthlyCashflowChart 
+        rows={monthlyRows} 
+        explanation={t("explain.monthlyCashflows")}
+      />
     </>
   );
 }
@@ -204,6 +214,7 @@ function PieLegend({
 function PlatformPieCard({
   title,
   data,
+  explanation,
 }: {
   title: string;
   data: Array<{
@@ -214,6 +225,7 @@ function PlatformPieCard({
     historicalWeight: number;
     color: string | null;
   }>;
+  explanation?: string;
 }) {
   const { t } = useApp();
   const [mode, setMode] = React.useState<PieMode>("current");
@@ -261,8 +273,8 @@ function PlatformPieCard({
     [mode, total],
   );
 
-  return (
-    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm">
+  const content = (
+    <>
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="text-sm font-medium whitespace-nowrap">{title}</div>
         <PieToggle mode={mode} onChange={setMode} />
@@ -305,6 +317,26 @@ function PlatformPieCard({
           <PieLegend items={legendItems} total={total} mode={mode} />
         </>
       )}
+    </>
+  );
+
+  const containerClass = "rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm";
+
+  if (explanation) {
+    return (
+      <FlipCard
+        className="h-full"
+        frontClassName={containerClass}
+        backClassName={cn(containerClass, "flex flex-col items-center justify-center text-center")}
+        front={content}
+        back={<div className="text-sm text-muted-foreground">{explanation}</div>}
+      />
+    );
+  }
+
+  return (
+    <div className={containerClass}>
+      {content}
     </div>
   );
 }
@@ -323,6 +355,7 @@ function StatusPieCard({
   defaultedCount,
   completedCount,
   principalByStatus,
+  explanation,
 }: {
   title: string;
   activeCount: number;
@@ -335,6 +368,7 @@ function StatusPieCard({
     defaulted: number;
     completed: number;
   };
+  explanation?: string;
 }) {
   const { t } = useApp();
   const [mode, setMode] = React.useState<PieMode>("current");
@@ -418,8 +452,8 @@ function StatusPieCard({
     [mode, total],
   );
 
-  return (
-    <div className="rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm">
+  const content = (
+    <>
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="text-sm font-medium whitespace-nowrap">{title}</div>
         <PieToggle mode={mode} onChange={setMode} />
@@ -462,6 +496,26 @@ function StatusPieCard({
           <PieLegend items={legendItems} total={total} mode={mode} />
         </>
       )}
+    </>
+  );
+
+  const containerClass = "rounded-2xl border border-border/40 bg-card p-4 sm:p-6 shadow-sm";
+
+  if (explanation) {
+    return (
+      <FlipCard
+        className="h-full"
+        frontClassName={containerClass}
+        backClassName={cn(containerClass, "flex flex-col items-center justify-center text-center")}
+        front={content}
+        back={<div className="text-sm text-muted-foreground">{explanation}</div>}
+      />
+    );
+  }
+
+  return (
+    <div className={containerClass}>
+      {content}
     </div>
   );
 }
@@ -501,7 +555,7 @@ function buildMonthlyLineRows(
   return rows;
 }
 
-function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
+function MonthlyCashflowChart({ rows, explanation }: { rows: MonthlyCashflowRow[], explanation?: string }) {
   const { t, settings } = useApp();
   const [mode, setMode] = React.useState<MonthlyChartMode>("bar");
   const isRtl = settings.language === "ar";
@@ -572,8 +626,8 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
     [t],
   );
 
-  return (
-    <div className="rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm">
+  const content = (
+    <>
       <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div>
           <div className="font-medium">{t("dash.monthlyCashflows")}</div>
@@ -669,6 +723,26 @@ function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
           </div>
         </div>
       )}
+    </>
+  );
+
+  const containerClass = "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm";
+
+  if (explanation) {
+    return (
+      <FlipCard
+        className="h-full"
+        frontClassName={containerClass}
+        backClassName={cn(containerClass, "flex flex-col items-center justify-center text-center")}
+        front={content}
+        back={<div className="text-sm text-muted-foreground">{explanation}</div>}
+      />
+    );
+  }
+
+  return (
+    <div className={containerClass}>
+      {content}
     </div>
   );
 }
