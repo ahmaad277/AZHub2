@@ -282,7 +282,7 @@ describe("getDashboardMetrics invariants", () => {
     vi.clearAllMocks();
   });
 
-  it("keeps nav equal to total principal exposure plus total cash balance", async () => {
+  it("keeps nav equal to total principal exposure plus total cash balance plus pending profits", async () => {
     dbState.fixture = mediumFixture;
     const metrics = await getDashboardMetrics({ now: NOW });
 
@@ -292,8 +292,14 @@ describe("getDashboardMetrics invariants", () => {
         metrics.principalByStatus.defaulted,
     );
 
+    const pendingProfits = roundToMoney(
+      mediumFixture.cashflows
+        .filter((cf) => cf.type === "profit" && cf.status === "pending")
+        .reduce((sum, cf) => sum + Number(cf.amount), 0)
+    );
+
     expect(metrics.nav).toBe(
-      roundToMoney(exposure + metrics.totalCashBalance),
+      roundToMoney(exposure + metrics.totalCashBalance + pendingProfits),
     );
   });
 

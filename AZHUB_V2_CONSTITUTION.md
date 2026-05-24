@@ -132,7 +132,7 @@ This is the highest-severity section. Violations here are automatically release-
 |---|---|---|
 | 1 | Total Cash Balance | `SUM(cash_transactions.amount)` |
 | 2 | Active Principal | `SUM(principal_amount)` where `derived_status ∈ {active, late, defaulted}` |
-| 3 | NAV | Total Principal Exposure + Cash Balance |
+| 3 | NAV | Total Principal Exposure + Cash Balance + Pending Profits |
 | 4 | Cash Drag % | Cash / NAV × 100 |
 | 5 | Realized Gains | `SUM(cashflows.amount)` where `type='profit' AND status='received'` — **strict**, no fallbacks |
 | 6 | Expected Inflow | pending cashflows bucketed at 30 / 60 / 90 days |

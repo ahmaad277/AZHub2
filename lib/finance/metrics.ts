@@ -4,7 +4,7 @@
  * The nine canonical metrics (1-9) match the Master Build Prompt exactly:
  *   1. Total Cash Balance   = SUM(cash_transactions.amount)
  *   2. Active Principal     = SUM(principal_amount) where derived_status in (active, late)
- *   3. NAV                  = Total Principal Exposure + Cash Balance
+ *   3. NAV                  = Total Principal Exposure + Cash Balance + Pending Profits
  *   4. Cash Drag            = Cash / NAV * 100
  *   5. Realized Gains       = SUM(cashflows.amount) where type=profit AND status=received
  *                             (STRICT — no fallback logic)
@@ -429,8 +429,13 @@ function computeMetrics(
       .reduce((acc, r) => acc + r.principal, 0),
   );
 
+  const pendingProfitRows = cashflowRows.filter(
+    (cf) => cf.type === "profit" && cf.status === "pending",
+  );
+  const pendingProfits = sumMoney(pendingProfitRows.map((r) => r.amount));
+
   // Metric 3: NAV.
-  const nav = roundToMoney(totalPrincipalExposure + totalCashBalance);
+  const nav = roundToMoney(totalPrincipalExposure + totalCashBalance + pendingProfits);
 
   // Metric 4: Cash Drag.
   const cashDragPercent =
