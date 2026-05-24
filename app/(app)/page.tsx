@@ -218,6 +218,7 @@ export default function DashboardPage() {
           value={m?.expectedInflow30d}
           icon={<CalendarClock className="h-4 w-4" />}
           accent="primary"
+          hidden={isLite}
         />
         <MetricTile
           label={t("metric.nextPayment")}
@@ -229,6 +230,7 @@ export default function DashboardPage() {
           }
           icon={<CalendarClock className="h-4 w-4" />}
           accent="muted"
+          hidden={isLite}
         />
         <MetricTile
           label={t("metric.annualYield")}
@@ -284,6 +286,7 @@ export default function DashboardPage() {
           value={m?.totalExpectedProfit}
           icon={<TrendingUp className="h-4 w-4" />}
           accent="muted"
+          hidden={isLite}
         />
       </div>
 
