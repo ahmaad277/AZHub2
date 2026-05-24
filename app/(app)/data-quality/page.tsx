@@ -60,8 +60,19 @@ export default function DataQualityPage() {
         router.push(res.redirectUrl);
       } else {
         toast.success(t("dataQuality.fixSuccess"));
-        await qc.invalidateQueries({ queryKey: ["dq"] });
-        await qc.invalidateQueries({ queryKey: ["dashboard-metrics"] });
+        await Promise.all(
+          [
+            "dq",
+            "dashboard-summary",
+            "dashboard-metrics",
+            "investments",
+            "cashflows",
+            "cashflows-upcoming",
+            "cashflows-monthly-summary",
+            "cashTxs",
+            "alerts",
+          ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
+        );
       }
     } catch (e) {
       toast.error(t("dataQuality.fixError") + ": " + (e as Error).message);

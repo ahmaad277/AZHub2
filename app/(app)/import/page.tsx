@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Upload, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ interface PreviewResponse {
 
 export default function ImportPage() {
   const { t } = useApp();
+  const qc = useQueryClient();
   const [preview, setPreview] = React.useState<PreviewResponse | null>(null);
   const [loading, setLoading] = React.useState(false);
 
@@ -52,6 +54,19 @@ export default function ImportPage() {
       );
       toast.success(`Imported ${committed}`);
       setPreview(null);
+      await Promise.all(
+        [
+          "dashboard-summary",
+          "dashboard-metrics",
+          "investments",
+          "cashflows",
+          "cashflows-upcoming",
+          "cashflows-monthly-summary",
+          "cashTxs",
+          "alerts",
+          "platforms",
+        ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
+      );
     } catch (e) {
       toast.error((e as Error).message);
     }

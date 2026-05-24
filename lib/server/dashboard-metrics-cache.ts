@@ -9,17 +9,25 @@ import { unstable_cache } from "next/cache";
 import { db } from "@/db";
 import { alerts } from "@/db/schema";
 
+const DEFAULT_DASHBOARD_REVALIDATE_SECONDS =
+  process.env.NODE_ENV === "development" ? 5 : 300;
+
+const dashboardRevalidateSeconds = Number(
+  process.env.DASHBOARD_METRICS_REVALIDATE_SECONDS ??
+    DEFAULT_DASHBOARD_REVALIDATE_SECONDS,
+);
+
 export const getCachedMetrics = unstable_cache(
   async (platformId?: string) =>
     getDashboardMetrics({ platformId }),
   ["dashboard-metrics"],
-  { tags: ["dashboard-metrics"], revalidate: 3600 },
+  { tags: ["dashboard-metrics"], revalidate: dashboardRevalidateSeconds },
 );
 
 export const getCachedBreakdown = unstable_cache(
   async () => getPlatformBreakdown(),
   ["dashboard-breakdown"],
-  { tags: ["dashboard-metrics"], revalidate: 3600 },
+  { tags: ["dashboard-metrics"], revalidate: dashboardRevalidateSeconds },
 );
 
 /** Same math as computeSummaryMetricsAndBreakdown; shared cache tag with /api/dashboard/metrics. */
@@ -27,7 +35,7 @@ export const getCachedSummaryCompute = unstable_cache(
   async (platformId: string | undefined) =>
     computeSummaryMetricsAndBreakdown({ platformId }),
   ["dashboard-summary-compute"],
-  { tags: ["dashboard-metrics"], revalidate: 3600 },
+  { tags: ["dashboard-metrics"], revalidate: dashboardRevalidateSeconds },
 );
 
 /**
@@ -41,12 +49,12 @@ export const getCachedMonthlyCashflowSummary = unstable_cache(
     return fetchMonthlyCashflowSummary(platformId);
   },
   ["dashboard-monthly-cashflow-summary"],
-  { tags: ["dashboard-metrics"], revalidate: 3600 },
+  { tags: ["dashboard-metrics"], revalidate: dashboardRevalidateSeconds },
 );
 
 /** Alerts list — same invalidation tag as dashboard metrics when portfolio data changes. */
 export const getCachedAlertsList = unstable_cache(
   async () => db.select().from(alerts).orderBy(desc(alerts.createdAt)),
   ["alerts-list"],
-  { tags: ["dashboard-metrics"], revalidate: 3600 },
+  { tags: ["dashboard-metrics"], revalidate: dashboardRevalidateSeconds },
 );

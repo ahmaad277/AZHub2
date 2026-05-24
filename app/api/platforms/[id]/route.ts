@@ -38,6 +38,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       .where(eq(platforms.id, id))
       .returning();
     revalidateTag("platforms-list");
+    revalidateTag("dashboard-metrics");
     return row;
   });
 }
@@ -48,6 +49,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     const { id } = await params;
     await db.delete(platforms).where(eq(platforms.id, id));
     revalidateTag("platforms-list");
+    revalidateTag("dashboard-metrics");
     return { ok: true };
   });
 }

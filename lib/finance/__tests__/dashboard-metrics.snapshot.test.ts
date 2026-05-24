@@ -365,6 +365,7 @@ describe("getDashboardMetrics snapshots", () => {
         "totalCashBalance": 300,
         "totalExpectedProfit": 120,
         "wamDays": 181,
+        "weightedOriginalDurationDays": 365,
       }
     `);
   });
@@ -403,6 +404,7 @@ describe("getDashboardMetrics snapshots", () => {
         "totalCashBalance": 800,
         "totalExpectedProfit": 695,
         "wamDays": 81,
+        "weightedOriginalDurationDays": 365,
       }
     `);
   });
@@ -415,7 +417,7 @@ describe("getDashboardMetrics snapshots", () => {
         "activeAnnualYieldPercent": 25,
         "activeCount": 1,
         "activePrincipal": 800,
-        "cashDragPercent": 13.04,
+        "cashDragPercent": 10.71,
         "completedCount": 0,
         "defaultRatePercent": 0,
         "defaultedCount": 0,
@@ -424,7 +426,7 @@ describe("getDashboardMetrics snapshots", () => {
         "expectedInflow90d": 1000,
         "generatedAt": "2026-01-15T00:00:00.000Z",
         "lateCount": 0,
-        "nav": 920,
+        "nav": 1120,
         "nextPayment": {
           "amount": 100,
           "dueDate": "2026-02-01T00:00:00.000Z",
@@ -441,6 +443,7 @@ describe("getDashboardMetrics snapshots", () => {
         "totalCashBalance": 120,
         "totalExpectedProfit": 200,
         "wamDays": 60,
+        "weightedOriginalDurationDays": 365,
       }
     `);
   });

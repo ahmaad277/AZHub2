@@ -125,9 +125,10 @@ export default function DashboardPage() {
         `/api/dashboard/summary${platformSummaryQuery}`,
       ),
     placeholderData: (previousData) => previousData,
-    // Server caches summary math up to 1h; keep client calm for ~3m to cut duplicate network.
-    staleTime: 180_000,
+    // Keep the dashboard fresh after edits while still avoiding noisy duplicate requests.
+    staleTime: 15_000,
     gcTime: 900_000,
+    refetchOnWindowFocus: true,
   });
 
   const [canMountCharts, setCanMountCharts] = React.useState(false);
@@ -241,6 +242,9 @@ export default function DashboardPage() {
           label={t("metric.wam")}
           value={m?.wamDays}
           format="days"
+          valueLabel={t("metric.wamRemaining")}
+          secondaryLabel={t("metric.wamOriginal")}
+          secondaryValue={m?.weightedOriginalDurationDays}
           icon={<CalendarClock className="h-4 w-4" />}
           accent="muted"
           hidden={isLite}

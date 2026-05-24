@@ -43,6 +43,7 @@ export interface DashboardMetrics {
   expectedInflow60d: number;
   expectedInflow90d: number;
   wamDays: number;
+  weightedOriginalDurationDays: number;
   defaultRatePercent: number;
   activeAnnualYieldPercent: number;
   // Helpful extras (not required by the prompt but cheap to compute):
@@ -474,14 +475,19 @@ function computeMetrics(
 
   // Metric 7: WAM (days) — weighted by principal, only active set.
   let wamNumerator = 0;
+  let originalDurationNumerator = 0;
   let wamDenominator = 0;
   for (const r of activeSet) {
     const days = Math.max(1, daysBetween(now, r.endDate));
+    const originalDurationDays = Math.max(1, daysBetween(r.startDate, r.endDate));
     wamNumerator += r.principal * days;
+    originalDurationNumerator += r.principal * originalDurationDays;
     wamDenominator += r.principal;
   }
   const wamDays =
     wamDenominator > 0 ? Math.round(wamNumerator / wamDenominator) : 0;
+  const weightedOriginalDurationDays =
+    wamDenominator > 0 ? Math.round(originalDurationNumerator / wamDenominator) : 0;
 
   // Metric 8: Default Rate.
   const defaultRatePercent =
@@ -532,6 +538,7 @@ function computeMetrics(
     expectedInflow60d: inflow60,
     expectedInflow90d: inflow90,
     wamDays,
+    weightedOriginalDurationDays,
     defaultRatePercent,
     activeAnnualYieldPercent,
     activeCount: computed.filter((r) => r.derivedStatus === "active").length,

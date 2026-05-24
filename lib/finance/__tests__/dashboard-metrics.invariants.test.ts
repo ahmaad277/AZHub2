@@ -335,6 +335,31 @@ describe("getDashboardMetrics invariants", () => {
     expect(metrics.wamDays).toBe(expectedWam);
   });
 
+  it("keeps original weighted duration tied to contract start and end dates", async () => {
+    dbState.fixture = mediumFixture;
+    const metrics = await getDashboardMetrics({ now: NOW });
+
+    const activeAndLate = mediumFixture.investments.filter((investment) =>
+      investment.id === "inv-active" || investment.id === "inv-late" || investment.id === "inv-defaulted",
+    );
+    const expectedOriginalDuration = Math.round(
+      activeAndLate.reduce(
+        (sum, investment) =>
+          sum +
+          Number(investment.principalAmount) *
+            Math.max(1, daysBetween(investment.startDate, investment.endDate)),
+        0,
+      ) /
+        activeAndLate.reduce(
+          (sum, investment) => sum + Number(investment.principalAmount),
+          0,
+        ),
+    );
+
+    expect(metrics.weightedOriginalDurationDays).toBe(expectedOriginalDuration);
+    expect(metrics.weightedOriginalDurationDays).toBeGreaterThan(metrics.wamDays);
+  });
+
   it("keeps default rate calculation consistent with defaulted principal over exposure", async () => {
     dbState.fixture = mediumFixture;
     const metrics = await getDashboardMetrics({ now: NOW });

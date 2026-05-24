@@ -38,7 +38,8 @@ export default function VisionPage() {
     queryKey: ["visionTargets"],
     queryFn: () =>
       api.get<VisionTargetRow[]>("/api/vision/targets"),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 15_000,
+    refetchOnWindowFocus: true,
     enabled: pathname === "/vision",
   });
 

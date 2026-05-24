@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
     const parsed = insertPlatformSchema.parse(body);
     const [row] = await db.insert(platforms).values(parsed).returning();
     revalidateTag("platforms-list");
+    revalidateTag("dashboard-metrics");
     return row;
   });
 }

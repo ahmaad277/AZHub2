@@ -9,6 +9,10 @@ interface Props {
   label: string;
   value: number | string | null | undefined;
   format?: "money" | "percent" | "number" | "days" | "text";
+  valueLabel?: React.ReactNode;
+  secondaryLabel?: React.ReactNode;
+  secondaryValue?: number | string | null | undefined;
+  secondaryFormat?: "money" | "percent" | "number" | "days" | "text";
   sublabel?: React.ReactNode;
   icon?: React.ReactNode;
   accent?: "primary" | "success" | "warning" | "destructive" | "muted";
@@ -28,6 +32,10 @@ export function MetricTile({
   label,
   value,
   format = "money",
+  valueLabel,
+  secondaryLabel,
+  secondaryValue,
+  secondaryFormat,
   sublabel,
   icon,
   accent = "primary",
@@ -38,16 +46,21 @@ export function MetricTile({
   if (hidden) return null;
   const localeCode = locale === "ar" ? "ar-SA" : "en-US";
 
-  let display: string = "—";
-  if (value === null || value === undefined || value === "") display = "—";
-  else if (format === "money") display = formatMoney(value as number, settings.currency, localeCode);
-  else if (format === "percent")
-    display = formatPercent(Number(value), 2, localeCode);
-  else if (format === "days")
-    display = `${formatNumber(Number(value), localeCode, 0)} d`;
-  else if (format === "number")
-    display = formatNumber(Number(value), localeCode, 0);
-  else display = String(value);
+  const formatDisplay = (
+    rawValue: number | string | null | undefined,
+    valueFormat: Props["format"] = "money",
+  ) => {
+    if (rawValue === null || rawValue === undefined || rawValue === "") return "—";
+    if (valueFormat === "money") return formatMoney(rawValue as number, settings.currency, localeCode);
+    if (valueFormat === "percent") return formatPercent(Number(rawValue), 2, localeCode);
+    if (valueFormat === "days") return `${formatNumber(Number(rawValue), localeCode, 0)} d`;
+    if (valueFormat === "number") return formatNumber(Number(rawValue), localeCode, 0);
+    return String(rawValue);
+  };
+
+  const display = formatDisplay(value, format);
+  const secondaryDisplay = formatDisplay(secondaryValue, secondaryFormat ?? format);
+  const hasSecondary = secondaryLabel !== undefined || secondaryValue !== undefined;
 
   return (
     <div
@@ -66,9 +79,26 @@ export function MetricTile({
           </div>
         ) : null}
       </div>
-      <div className={cn("mt-3 text-2xl sm:text-3xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
-        {display}
-      </div>
+      {hasSecondary ? (
+        <div className="mt-3 space-y-2">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-xs text-muted-foreground">{valueLabel}</span>
+            <span className={cn("text-xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
+              {display}
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-xs text-muted-foreground">{secondaryLabel}</span>
+            <span className={cn("text-xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
+              {secondaryDisplay}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className={cn("mt-3 text-2xl sm:text-3xl font-bold tracking-tight tabular-nums", ACCENT[accent])}>
+          {display}
+        </div>
+      )}
       {sublabel ? (
         <div className="mt-1 text-xs text-muted-foreground">{sublabel}</div>
       ) : null}

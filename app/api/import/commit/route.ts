@@ -9,6 +9,7 @@ import {
   investmentInputSchema,
 } from "@/lib/finance/investments-service";
 import { z } from "zod";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,8 @@ export async function POST(request: NextRequest) {
       .update(importJobs)
       .set({ status: "committed", committedCount: committed, updatedAt: new Date() })
       .where(eq(importJobs.id, jobId));
+
+    revalidateTag("dashboard-metrics");
 
     return { committed };
   });

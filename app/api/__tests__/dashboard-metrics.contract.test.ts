@@ -10,6 +10,7 @@ const metricsFixture = {
   expectedInflow60d: 60,
   expectedInflow90d: 2060,
   wamDays: 120,
+  weightedOriginalDurationDays: 365,
   defaultRatePercent: 39.47,
   activeAnnualYieldPercent: 42.58,
   activeCount: 1,
@@ -85,6 +86,7 @@ const expectedMetricKeys = [
   "totalCashBalance",
   "totalExpectedProfit",
   "wamDays",
+  "weightedOriginalDurationDays",
 ].sort();
 
 describe("dashboard metrics route contract", () => {

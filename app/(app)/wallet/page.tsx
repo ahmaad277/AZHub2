@@ -162,8 +162,18 @@ export default function WalletPage() {
       
       await api.post(`/api/cash-transactions/zero-out?${params.toString()}`, {});
       toast.success("تم تصفير الرصيد النقدي بنجاح");
-      qc.invalidateQueries({ queryKey: ["dashboard-metrics"] });
-      qc.invalidateQueries({ queryKey: ["cashTxs"] });
+      await Promise.all(
+        [
+          "cashTxs",
+          "dashboard-summary",
+          "dashboard-metrics",
+          "investments",
+          "cashflows",
+          "cashflows-upcoming",
+          "cashflows-monthly-summary",
+          "alerts",
+        ].map((queryKey) => qc.invalidateQueries({ queryKey: [queryKey] })),
+      );
     } catch (error) {
       toast.error("حدث خطأ أثناء تصفير الرصيد");
     }
