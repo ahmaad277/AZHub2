@@ -23,7 +23,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       .returning();
     revalidateTag("dashboard-metrics");
     return row;
-  });
+  }, "PATCH /api/alerts/[id]");
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
@@ -33,5 +33,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await db.delete(alerts).where(eq(alerts.id, id));
     revalidateTag("dashboard-metrics");
     return { ok: true };
-  });
+  }, "DELETE /api/alerts/[id]");
 }

@@ -16,5 +16,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
       .set({ revokedAt: new Date() })
       .where(eq(shareLinks.id, id));
     return { ok: true };
-  });
+  }, "DELETE /api/share-links/[id]");
 }

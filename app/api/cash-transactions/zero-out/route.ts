@@ -30,5 +30,5 @@ export async function POST(request: NextRequest) {
     }
 
     return { success: true, deletedCount: result.length };
-  });
+  }, "POST /api/cash-transactions/zero-out");
 }

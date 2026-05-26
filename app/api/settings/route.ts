@@ -41,7 +41,7 @@ export async function GET() {
   return handleRoute(async () => {
     const user = await requireOwner();
     return getOrCreateSettings(user.email ?? "owner@example.com");
-  });
+  }, "GET /api/settings");
 }
 
 export async function PATCH(request: NextRequest) {
@@ -60,5 +60,5 @@ export async function PATCH(request: NextRequest) {
       .where(eq(userSettings.id, current.id))
       .returning();
     return row;
-  });
+  }, "PATCH /api/settings");
 }

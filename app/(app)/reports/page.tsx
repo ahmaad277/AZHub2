@@ -4,6 +4,7 @@ import * as React from "react";
 import { FileText, FileJson, Download, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/components/providers";
+import { formatDate } from "@/lib/finance/money";
 
 export default function ReportsPage() {
   const { t } = useApp();
@@ -50,7 +51,7 @@ export default function ReportsPage() {
     doc.setFontSize(16);
     doc.text("A.Z Finance Hub — Portfolio Report", 14, 14);
     doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 22);
+    doc.text(`Generated: ${formatDate(new Date(), undefined, { dateStyle: "short", timeStyle: "short" })}`, 14, 22);
 
     const m = data.metrics;
     autoTable(doc, {
@@ -77,7 +78,7 @@ export default function ReportsPage() {
           i.platformId,
           i.principalAmount,
           i.expectedProfit,
-          new Date(i.endDate).toLocaleDateString(),
+          formatDate(i.endDate),
         ]),
       });
     }
@@ -88,21 +89,21 @@ export default function ReportsPage() {
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-3">
         <ReportCard
-          title="JSON Export"
+          title={t("reports.jsonExport")}
           description="Structured export for AI agents and backups."
           icon={<FileJson className="h-5 w-5" />}
           onClick={downloadJson}
           label="Download JSON"
         />
         <ReportCard
-          title="Excel Export"
+          title={t("reports.excelExport")}
           description="Multi-sheet workbook: metrics, investments, cashflows, ledger."
           icon={<FileSpreadsheet className="h-5 w-5" />}
           onClick={downloadXlsx}
           label="Download XLSX"
         />
         <ReportCard
-          title="PDF Report"
+          title={t("reports.pdfReport")}
           description="Printable snapshot of your portfolio."
           icon={<FileText className="h-5 w-5" />}
           onClick={downloadPdf}

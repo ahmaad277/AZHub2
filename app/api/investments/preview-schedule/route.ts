@@ -25,5 +25,5 @@ export async function POST(request: NextRequest) {
         isCustomSchedule: r.isCustomSchedule,
       })),
     };
-  });
+  }, "POST /api/investments/preview-schedule");
 }

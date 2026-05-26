@@ -201,7 +201,15 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   // Auth
   "auth.signOut": { en: "Sign out", ar: "تسجيل الخروج" },
 
+  // Reports
+  "reports.jsonExport": { en: "JSON Export", ar: "تصدير JSON" },
+  "reports.excelExport": { en: "Excel Export", ar: "تصدير Excel" },
+  "reports.pdfReport": { en: "PDF Report", ar: "تقرير PDF" },
+
   // Settings
+  "settings.appearance": { en: "Appearance", ar: "المظهر" },
+  "settings.goalsAndCurrency": { en: "Goals & Currency", ar: "الأهداف والعملة" },
+  "settings.daysBefore": { en: "Days before", ar: "أيام قبل" },
   "settings.theme": { en: "Theme", ar: "الثيم" },
   "settings.language": { en: "Language", ar: "اللغة" },
   "settings.viewMode": { en: "View Mode", ar: "وضع العرض" },
@@ -287,6 +295,15 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   },
   "snapshots.resetAction": { en: "Reset", ar: "إعادة تعيين" },
   "snapshots.restoreAction": { en: "Restore", ar: "استعادة" },
+
+  // Share Links
+  "shareLinks.linkCreated": { en: "Link created", ar: "تم إنشاء الرابط" },
+  "shareLinks.label": { en: "Label", ar: "التسمية" },
+  "shareLinks.days": { en: "Days", ar: "الأيام" },
+
+  // Pagination
+  "pagination.previousPage": { en: "Previous page", ar: "الصفحة السابقة" },
+  "pagination.nextPage": { en: "Next page", ar: "الصفحة التالية" },
 
   // Share page
   "share.title": { en: "Add Investment", ar: "إضافة استثمار" },

@@ -20,7 +20,7 @@ export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
     return db.select().from(visionTargets).orderBy(asc(visionTargets.month));
-  });
+  }, "GET /api/vision/targets");
 }
 
 export async function POST(request: NextRequest) {
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       })
       .returning();
     return row;
-  });
+  }, "POST /api/vision/targets");
 }
 
 const bulkSchema = z.object({
@@ -104,5 +104,5 @@ export async function PUT(request: NextRequest) {
       }
       return { count: parsed.targets.length };
     });
-  });
+  }, "PUT /api/vision/targets");
 }

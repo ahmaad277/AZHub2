@@ -14,7 +14,7 @@ export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
     return getCachedAlertsList();
-  });
+  }, "GET /api/alerts");
 }
 
 /**
@@ -87,5 +87,5 @@ export async function POST() {
     }
     revalidateTag("dashboard-metrics");
     return { generated };
-  });
+  }, "POST /api/alerts");
 }

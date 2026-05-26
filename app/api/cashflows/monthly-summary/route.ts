@@ -13,5 +13,5 @@ export async function GET(request: NextRequest) {
     const monthlyScope = platformId && platformId !== "all" ? platformId : "all";
     const monthKeyUtc = new Date().toISOString().slice(0, 7);
     return getCachedMonthlyCashflowSummary(monthlyScope, monthKeyUtc);
-  });
+  }, "GET /api/cashflows/monthly-summary");
 }

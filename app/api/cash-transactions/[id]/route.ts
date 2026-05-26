@@ -35,5 +35,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await db.delete(cashTransactions).where(eq(cashTransactions.id, id));
     revalidateTag("dashboard-metrics");
     return { ok: true };
-  });
+  }, "DELETE /api/cash-transactions/[id]");
 }

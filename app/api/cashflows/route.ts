@@ -28,5 +28,5 @@ export async function GET(request: NextRequest) {
       limit,
       page,
     });
-  });
+  }, "GET /api/cashflows");
 }

@@ -45,6 +45,9 @@ export async function getOwnerSession() {
 }
 
 export async function requireOwner() {
+  if (process.env.SKIP_AUTH === "1") {
+    return { id: "dev-mock-user", email: getConfiguredOwnerEmail() } as User;
+  }
   const session = await getOwnerSessionState();
   if (session.status === "authenticated") {
     return session.user;

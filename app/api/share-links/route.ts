@@ -19,7 +19,7 @@ export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
     return db.select().from(shareLinks).orderBy(desc(shareLinks.createdAt));
-  });
+  }, "GET /api/share-links");
 }
 
 export async function POST(request: NextRequest) {
@@ -40,5 +40,5 @@ export async function POST(request: NextRequest) {
       })
       .returning();
     return row;
-  });
+  }, "POST /api/share-links");
 }

@@ -14,6 +14,7 @@ export function jsonError(message: string, status = 400, extra?: unknown) {
 
 export async function handleRoute<T>(
   fn: () => Promise<T>,
+  routeName?: string,
 ): Promise<Response> {
   try {
     const result = await fn();
@@ -24,7 +25,8 @@ export async function handleRoute<T>(
     }
     const e = err as Error & { status?: number };
     const status = typeof e.status === "number" ? e.status : 500;
-    console.error("[api]", e);
-    return jsonError(e.message ?? "Internal error", status);
+    console.error(`[api${routeName ? ` ${routeName}` : ""}]`, e);
+    const fallbackMessage = routeName ? `Internal error [${routeName}]` : "Internal error";
+    return jsonError(e.message ?? fallbackMessage, status);
   }
 }

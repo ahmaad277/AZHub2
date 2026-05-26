@@ -7,7 +7,7 @@
 
 | Field | Value |
 |---|---|
-| Version | 1.0.2 |
+| Version | 1.0.3 |
 | Effective date | On merge to `main` |
 | Owner | Single owner defined by `OWNER_EMAIL` |
 | Scope | Entire repository, all branches, all environments (local / staging / production) |
@@ -111,7 +111,7 @@ The current visual identity, spacing, typography, and shadcn/ui component usage 
 - **UX-R-005 (MUST)** Cashflow receipt is a one-click atomic action via `PATCH /api/cashflows/:id/receive`. It MUST NOT be split across two steps.
 - **UX-R-006 (MUST NOT)** Hide financial actions behind overflow menus (`…`) when they mutate money. Money mutations are first-class buttons.
 - **UX-R-007 (MUST)** Navigation destinations are finite: Dashboard, Investments, Cashflows, Wallet, Platforms, Vision, Alerts, Data Quality, Reports, Snapshots, Import, Settings, Share Links. **No new top-level destinations** without a charter amendment.
-- **UX-R-008 (MUST)** Errors MUST be actionable (tell the user exactly which field, which row). Generic `"Something went wrong"` toasts are a bug.
+- **UX-R-008 (MUST)** Errors MUST be actionable (tell the user exactly which field, which row, and include the API route name). Generic `"Something went wrong"` toasts are a bug.
 - **UX-R-009 (MUST)** AR and EN outputs MUST be semantically equivalent. Never translate a number (e.g. `30d` stays `30d`; only labels translate).
 - **UX-R-010 (MUST NOT)** Introduce a second import path besides `POST /api/import/preview` → `POST /api/import/commit`. Preview-before-commit is mandatory.
 
@@ -218,7 +218,7 @@ This is the highest-severity section. Violations here are automatically release-
 - **AUTH-R-001 (MUST)** The only sign-in path is Supabase **owner-only password auth** for `OWNER_EMAIL`. The UI MAY present this as a numeric `PIN`, but the underlying auth provider remains Supabase Auth.
 - **AUTH-R-002 (MUST)** Every protected API route calls `requireOwner()` before any DB work.
 - **AUTH-R-003 (MUST)** Every protected page checks `getOwnerSession()` server-side.
-- **AUTH-R-004 (MUST NOT)** Skip auth in any environment where real data exists (staging included). The current dev-only bypass in `app/(app)/layout.tsx` is tolerated **only for `NODE_ENV=development`**. Staging and production MUST be guarded.
+- **AUTH-R-004 (MUST NOT)** Skip auth in any environment where real data exists (staging included). The dev-only bypass is tolerated **only when `SKIP_AUTH=1` is explicitly set**. Staging and production MUST be guarded.
 - **AUTH-R-005 (MUST)** Share-link endpoints (`/api/share/:token`) are the only public data-write paths; they MUST only accept investment submissions flagged `needsReview=true`.
 - **AUTH-R-006 (MUST NOT)** Introduce a second auth method (Magic Link, OAuth, SSO, biometrics, passkeys, local-only PIN stores) without an amendment to §10.
 - **AUTH-R-007 (MUST)** Supabase Auth redirect URLs MUST list exactly the local origin, staging origin (`https://azhub.uk/auth/callback`), and production origin for password recovery and authenticated callback flows. No wildcards.

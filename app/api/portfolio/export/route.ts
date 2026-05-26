@@ -43,5 +43,5 @@ export async function GET() {
       cashTransactions: txs,
       visionTargets: targets,
     };
-  });
+  }, "GET /api/portfolio/export");
 }

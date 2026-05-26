@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useApp } from "./providers";
 import { api } from "@/lib/fetcher";
+import { formatDate } from "@/lib/finance/money";
 import type { ShareLink } from "@/db/schema";
 
 export function ShareLinksManager() {
@@ -30,7 +31,7 @@ export function ShareLinksManager() {
   const create = async () => {
     try {
       await api.post("/api/share-links", { label, expiresInDays: days });
-      toast.success("Link created");
+      toast.success(t("shareLinks.linkCreated"));
       await qc.invalidateQueries({ queryKey: ["share-links"] });
     } catch (e) {
       toast.error((e as Error).message);
@@ -62,11 +63,11 @@ export function ShareLinksManager() {
       </p>
       <div className="flex flex-wrap items-end gap-2">
         <div className="flex-1 min-w-[12rem] space-y-2">
-          <Label>Label</Label>
+          <Label>{t("shareLinks.label")}</Label>
           <Input value={label} onChange={(e) => setLabel(e.target.value)} />
         </div>
         <div className="w-28 space-y-2">
-          <Label>Days</Label>
+          <Label>{t("shareLinks.days")}</Label>
           <Input
             type="number"
             min={1}
@@ -108,7 +109,7 @@ export function ShareLinksManager() {
                 <div className="truncate text-xs text-muted-foreground">
                   token: {l.token} · used {l.usageCount}×
                   {l.expiresAt
-                    ? ` · expires ${new Date(l.expiresAt).toLocaleDateString()}`
+                    ? ` · expires ${formatDate(l.expiresAt)}`
                     : ""}
                 </div>
               </div>

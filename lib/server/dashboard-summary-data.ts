@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { cashflows, investments, platforms } from "@/db/schema";
 import { resolveStatus } from "@/lib/finance/status-resolver";
-import { roundToMoney } from "@/lib/finance/money";
+import { roundToMoney, sumMoney } from "@/lib/finance/money";
 import { and, asc, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 
 export function parseLimitParam(value: string | null) {
@@ -98,7 +98,7 @@ export async function fetchInvestmentsGet(options: {
     const principalReturned = theseCfs.filter(
       (c) => c.status === "received" && c.type === "principal",
     );
-    const realizedProfit = received.reduce((a, c) => a + Number(c.amount), 0);
+    const realizedProfit = sumMoney(received.map((c) => c.amount));
     return {
       ...investment,
       platform,
@@ -106,10 +106,7 @@ export async function fetchInvestmentsGet(options: {
       overdueDays,
       cashflowsCount: theseCfs.length,
       realizedProfit,
-      principalReturned: principalReturned.reduce(
-        (a, c) => a + Number(c.amount),
-        0,
-      ),
+      principalReturned: sumMoney(principalReturned.map((c) => c.amount)),
     };
   });
 
@@ -184,9 +181,7 @@ export async function fetchCashflowsGet(options: {
   if (limit && skipAggregate) {
     rows = await listQuery;
     count = rows.length;
-    totalAmount = roundToMoney(
-      rows.reduce((acc, r) => acc + Number(r.cashflow.amount), 0),
-    );
+    totalAmount = sumMoney(rows.map((r) => r.cashflow.amount));
   } else {
     const [[aggRow], pageRows] = await Promise.all([aggregateQuery, listQuery]);
     rows = pageRows;

@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
       throw err;
     }
     return row;
-  });
+  }, "GET /api/platforms/[id]");
 }
 
 export async function PATCH(request: NextRequest, { params }: Ctx) {
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
     revalidateTag("platforms-list");
     revalidateTag("dashboard-metrics");
     return row;
-  });
+  }, "PATCH /api/platforms/[id]");
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
@@ -51,5 +51,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     revalidateTag("platforms-list");
     revalidateTag("dashboard-metrics");
     return { ok: true };
-  });
+  }, "DELETE /api/platforms/[id]");
 }

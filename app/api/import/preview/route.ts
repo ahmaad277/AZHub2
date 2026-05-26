@@ -61,5 +61,5 @@ export async function POST(request: NextRequest) {
       .returning();
 
     return { jobId: job.id, validCount: valid.length, errors };
-  });
+  }, "POST /api/import/preview");
 }

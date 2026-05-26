@@ -12,5 +12,5 @@ export async function GET() {
     const rows = await pgDriver`select 1 as ok`;
     const ms = Date.now() - t0;
     return { ok: true, ms, result: rows[0] ?? null };
-  });
+  }, "GET /api/health/db-ping");
 }

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
         ),
       },
     };
-  });
+  }, "GET /api/cash-transactions");
 }
 
 export async function POST(request: NextRequest) {
@@ -119,5 +119,5 @@ export async function POST(request: NextRequest) {
       .returning();
     revalidateTag("dashboard-metrics");
     return row;
-  });
+  }, "POST /api/cash-transactions");
 }

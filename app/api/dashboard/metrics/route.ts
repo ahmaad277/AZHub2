@@ -1,10 +1,7 @@
 import { NextRequest } from "next/server";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import {
-  getCachedBreakdown,
-  getCachedMetrics,
-} from "@/lib/server/dashboard-metrics-cache";
+import { getDashboardMetrics, getPlatformBreakdown } from "@/lib/finance/metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -16,12 +13,12 @@ export async function GET(request: NextRequest) {
     const includeBreakdown = searchParams.get("breakdown") === "true";
 
     const pid = platformId && platformId !== "all" ? platformId : undefined;
-    const metrics = await getCachedMetrics(pid);
+    const metrics = await getDashboardMetrics({ platformId: pid });
 
     if (includeBreakdown) {
-      const breakdown = await getCachedBreakdown();
+      const breakdown = await getPlatformBreakdown();
       return { metrics, breakdown };
     }
     return { metrics };
-  });
+  }, "GET /api/dashboard/metrics");
 }

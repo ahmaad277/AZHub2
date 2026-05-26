@@ -102,5 +102,5 @@ export async function POST(request: NextRequest) {
     }
 
     return { success: true, action, redirectUrl };
-  });
+  }, "POST /api/data-quality/fix");
 }

@@ -142,5 +142,5 @@ export async function POST(_req: NextRequest, { params }: Ctx) {
     revalidateTag("platforms-list");
 
     return { ok: true };
-  });
+  }, "POST /api/snapshots/[id]/restore");
 }

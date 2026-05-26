@@ -119,7 +119,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       revalidateTag("dashboard-metrics");
       return { ok: true };
     });
-  });
+  }, "PATCH /api/cashflows/[id]/receive");
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
@@ -136,9 +136,22 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
       if (!cf || cf.status !== "received") {
         return { ok: true, noop: true };
       }
-      await tx
-        .delete(cashTransactions)
-        .where(eq(cashTransactions.referenceId, cf.id));
+      const [originalTx] = await tx
+        .select()
+        .from(cashTransactions)
+        .where(eq(cashTransactions.referenceId, cf.id))
+        .limit(1);
+
+      if (originalTx) {
+        await tx.insert(cashTransactions).values({
+          amount: `-${originalTx.amount}`,
+          type: "withdrawal",
+          referenceId: cf.id,
+          platformId: originalTx.platformId,
+          notes: `Reversed receipt for cashflow ${cf.id}`,
+          date: new Date(),
+        });
+      }
       await tx
         .update(cashflows)
         .set({ status: "pending", receivedDate: null })
@@ -157,5 +170,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
       revalidateTag("dashboard-metrics");
       return { ok: true };
     });
-  });
+  }, "DELETE /api/cashflows/[id]/receive");
 }

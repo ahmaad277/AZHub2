@@ -9,7 +9,7 @@ import {
 } from "@/db/schema";
 import { handleRoute } from "@/lib/api";
 import { requireOwner } from "@/lib/auth";
-import { roundToMoney } from "@/lib/finance/money";
+import { roundToMoney, sumMoney } from "@/lib/finance/money";
 
 export const dynamic = "force-dynamic";
 
@@ -68,9 +68,9 @@ export async function POST() {
           suggestedFix: "dq.fix_open_regenerate",
         });
       } else {
-        const profitSum = list
-          .filter((c) => c.type === "profit")
-          .reduce((a, c) => a + Number(c.amount), 0);
+        const profitSum = sumMoney(
+          list.filter((c) => c.type === "profit").map((c) => c.amount)
+        );
         if (roundToMoney(profitSum) !== roundToMoney(Number(inv.expectedProfit))) {
           issues.push({
             entityType: "investment",
@@ -81,9 +81,9 @@ export async function POST() {
             suggestedFix: "dq.fix_regenerate_schedule",
           });
         }
-        const principalSum = list
-          .filter((c) => c.type === "principal")
-          .reduce((a, c) => a + Number(c.amount), 0);
+        const principalSum = sumMoney(
+          list.filter((c) => c.type === "principal").map((c) => c.amount)
+        );
         if (roundToMoney(principalSum) !== roundToMoney(Number(inv.principalAmount))) {
           issues.push({
             entityType: "investment",
@@ -125,7 +125,7 @@ export async function POST() {
       await db.insert(dataQualityIssues).values(issues);
     }
     return { count: issues.length };
-  });
+  }, "POST /api/data-quality/scan");
 }
 
 export async function GET() {
@@ -135,5 +135,5 @@ export async function GET() {
       .select()
       .from(dataQualityIssues)
       .orderBy(desc(dataQualityIssues.createdAt));
-  });
+  }, "GET /api/data-quality/scan");
 }

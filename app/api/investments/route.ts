@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       limit,
       page,
     });
-  });
+  }, "GET /api/investments");
 }
 
 export async function POST(request: NextRequest) {
@@ -41,5 +41,5 @@ export async function POST(request: NextRequest) {
     const inv = await createInvestmentWithSchedule(input);
     revalidateTag("dashboard-metrics");
     return inv;
-  });
+  }, "POST /api/investments");
 }

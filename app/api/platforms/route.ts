@@ -12,7 +12,7 @@ export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
     return getCachedPlatformsList();
-  });
+  }, "GET /api/platforms");
 }
 
 export async function POST(request: NextRequest) {
@@ -24,5 +24,5 @@ export async function POST(request: NextRequest) {
     revalidateTag("platforms-list");
     revalidateTag("dashboard-metrics");
     return row;
-  });
+  }, "POST /api/platforms");
 }

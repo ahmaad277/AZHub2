@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import { InvestmentWizard } from "@/components/investment-wizard";
 import { useApp } from "@/components/providers";
+import { formatDate } from "@/lib/finance/money";
 
 interface Meta {
   valid: boolean;
@@ -79,7 +80,7 @@ export default function SharePage() {
           <div className="mb-4 text-xs text-muted-foreground">
             Link: <span className="font-semibold">{meta.label}</span>
             {meta.expiresAt
-              ? ` · expires ${new Date(meta.expiresAt).toLocaleDateString()}`
+              ? ` · expires ${formatDate(meta.expiresAt)}`
               : ""}
           </div>
           <InvestmentWizard

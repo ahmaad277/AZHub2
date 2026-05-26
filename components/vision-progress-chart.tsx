@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import { Target } from "lucide-react";
 import { useApp } from "@/components/providers";
-import { formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
+import { formatDate, formatMoney, formatNumber, formatPercent } from "@/lib/finance/money";
 import {
   VISION_TARGET_YEAR,
   buildProjectionSeries,
@@ -93,11 +93,7 @@ export function VisionProgressChart({
     (value: string) => {
       const d = new Date(value);
       if (Number.isNaN(d.getTime())) return value;
-      return new Intl.DateTimeFormat(locale, {
-        calendar: "gregory",
-        numberingSystem: "latn",
-        year: "numeric",
-      }).format(d);
+      return formatDate(d, locale, { year: "numeric" });
     },
     [locale],
   );
@@ -118,12 +114,10 @@ export function VisionProgressChart({
     (label: string | number) => {
       const d = new Date(String(label));
       if (Number.isNaN(d.getTime())) return String(label);
-      return new Intl.DateTimeFormat(locale, {
-        calendar: "gregory",
-        numberingSystem: "latn",
+      return formatDate(d, locale, {
         year: "numeric",
         month: "short",
-      }).format(d);
+      });
     },
     [locale],
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useApp } from "@/components/providers";
 
 interface TablePaginationProps {
   page: number;
@@ -13,6 +14,7 @@ export function TablePagination({
   pageCount,
   onPageChange,
 }: TablePaginationProps) {
+  const { t } = useApp();
   if (pageCount <= 1) return null;
 
   return (
@@ -23,7 +25,7 @@ export function TablePagination({
         size="sm"
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page <= 1}
-        aria-label="Previous page"
+        aria-label={t("pagination.previousPage")}
       >
         ‹
       </Button>
@@ -36,7 +38,7 @@ export function TablePagination({
         size="sm"
         onClick={() => onPageChange(Math.min(pageCount, page + 1))}
         disabled={page >= pageCount}
-        aria-label="Next page"
+        aria-label={t("pagination.nextPage")}
       >
         ›
       </Button>

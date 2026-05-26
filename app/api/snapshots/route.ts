@@ -27,7 +27,7 @@ export async function GET() {
   return handleRoute(async () => {
     await requireOwner();
     return getCachedSnapshotsList();
-  });
+  }, "GET /api/snapshots");
 }
 
 export async function POST(request: NextRequest) {
@@ -82,5 +82,5 @@ export async function POST(request: NextRequest) {
       .returning();
     revalidateTag("snapshots-list");
     return row;
-  });
+  }, "POST /api/snapshots");
 }

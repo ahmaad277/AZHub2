@@ -37,7 +37,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-4">
-      <CollapsibleSection id="settings-appearance" title="Appearance">
+      <CollapsibleSection id="settings-appearance" title={t("settings.appearance")}>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label>{t("settings.language")}</Label>
@@ -107,7 +107,7 @@ export default function SettingsPage() {
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection id="settings-goals" title="Goals & Currency">
+      <CollapsibleSection id="settings-goals" title={t("settings.goalsAndCurrency")}>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label>{t("settings.target2040")}</Label>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
           <span className="text-sm">Enabled</span>
         </div>
         <div className="mt-3 space-y-2">
-          <Label>Days before</Label>
+          <Label>{t("settings.daysBefore")}</Label>
           <Input
             type="number"
             min={0}

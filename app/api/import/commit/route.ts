@@ -51,5 +51,5 @@ export async function POST(request: NextRequest) {
     revalidateTag("dashboard-metrics");
 
     return { committed };
-  });
+  }, "POST /api/import/commit");
 }

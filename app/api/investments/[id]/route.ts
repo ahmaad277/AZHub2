@@ -61,7 +61,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
       overdueDays,
       cashflows: cfs,
     };
-  });
+  }, "GET /api/investments/[id]");
 }
 
 export async function PATCH(request: NextRequest, { params }: Ctx) {
@@ -176,7 +176,7 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
       .returning();
     revalidateTag("dashboard-metrics");
     return row;
-  });
+  }, "PATCH /api/investments/[id]");
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
@@ -186,5 +186,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await db.delete(investments).where(eq(investments.id, id));
     revalidateTag("dashboard-metrics");
     return { ok: true };
-  });
+  }, "DELETE /api/investments/[id]");
 }

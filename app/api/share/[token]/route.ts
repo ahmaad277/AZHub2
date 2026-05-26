@@ -55,7 +55,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
       expiresAt: link.expiresAt,
       platforms: filtered.map((p) => ({ id: p.id, name: p.name, type: p.type })),
     };
-  });
+  }, "GET /api/share/[token]");
 }
 
 export async function POST(request: NextRequest, { params }: Ctx) {
@@ -84,5 +84,5 @@ export async function POST(request: NextRequest, { params }: Ctx) {
       .where(eq(shareLinks.id, link.id));
 
     return { id: inv.id, ok: true };
-  });
+  }, "POST /api/share/[token]");
 }

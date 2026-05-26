@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
       throw e;
     }
     return row;
-  });
+  }, "GET /api/snapshots/[id]");
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
@@ -33,5 +33,5 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     await db.delete(portfolioSnapshots).where(eq(portfolioSnapshots.id, id));
     revalidateTag("snapshots-list");
     return { ok: true };
-  });
+  }, "DELETE /api/snapshots/[id]");
 }

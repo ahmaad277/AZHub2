@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useApp } from "@/components/providers";
 import { api } from "@/lib/fetcher";
+import { formatDate } from "@/lib/finance/money";
 
 interface Alert {
   id: string;
@@ -84,7 +85,7 @@ export default function AlertsPage() {
               </div>
               <div className="mt-1 text-sm text-muted-foreground">{a.message}</div>
               <div className="mt-1 text-xs text-muted-foreground">
-                {new Date(a.createdAt).toLocaleString()}
+                {formatDate(a.createdAt, undefined, { dateStyle: "short", timeStyle: "short" })}
               </div>
             </div>
             <div className="flex items-center gap-1">
