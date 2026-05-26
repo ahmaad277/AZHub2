@@ -48,7 +48,7 @@ export const getCachedMonthlyCashflowSummary = unstable_cache(
     const platformId = scopeKey === "all" ? undefined : scopeKey;
     return fetchMonthlyCashflowSummary(platformId);
   },
-  ["dashboard-monthly-cashflow-summary"],
+  ["dashboard-monthly-cashflow-summary-v2"],
   { tags: ["dashboard-metrics"], revalidate: dashboardRevalidateSeconds },
 );
 
