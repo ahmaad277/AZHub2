@@ -223,7 +223,6 @@ export async function fetchMonthlyCashflowSummary(
     .where(
       and(
         eq(cashflows.status, "pending"),
-        eq(cashflows.type, "profit"),
         gte(cashflows.dueDate, startOfMonth),
         platformId && platformId !== "all"
           ? eq(investments.platformId, platformId)
