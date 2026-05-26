@@ -110,7 +110,6 @@ export function DashboardCharts({
       </div>
       <MonthlyCashflowChart 
         rows={monthlyRows} 
-        explanation={t("explain.monthlyCashflows")}
       />
     </>
   );
@@ -555,7 +554,7 @@ function buildMonthlyLineRows(
   return rows;
 }
 
-function MonthlyCashflowChart({ rows, explanation }: { rows: MonthlyCashflowRow[], explanation?: string }) {
+function MonthlyCashflowChart({ rows }: { rows: MonthlyCashflowRow[] }) {
   const { t, settings } = useApp();
   const [mode, setMode] = React.useState<MonthlyChartMode>("bar");
   const isRtl = settings.language === "ar";
@@ -727,18 +726,6 @@ function MonthlyCashflowChart({ rows, explanation }: { rows: MonthlyCashflowRow[
   );
 
   const containerClass = "rounded-2xl border border-border/40 bg-card p-5 sm:p-6 shadow-sm";
-
-  if (explanation) {
-    return (
-      <FlipCard
-        className="h-full"
-        frontClassName={containerClass}
-        backClassName={cn(containerClass, "flex flex-col items-center justify-center text-center")}
-        front={content}
-        back={<div className="text-sm text-muted-foreground">{explanation}</div>}
-      />
-    );
-  }
 
   return (
     <div className={containerClass}>
