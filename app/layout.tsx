@@ -6,7 +6,7 @@ import { getInitialSettings } from "@/lib/server-settings";
 
 export const metadata: Metadata = {
   title: "A.Z Finance Hub",
-  description: "Personal Sukuk & Fixed-Income Portfolio Management — v2.1",
+  description: "Personal Sukuk & Fixed-Income Portfolio Management — v3.1",
   manifest: "/manifest.webmanifest",
 };
 

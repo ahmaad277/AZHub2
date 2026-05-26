@@ -1,5 +1,5 @@
 /* A.Z Finance Hub — minimal offline-first service worker */
-const CACHE = "az-hub-v2";
+const CACHE = "az-hub-v3";
 const CORE = ["/", "/offline", "/manifest.webmanifest", "/icon.svg"];
 
 self.addEventListener("install", (event) => {

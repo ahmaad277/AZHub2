@@ -1,5 +1,5 @@
 # AZHUB_V2_CONSTITUTION.md
-**A.Z Finance Hub v2 — Operational Constitution**
+**A.Z Finance Hub v3 — Operational Constitution**
 
 ---
 
@@ -23,7 +23,7 @@ document (README, chat, issue, comment) conflicts with this file, **this file wi
 ## 1. Core Product Mission & Non-Goals
 
 ### 1.1 Mission
-A.Z Finance Hub v2 is a **single-owner, private, fixed-income and sukuk portfolio command center**. Its purpose is to give the owner an **auditable, mathematically correct, friction-free** view of:
+A.Z Finance Hub v3 is a **single-owner, private, fixed-income and sukuk portfolio command center**. Its purpose is to give the owner an **auditable, mathematically correct, friction-free** view of:
 
 - Active principal and cash balance
 - Realized vs. expected profit

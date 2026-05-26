@@ -1,6 +1,6 @@
-# A.Z Finance Hub v2 - Release Notes
+# A.Z Finance Hub v3 - Release Notes
 
-## Recommended Version: v2.1.0
+## Recommended Version: v3.1.0
 
 Reason: this milestone ships a substantial set of stability and UX hardening fixes plus performance tuning and release governance improvements, while avoiding breaking changes to core finance logic, schema, and auth.
 

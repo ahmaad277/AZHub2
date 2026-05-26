@@ -3,7 +3,7 @@
 Default mode: do not load the full constitution unless the task touches a guarded area.
 
 Always obey:
-- Preserve the current v2 design style. No redesign, no random components, no new UI library.
+- Preserve the current v3 design style. No redesign, no random components, no new UI library.
 - Frontend UI renders data; it must not derive portfolio-level finance math.
 - Do not change dashboard metric definitions, financial logic, auth model, or schema without owner approval.
 - Do not touch unrelated files or do opportunistic refactors.

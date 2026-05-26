@@ -1,5 +1,5 @@
 /**
- * A.Z Finance Hub v2 — Database Schema (Postgres / Drizzle ORM)
+ * A.Z Finance Hub v3 — Database Schema (Postgres / Drizzle ORM)
  *
  * Architectural principles (NON-NEGOTIABLE):
  *  - Single Source of Truth: the database is the only source of truth for money.
