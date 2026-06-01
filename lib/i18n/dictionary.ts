@@ -26,6 +26,10 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "nav.snapshots": { en: "Snapshots", ar: "النسخ الاحتياطية" },
   "nav.import": { en: "Import", ar: "الاستيراد" },
   "nav.settings": { en: "Settings", ar: "الإعدادات" },
+  "nav.stocks": { en: "Stocks", ar: "الأسهم" },
+  "nav.gold": { en: "Gold", ar: "الذهب" },
+  "nav.realEstate": { en: "Real Estate", ar: "العقارات" },
+  "nav.liabilities": { en: "Liabilities", ar: "الالتزامات" },
 
   // Metrics
   "metric.totalCashBalance": { en: "Cash Balance", ar: "الرصيد النقدي" },
@@ -111,7 +115,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "dash.recentInvestments": { en: "Recent Investments", ar: "أحدث الاستثمارات" },
   "dash.upcomingCashflows": { en: "Upcoming Cashflows", ar: "التدفقات القادمة" },
   "dash.vision2040": { en: "Vision 2040 Progress", ar: "تقدم رؤية 2040" },
-  "dash.forecast": { en: "Cashflow Forecast", ar: "توقعات التدفق" },
+  "dash.forecast": { en: "Cashflow Forecast", ar: "التدفقات القادمة" },
   "dash.allPlatforms": { en: "All Platforms", ar: "كل المنصات" },
   "dash.platformDistribution": { en: "Platform Distribution", ar: "المنصات" },
   "dash.platformStatus": { en: "Opportunities Status", ar: "حالة الفرص" },
@@ -158,6 +162,7 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "common.needsReview": { en: "Needs Review", ar: "يحتاج مراجعة" },
   "common.loading": { en: "Loading…", ar: "جارٍ التحميل…" },
   "common.empty": { en: "Nothing to show yet.", ar: "لا يوجد شيء لعرضه." },
+  "common.comingSoon": { en: "Coming soon", ar: "قريباً" },
   "common.yes": { en: "Yes", ar: "نعم" },
   "common.no": { en: "No", ar: "لا" },
   "common.total": { en: "Total", ar: "المجموع" },

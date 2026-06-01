@@ -16,6 +16,10 @@ import {
   Archive,
   Upload,
   Sparkles,
+  TrendingUp,
+  Coins,
+  Building,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "./providers";
@@ -33,6 +37,13 @@ const NAV_ITEMS = [
   { href: "/snapshots", key: "nav.snapshots", icon: Archive },
   { href: "/import", key: "nav.import", icon: Upload },
   { href: "/settings", key: "nav.settings", icon: Settings },
+];
+
+const SECONDARY_NAV_ITEMS = [
+  { href: "/stocks", key: "nav.stocks", icon: TrendingUp },
+  { href: "/gold", key: "nav.gold", icon: Coins },
+  { href: "/real-estate", key: "nav.realEstate", icon: Building },
+  { href: "/liabilities", key: "nav.liabilities", icon: CreditCard },
 ];
 
 interface AppSidebarProps {
@@ -85,6 +96,41 @@ export function AppSidebar({ mobile = false, onNavigate }: AppSidebarProps) {
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span className="truncate">{t(item.key)}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-6 mb-2 px-3">
+          <div className="h-px w-full bg-border" />
+        </div>
+        
+        <ul className="space-y-1">
+          {SECONDARY_NAV_ITEMS.map((item) => {
+            const active =
+              pathname === item.href || pathname.startsWith(item.href + "/");
+            const Icon = item.icon;
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  prefetch={false}
+                  onClick={onNavigate}
+                  className={cn(
+                    "flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    active
+                      ? "bg-primary/15 text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{t(item.key)}</span>
+                  </div>
+                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                    {t("common.comingSoon")}
+                  </span>
                 </Link>
               </li>
             );
