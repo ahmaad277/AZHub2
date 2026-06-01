@@ -3,6 +3,8 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import Link from "next/link";
+import { Archive } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -107,38 +109,16 @@ export default function SettingsPage() {
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection id="settings-goals" title={t("settings.goalsAndCurrency")}>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label>{t("settings.target2040")}</Label>
-            <Input
-              type="number"
-              value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              onBlur={() =>
-                save({
-                  targetCapital2040: target.trim() === "" ? null : target,
-                })
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>{t("settings.currency")}</Label>
-            <Select
-              value={settings.currency}
-              onValueChange={(v) => save({ currency: v })}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="SAR">SAR</SelectItem>
-                <SelectItem value="USD">USD</SelectItem>
-                <SelectItem value="EUR">EUR</SelectItem>
-                <SelectItem value="AED">AED</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <CollapsibleSection id="settings-snapshots" title={t("nav.snapshots")}>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            إدارة النسخ الاحتياطية لمحفظتك واستعادتها.
+          </p>
+          <Button asChild variant="outline" className="gap-2">
+            <Link href="/snapshots">
+              <Archive className="h-4 w-4" /> {t("nav.snapshots")}
+            </Link>
+          </Button>
         </div>
       </CollapsibleSection>
 

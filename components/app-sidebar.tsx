@@ -34,7 +34,6 @@ const NAV_ITEMS = [
   { href: "/alerts", key: "nav.alerts", icon: BellRing },
   { href: "/reports", key: "nav.reports", icon: FileText },
   { href: "/data-quality", key: "nav.dataQuality", icon: ShieldCheck },
-  { href: "/snapshots", key: "nav.snapshots", icon: Archive },
   { href: "/import", key: "nav.import", icon: Upload },
   { href: "/settings", key: "nav.settings", icon: Settings },
 ];

@@ -204,22 +204,6 @@ export default function DashboardPage() {
   const cfs = data?.cashflowsUpcoming?.rows ?? [];
   const monthlyData = data?.monthlySummary;
 
-  // Saved monthly plan targets — shared cache key with /vision page.
-  const { data: visionTargetRows = [] } = useQuery<VisionTargetRow[]>({
-    queryKey: ["visionTargets"],
-    queryFn: () => api.get<VisionTargetRow[]>("/api/vision/targets"),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
-  const visionPlanTargets = React.useMemo<PlanTargetInput[]>(
-    () =>
-      visionTargetRows.map((row) => ({
-        month: row.month,
-        value: row.targetValue,
-      })),
-    [visionTargetRows],
-  );
-
   return (
     <div className="space-y-6">
       {/* KPI Tiles */}
@@ -383,7 +367,7 @@ export default function DashboardPage() {
           target={Number(settings.targetCapital2040 ?? 0)}
           historicalApyPct={m?.historicalAnnualYieldPercent ?? 0}
           whatIfApyPct={null}
-          planTargets={visionPlanTargets}
+          planTargets={[]}
           compact
         />
       </CollapsibleSection>
@@ -398,37 +382,45 @@ export default function DashboardPage() {
           </Button>
         }
       >
-        <div className="space-y-2">
-          {cfs.slice(0, 6).map((cf) => (
-            <div
-              key={cf.id}
-              className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-border/80"
-              style={{
-                borderInlineStartWidth: 4,
-                borderInlineStartColor: getPlatformColorOption(cf.investment.platform?.color).chartColor,
-              }}
-            >
-              <div>
-                <div className="text-sm font-medium">
-                  {cf.investment.name}
+        <div className="space-y-6">
+          <div className="grid gap-3 md:grid-cols-3">
+            <ForecastCard label="30d" value={m?.expectedInflow30d ?? 0} />
+            <ForecastCard label="60d" value={m?.expectedInflow60d ?? 0} />
+            <ForecastCard label="90d" value={m?.expectedInflow90d ?? 0} />
+          </div>
+          
+          <div className="space-y-2">
+            {cfs.slice(0, 6).map((cf) => (
+              <div
+                key={cf.id}
+                className="flex items-center justify-between rounded-2xl border border-border/40 bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-border/80"
+                style={{
+                  borderInlineStartWidth: 4,
+                  borderInlineStartColor: getPlatformColorOption(cf.investment.platform?.color).chartColor,
+                }}
+              >
+                <div>
+                  <div className="text-sm font-medium">
+                    {cf.investment.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {formatDate(cf.dueDate, dateLocale)} · {t(`status.${cf.type === "profit" ? "pending" : "pending"}`)} ·{" "}
+                    {t(`cashflowType.${cf.type}`)}
+                  </div>
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  {formatDate(cf.dueDate, dateLocale)} · {t(`status.${cf.type === "profit" ? "pending" : "pending"}`)} ·{" "}
-                  {t(`cashflowType.${cf.type}`)}
+                <div className="text-sm font-semibold tabular-nums">
+                  {formatMoney(cf.amount, settings.currency)}
                 </div>
               </div>
-              <div className="text-sm font-semibold tabular-nums">
-                {formatMoney(cf.amount, settings.currency)}
+            ))}
+            {isLoading ? (
+              <ListSkeleton rows={3} />
+            ) : cfs.length === 0 ? (
+              <div className="py-8 text-center text-sm text-muted-foreground">
+                {t("common.empty")}
               </div>
-            </div>
-          ))}
-          {isLoading ? (
-            <ListSkeleton rows={3} />
-          ) : cfs.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              {t("common.empty")}
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       </CollapsibleSection>
 
@@ -495,15 +487,6 @@ export default function DashboardPage() {
               {t("common.empty")}
             </div>
           ) : null}
-        </div>
-      </CollapsibleSection>
-
-      {/* Forecast (simple summary for now) */}
-      <CollapsibleSection id="cashflow-forecast" title={t("dash.forecast")}>
-        <div className="grid gap-3 md:grid-cols-3">
-          <ForecastCard label="30d" value={m?.expectedInflow30d ?? 0} />
-          <ForecastCard label="60d" value={m?.expectedInflow60d ?? 0} />
-          <ForecastCard label="90d" value={m?.expectedInflow90d ?? 0} />
         </div>
       </CollapsibleSection>
 

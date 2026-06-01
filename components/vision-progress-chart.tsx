@@ -43,7 +43,6 @@ const COLORS = {
   required: "hsl(var(--muted-foreground))",
   current: "hsl(142 71% 45%)",
   whatIf: "hsl(38 92% 50%)",
-  plan: "hsl(217 91% 60%)",
   target: "hsl(var(--primary))",
 } as const;
 
@@ -296,17 +295,6 @@ export function VisionProgressChart({
               dot={false}
               isAnimationActive={false}
               connectNulls={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="plan"
-              name={t("vision.chart.plan")}
-              stroke={COLORS.plan}
-              strokeWidth={2.5}
-              dot={false}
-              activeDot={{ r: 4 }}
-              isAnimationActive={false}
-              connectNulls
             />
             {!compact ? (
               <Legend

@@ -170,7 +170,7 @@ export default function VisionPage() {
         target={target}
         historicalApyPct={historicalApyPct}
         whatIfApyPct={whatIfApyPct}
-        planTargets={planTargets}
+        planTargets={[]}
       />
 
       <div className="rounded-xl border p-5">
