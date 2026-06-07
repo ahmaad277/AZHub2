@@ -146,7 +146,8 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen flex-col px-4">
+      <div className="flex flex-1 items-center justify-center">
       <motion.div
         animate={success ? { scale: 1.02, opacity: 0.98 } : { scale: 1, opacity: 1 }}
         transition={{ duration: 0.22, ease: "easeOut" }}
@@ -204,13 +205,21 @@ function LoginForm() {
         </CardContent>
       </Card>
       </motion.div>
+      </div>
+
+      <div className="pointer-events-none select-none space-y-0.5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 text-center text-xs leading-tight text-muted-foreground/60 sm:text-sm">
+        <p className="tracking-tight [word-spacing:-0.15em]">أحمد غرم الله أحمد الزهراني</p>
+        <p dir="ltr">0534897272</p>
+        <p dir="ltr">Ahmaaad277@gmail.com</p>
+      </div>
     </div>
   );
 }
 
 function LoginFallback() {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen flex-col px-4">
+      <div className="flex flex-1 items-center justify-center">
       <Card className="w-full max-w-lg border-primary/15 shadow-sm">
         <CardHeader>
           <div className="mb-3 grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary">
@@ -227,6 +236,13 @@ function LoginFallback() {
           </div>
         </CardHeader>
       </Card>
+      </div>
+
+      <div className="pointer-events-none select-none space-y-0.5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 text-center text-xs leading-tight text-muted-foreground/60 sm:text-sm">
+        <p className="tracking-tight [word-spacing:-0.15em]">أحمد غرم الله أحمد الزهراني</p>
+        <p dir="ltr">0534897272</p>
+        <p dir="ltr">Ahmaaad277@gmail.com</p>
+      </div>
     </div>
   );
 }
