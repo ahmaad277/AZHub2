@@ -262,6 +262,21 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
   const graceDays = DEFAULT_GRACE_DAYS;
   const { investmentRows, cashflowRows, cashRows, platformRows: plats } = agg;
 
+  // Pre-build cfByInvestment once — investment IDs are globally unique,
+  // so the same Map works correctly for every per-platform computeMetrics call.
+  const cfByInvestment: CfByInvestmentMap = new Map();
+  for (const cf of cashflowRows) {
+    const list = cfByInvestment.get(cf.investmentId) ?? [];
+    list.push({
+      id: cf.id,
+      dueDate: cf.dueDate,
+      amount: Number(cf.amount),
+      type: cf.type as "profit" | "principal",
+      status: cf.status as "pending" | "received",
+    });
+    cfByInvestment.set(cf.investmentId, list);
+  }
+
   const investmentsByPlatform = new Map<string, RawInvestment[]>();
   const invIdToPlatformId = new Map<string, string>();
   for (const i of investmentRows) {
@@ -300,7 +315,14 @@ function computePlatformBreakdownFromAggregates(agg: DashboardAggregates, now: D
       (cr) => cr.platformId === p.id,
     );
 
-    const m = computeMetrics(platformInvestments, platformCashflows, platformCashRows, now, graceDays);
+    const m = computeMetrics(
+      platformInvestments,
+      platformCashflows,
+      platformCashRows,
+      now,
+      graceDays,
+      cfByInvestment,
+    );
 
     const investmentsPrincipalTotal = roundToMoney(
       platformInvestments.reduce((acc, i) => acc + Number(i.principal), 0),
@@ -333,9 +355,23 @@ export async function computeSummaryMetricsAndBreakdown(options: {
   return { metrics, breakdown, platforms: agg.platformRows };
 }
 
+type CfByInvestmentMap = Map<
+  string,
+  Array<{
+    id: string;
+    dueDate: Date;
+    amount: number;
+    type: "profit" | "principal";
+    status: "pending" | "received";
+  }>
+>;
+
 /**
  * Core metrics calculation logic extracted for reuse.
  * Computes metrics in-memory from pre-fetched rows.
+ *
+ * When `prebuiltCfByInvestment` is provided, the per-investment cashflow
+ * lookup is reused across platform-breakdown calls instead of being rebuilt.
  */
 function computeMetrics(
   investmentRows: RawInvestment[],
@@ -343,29 +379,24 @@ function computeMetrics(
   cashRows: RawCashTransaction[],
   now: Date,
   graceDays: number,
+  prebuiltCfByInvestment?: CfByInvestmentMap,
 ): DashboardMetrics {
-  // Group cashflows by investment.
-  const cfByInvestment = new Map<
-    string,
-    Array<{
-      id: string;
-      dueDate: Date;
-      amount: number;
-      type: "profit" | "principal";
-      status: "pending" | "received";
-    }>
-  >();
-  for (const cf of cashflowRows) {
-    const list = cfByInvestment.get(cf.investmentId) ?? [];
-    list.push({
-      id: cf.id,
-      dueDate: cf.dueDate,
-      amount: Number(cf.amount),
-      type: cf.type as "profit" | "principal",
-      status: cf.status as "pending" | "received",
-    });
-    cfByInvestment.set(cf.investmentId, list);
-  }
+  // Group cashflows by investment (skip if pre-built map provided).
+  const cfByInvestment = prebuiltCfByInvestment ?? (() => {
+    const map: CfByInvestmentMap = new Map();
+    for (const cf of cashflowRows) {
+      const list = map.get(cf.investmentId) ?? [];
+      list.push({
+        id: cf.id,
+        dueDate: cf.dueDate,
+        amount: Number(cf.amount),
+        type: cf.type as "profit" | "principal",
+        status: cf.status as "pending" | "received",
+      });
+      map.set(cf.investmentId, list);
+    }
+    return map;
+  })();
 
   // Compute per-investment derived status + overdue days.
   const computed: InvestmentComputedRow[] = investmentRows.map((i) => {
@@ -404,39 +435,74 @@ function computeMetrics(
     };
   });
 
-  // Active set = active + late + defaulted (i.e., not completed).
-  const activeSet = computed.filter(
-    (r) =>
-      r.derivedStatus === "active" ||
-      r.derivedStatus === "late" ||
-      r.derivedStatus === "defaulted",
-  );
+  // ── Single pass: accumulate all per-investment aggregations ──
+  let activePrincipalAcc = 0;
+  let totalPrincipalExposureAcc = 0;
+  let defaultedPrincipalAcc = 0;
+  let totalExpectedProfit = 0;
+  let principalActive = 0;
+  let principalLate = 0;
+  let principalDefaulted = 0;
+  let principalCompleted = 0;
+  let countActive = 0;
+  let countLate = 0;
+  let countDefaulted = 0;
+  let countCompleted = 0;
+  let aprWeightedNumerator = 0;
+  let historicalAprWeightedNumerator = 0;
+  let totalPrincipalAll = 0;
+  let wamNumerator = 0;
+  let originalDurationNumerator = 0;
+  let wamDenominator = 0;
+
+  for (const r of computed) {
+    switch (r.derivedStatus) {
+      case "active":
+        countActive++;
+        principalActive += r.principal;
+        break;
+      case "late":
+        countLate++;
+        principalLate += r.principal;
+        break;
+      case "defaulted":
+        countDefaulted++;
+        principalDefaulted += r.principal;
+        break;
+      case "completed":
+        countCompleted++;
+        principalCompleted += r.principal;
+        break;
+    }
+
+    const isActive = r.derivedStatus !== "completed";
+    if (isActive) {
+      activePrincipalAcc += r.principal;
+      totalPrincipalExposureAcc += r.principal;
+      const days = Math.max(1, daysBetween(now, r.endDate));
+      const originalDurationDays = Math.max(1, daysBetween(r.startDate, r.endDate));
+      wamNumerator += r.principal * days;
+      originalDurationNumerator += r.principal * originalDurationDays;
+      wamDenominator += r.principal;
+      aprWeightedNumerator += r.principal * (r.expectedIrr / 100);
+    }
+
+    if (r.derivedStatus === "defaulted") {
+      defaultedPrincipalAcc += r.principal;
+    }
+
+    totalExpectedProfit += r.expectedProfit;
+    historicalAprWeightedNumerator += r.principal * (r.expectedIrr / 100);
+    totalPrincipalAll += r.principal;
+  }
+
+  const activePrincipal = roundToMoney(activePrincipalAcc);
+  const defaultedPrincipal = roundToMoney(defaultedPrincipalAcc);
+  const totalPrincipalExposure = roundToMoney(totalPrincipalExposureAcc);
 
   // Metric 1: Total Cash Balance (from the ledger, always).
   // Clamp to 0 to prevent negative balances from affecting metrics
   const totalCashBalance = Math.max(0, sumMoney(cashRows.map((r) => r.amount)));
-
-  // Metric 2: Active Principal.
-  const activePrincipal = roundToMoney(
-    activeSet.reduce((acc, r) => acc + r.principal, 0),
-  );
-
-  const defaultedPrincipal = roundToMoney(
-    computed
-      .filter((r) => r.derivedStatus === "defaulted")
-      .reduce((acc, r) => acc + r.principal, 0),
-  );
-
-  const totalPrincipalExposure = roundToMoney(
-    computed
-      .filter(
-        (r) =>
-          r.derivedStatus === "active" ||
-          r.derivedStatus === "late" ||
-          r.derivedStatus === "defaulted",
-      )
-      .reduce((acc, r) => acc + r.principal, 0),
-  );
 
   const pendingProfitRows = cashflowRows.filter(
     (cf) => cf.type === "profit" && cf.status === "pending",
@@ -482,16 +548,6 @@ function computeMetrics(
   overdueBalance = roundToMoney(overdueBalance);
 
   // Metric 7: WAM (days) — weighted by principal, only active set.
-  let wamNumerator = 0;
-  let originalDurationNumerator = 0;
-  let wamDenominator = 0;
-  for (const r of activeSet) {
-    const days = Math.max(1, daysBetween(now, r.endDate));
-    const originalDurationDays = Math.max(1, daysBetween(r.startDate, r.endDate));
-    wamNumerator += r.principal * days;
-    originalDurationNumerator += r.principal * originalDurationDays;
-    wamDenominator += r.principal;
-  }
   const wamDays =
     wamDenominator > 0 ? Math.round(wamNumerator / wamDenominator) : 0;
   const weightedOriginalDurationDays =
@@ -504,48 +560,30 @@ function computeMetrics(
       : 0;
 
   // Metric 9: Active Annual Yield (principal-weighted using expectedIrr).
-  let aprWeightedNumerator = 0;
-  for (const r of activeSet) {
-    const annualReturn = r.expectedIrr / 100;
-    aprWeightedNumerator += r.principal * annualReturn;
-  }
   const activeAnnualYieldPercent =
     activePrincipal > 0
       ? roundToMoney((aprWeightedNumerator / activePrincipal) * 100)
       : 0;
 
   // Historical Annual Yield (principal-weighted using expectedIrr for ALL investments).
-  let historicalAprWeightedNumerator = 0;
-  let totalPrincipalAll = 0;
-  for (const r of computed) {
-    const annualReturn = r.expectedIrr / 100;
-    historicalAprWeightedNumerator += r.principal * annualReturn;
-    totalPrincipalAll += r.principal;
-  }
   const historicalAnnualYieldPercent =
     totalPrincipalAll > 0
       ? roundToMoney((historicalAprWeightedNumerator / totalPrincipalAll) * 100)
       : 0;
 
-  // Next upcoming payment (helpful for Lite mode).
+  // Next upcoming payment.
   const pendingSorted = cashflowRows
     .filter((cf) => cf.status === "pending" && cf.dueDate.getTime() >= now.getTime())
     .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
   const next = pendingSorted[0];
 
-  const totalExpectedProfit = roundToMoney(
-    computed.reduce((acc, r) => acc + r.expectedProfit, 0),
-  );
+  totalExpectedProfit = roundToMoney(totalExpectedProfit);
 
-  const sumPrincipalForStatus = (s: DerivedStatus) =>
-    roundToMoney(
-      computed.filter((r) => r.derivedStatus === s).reduce((acc, r) => acc + r.principal, 0),
-    );
   const principalByStatus = {
-    active: sumPrincipalForStatus("active"),
-    late: sumPrincipalForStatus("late"),
-    defaulted: sumPrincipalForStatus("defaulted"),
-    completed: sumPrincipalForStatus("completed"),
+    active: roundToMoney(principalActive),
+    late: roundToMoney(principalLate),
+    defaulted: roundToMoney(principalDefaulted),
+    completed: roundToMoney(principalCompleted),
   };
 
   return {
@@ -562,10 +600,10 @@ function computeMetrics(
     defaultRatePercent,
     activeAnnualYieldPercent,
     historicalAnnualYieldPercent,
-    activeCount: computed.filter((r) => r.derivedStatus === "active").length,
-    lateCount: computed.filter((r) => r.derivedStatus === "late").length,
-    defaultedCount: computed.filter((r) => r.derivedStatus === "defaulted").length,
-    completedCount: computed.filter((r) => r.derivedStatus === "completed").length,
+    activeCount: countActive,
+    lateCount: countLate,
+    defaultedCount: countDefaulted,
+    completedCount: countCompleted,
     totalExpectedProfit,
     overdueBalance,
     nextPayment: next

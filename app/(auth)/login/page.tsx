@@ -14,7 +14,9 @@ import { getLoginErrorMessage, sanitizeNextPath } from "@/lib/auth/login-flow-sh
 import {
   checkFaceIdSupport,
   enrollFaceId,
+  isBiometricLoginPreferred,
   isFaceIdEnrolled,
+  setBiometricLoginPreferred,
   unlockPinWithFaceId,
 } from "@/lib/auth/face-id";
 import packageJson from "@/package.json";
@@ -52,11 +54,23 @@ function LoginPageShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LoginBrandHeader({ success }: { success?: boolean }) {
+function LoginBrandHeader({
+  success,
+  biometricMode,
+}: {
+  success?: boolean;
+  biometricMode?: boolean;
+}) {
   return (
     <CardHeader className="items-center space-y-3 pb-4 text-center">
       <div className="grid h-14 w-14 place-items-center rounded-2xl bg-primary/15 text-primary shadow-sm ring-1 ring-primary/10">
-        {success ? <Sparkles className="h-7 w-7" /> : <KeyRound className="h-7 w-7" />}
+        {success ? (
+          <Sparkles className="h-7 w-7" />
+        ) : biometricMode ? (
+          <ScanFace className="h-7 w-7" />
+        ) : (
+          <KeyRound className="h-7 w-7" />
+        )}
       </div>
       <div className="space-y-2">
         <p className="text-[10px] font-semibold uppercase tracking-[0.4em] text-primary/70">
@@ -66,7 +80,9 @@ function LoginBrandHeader({ success }: { success?: boolean }) {
           A.Z Finance Hub
         </CardTitle>
         <CardDescription className="text-balance" dir="ltr">
-          Enter the owner PIN to open the dashboard.
+          {biometricMode
+            ? "Use your fingerprint or Face ID to open the dashboard."
+            : "Enter the owner PIN to open the dashboard."}
         </CardDescription>
       </div>
     </CardHeader>
@@ -85,8 +101,8 @@ function LoginForm() {
   const [faceIdBusy, setFaceIdBusy] = React.useState(false);
   const [enrollBusy, setEnrollBusy] = React.useState(false);
   const [sessionReady, setSessionReady] = React.useState(false);
+  const [loginMode, setLoginMode] = React.useState<"pin" | "biometric">("pin");
   const hasShownErrorRef = React.useRef(false);
-  const autoFaceIdAttemptedRef = React.useRef(false);
   const nextPath = React.useMemo(
     () => sanitizeNextPath(searchParams.get("next")),
     [searchParams],
@@ -132,8 +148,12 @@ function LoginForm() {
 
     void checkFaceIdSupport().then((support) => {
       if (cancelled) return;
+      const enrolled = isFaceIdEnrolled();
       setFaceIdSupported(support.platformAuthenticator);
-      setFaceIdEnrolled(isFaceIdEnrolled());
+      setFaceIdEnrolled(enrolled);
+      if (enrolled && isBiometricLoginPreferred()) {
+        setLoginMode("biometric");
+      }
     });
 
     return () => {
@@ -155,7 +175,7 @@ function LoginForm() {
   );
 
   const submitPin = React.useCallback(
-    async (value: string) => {
+    async (value: string, successMessage?: string) => {
       if (sending) return false;
       if (!/^\d{6}$/.test(value)) {
         toast.error("The PIN must be exactly 6 digits.");
@@ -173,7 +193,7 @@ function LoginForm() {
         if (!res.ok) {
           throw new Error(data.error ?? "Login failed");
         }
-        completeLogin();
+        completeLogin(successMessage);
         return true;
       } catch (e) {
         toast.error((e as Error).message);
@@ -190,8 +210,14 @@ function LoginForm() {
     setFaceIdBusy(true);
     try {
       const unlockedPin = await unlockPinWithFaceId();
-      if (!unlockedPin) return;
-      await submitPin(unlockedPin);
+      if (!unlockedPin) {
+        toast.error("Biometric sign-in failed. Try again or use your PIN.");
+        return;
+      }
+      await submitPin(
+        unlockedPin,
+        "Signed in with biometrics. Opening your dashboard...",
+      );
     } finally {
       setFaceIdBusy(false);
     }
@@ -203,15 +229,26 @@ function LoginForm() {
     try {
       const enrolled = await enrollFaceId(pin);
       if (!enrolled) {
-        toast.error("Face ID could not be enabled on this device.");
+        toast.error("Biometric sign-in could not be enabled on this device.");
         return;
       }
       setFaceIdEnrolled(true);
-      toast.success("Face ID enabled for faster sign-in on this device.");
+      setLoginMode("biometric");
+      toast.success("Biometric sign-in enabled. Use your fingerprint or Face ID next time.");
     } finally {
       setEnrollBusy(false);
     }
   }, [enrollBusy, pin]);
+
+  const onUsePinInstead = React.useCallback(() => {
+    setBiometricLoginPreferred(false);
+    setLoginMode("pin");
+  }, []);
+
+  const onUseBiometricInstead = React.useCallback(() => {
+    setBiometricLoginPreferred(true);
+    setLoginMode("biometric");
+  }, []);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -247,14 +284,15 @@ function LoginForm() {
     };
   }, [nextPath, router]);
 
-  React.useEffect(() => {
-    if (!sessionReady || !faceIdEnrolled || autoFaceIdAttemptedRef.current) return;
-    autoFaceIdAttemptedRef.current = true;
-    void onFaceIdLogin();
-  }, [faceIdEnrolled, onFaceIdLogin, sessionReady]);
+  const biometricMode =
+    loginMode === "biometric" && faceIdSupported && faceIdEnrolled;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (biometricMode) {
+      await onFaceIdLogin();
+      return;
+    }
     await submitPin(pin);
   };
 
@@ -286,61 +324,95 @@ function LoginForm() {
         className="w-full max-w-md"
       >
         <Card className="w-full border-border/50 bg-card/90 shadow-lg backdrop-blur-sm">
-          <LoginBrandHeader success={success} />
+          <LoginBrandHeader success={success} biometricMode={biometricMode} />
           <CardContent className="px-6 pb-6">
             <form onSubmit={onSubmit} className="space-y-5">
-              <Input
-                id="pin"
-                type="password"
-                inputMode="numeric"
-                autoComplete="current-password"
-                placeholder="000000"
-                aria-label="Owner PIN"
-                required
-                className="h-[4.5rem] rounded-2xl border-border/60 bg-secondary/25 text-center text-3xl tracking-[0.5em] shadow-inner transition-shadow focus-visible:ring-2 focus-visible:ring-primary/35"
-                value={pin}
-                onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              />
+              {biometricMode ? (
+                <>
+                  <Button
+                    type="button"
+                    className="h-14 w-full gap-2 rounded-xl text-base font-semibold shadow-sm"
+                    onClick={onFaceIdLogin}
+                    disabled={faceIdBusy || sending || success || !sessionReady}
+                  >
+                    <ScanFace className="h-5 w-5" />
+                    <span dir="ltr">
+                      {!sessionReady
+                        ? "Loading..."
+                        : faceIdBusy
+                          ? "Verifying biometrics..."
+                          : "Sign in with fingerprint / Face ID"}
+                    </span>
+                  </Button>
 
-              {faceIdSupported && faceIdEnrolled ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-12 w-full gap-2 rounded-xl border-primary/25 bg-primary/5 text-base font-medium hover:bg-primary/10"
-                  onClick={onFaceIdLogin}
-                  disabled={faceIdBusy || sending || success}
-                >
-                  <ScanFace className="h-5 w-5" />
-                  <span dir="ltr">
-                    {faceIdBusy ? "Verifying Face ID..." : "Sign in with Face ID"}
-                  </span>
-                </Button>
-              ) : null}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 w-full text-muted-foreground hover:text-foreground"
+                    onClick={onUsePinInstead}
+                    disabled={faceIdBusy || sending || success}
+                  >
+                    <span dir="ltr">Use PIN instead</span>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Input
+                    id="pin"
+                    type="password"
+                    inputMode="numeric"
+                    autoComplete="current-password"
+                    placeholder="000000"
+                    aria-label="Owner PIN"
+                    required
+                    className="h-[4.5rem] rounded-2xl border-border/60 bg-secondary/25 text-center text-3xl tracking-[0.5em] shadow-inner transition-shadow focus-visible:ring-2 focus-visible:ring-primary/35"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  />
 
-              <Button
-                type="submit"
-                className="h-12 w-full gap-2 rounded-xl text-base font-semibold shadow-sm"
-                disabled={sending || success || faceIdBusy}
-              >
-                {!sending && !success ? <KeyRound className="h-4 w-4" /> : null}
-                {sending ? "Checking..." : success ? "Success" : "Unlock"}
-              </Button>
+                  <Button
+                    type="submit"
+                    className="h-12 w-full gap-2 rounded-xl text-base font-semibold shadow-sm"
+                    disabled={sending || success}
+                  >
+                    {!sending && !success ? <KeyRound className="h-4 w-4" /> : null}
+                    {sending ? "Checking..." : success ? "Success" : "Unlock"}
+                  </Button>
 
-              {faceIdSupported && !faceIdEnrolled && pin.length === 6 ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 w-full gap-2 text-muted-foreground hover:text-foreground"
-                  onClick={onEnableFaceId}
-                  disabled={enrollBusy || sending || success}
-                >
-                  <ScanFace className="h-4 w-4" />
-                  <span dir="ltr">
-                    {enrollBusy ? "Setting up Face ID..." : "Enable Face ID on this device"}
-                  </span>
-                </Button>
-              ) : null}
+                  {faceIdSupported && !faceIdEnrolled && pin.length === 6 ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-full gap-2 text-muted-foreground hover:text-foreground"
+                      onClick={onEnableFaceId}
+                      disabled={enrollBusy || sending || success}
+                    >
+                      <ScanFace className="h-4 w-4" />
+                      <span dir="ltr">
+                        {enrollBusy
+                          ? "Setting up biometrics..."
+                          : "Enable fingerprint / Face ID on this device"}
+                      </span>
+                    </Button>
+                  ) : null}
+
+                  {faceIdSupported && faceIdEnrolled ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-full gap-2 text-muted-foreground hover:text-foreground"
+                      onClick={onUseBiometricInstead}
+                      disabled={sending || success}
+                    >
+                      <ScanFace className="h-4 w-4" />
+                      <span dir="ltr">Sign in with fingerprint / Face ID</span>
+                    </Button>
+                  ) : null}
+                </>
+              )}
 
               <div className="space-y-2 border-t border-border/40 pt-4">
                 <p

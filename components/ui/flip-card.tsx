@@ -19,7 +19,7 @@ export function FlipCard({ front, back, className, frontClassName, backClassName
     if (isFlipped) return;
     timerRef.current = setTimeout(() => {
       setIsFlipped(true);
-    }, 500);
+    }, 150);
   };
 
   const handlePressEnd = () => {

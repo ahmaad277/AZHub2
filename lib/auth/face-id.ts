@@ -1,5 +1,6 @@
 const CREDENTIAL_STORAGE_KEY = "azhub_face_id_credential_v1";
 const PIN_STORAGE_KEY = "azhub_face_id_pin_sealed_v1";
+const BIOMETRIC_LOGIN_PREFERRED_KEY = "azhub_biometric_login_preferred_v1";
 const SEAL_SALT = "azhub-face-id-v1";
 
 export interface FaceIdCapability {
@@ -92,6 +93,20 @@ export function clearFaceIdEnrollment(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(CREDENTIAL_STORAGE_KEY);
   localStorage.removeItem(PIN_STORAGE_KEY);
+  localStorage.removeItem(BIOMETRIC_LOGIN_PREFERRED_KEY);
+}
+
+export function isBiometricLoginPreferred(): boolean {
+  if (typeof window === "undefined") return false;
+  const value = localStorage.getItem(BIOMETRIC_LOGIN_PREFERRED_KEY);
+  if (value === "0") return false;
+  if (value === "1") return true;
+  return isFaceIdEnrolled();
+}
+
+export function setBiometricLoginPreferred(preferred: boolean): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(BIOMETRIC_LOGIN_PREFERRED_KEY, preferred ? "1" : "0");
 }
 
 export async function checkFaceIdSupport(): Promise<FaceIdCapability> {
@@ -144,6 +159,7 @@ export async function enrollFaceId(pin: string): Promise<boolean> {
     const sealedPin = await sealPin(pin, credentialId);
     localStorage.setItem(CREDENTIAL_STORAGE_KEY, credentialId);
     localStorage.setItem(PIN_STORAGE_KEY, sealedPin);
+    setBiometricLoginPreferred(true);
     return true;
   } catch {
     return false;

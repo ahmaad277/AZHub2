@@ -186,7 +186,7 @@ export async function fetchCashflowsGet(options: {
     const [[aggRow], pageRows] = await Promise.all([aggregateQuery, listQuery]);
     rows = pageRows;
     count = aggRow.count;
-    totalAmount = Number(aggRow.totalAmount ?? 0);
+    totalAmount = roundToMoney(Number(aggRow.totalAmount ?? 0));
   }
 
   const normalizedRows = rows.map((r) => ({

@@ -44,6 +44,8 @@ export const getCachedSummaryCompute = unstable_cache(
  */
 export const getCachedMonthlyCashflowSummary = unstable_cache(
   async (scopeKey: string, monthKey: string) => {
+    // monthKey is passed by the caller to force cache-invalidation when the month rolls over.
+    // eslint-disable-next-line no-void
     void monthKey;
     const platformId = scopeKey === "all" ? undefined : scopeKey;
     return fetchMonthlyCashflowSummary(platformId);

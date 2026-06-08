@@ -7,7 +7,7 @@ export type Locale = "en" | "ar";
 
 export const dictionary: Record<string, { en: string; ar: string }> = {
   // App-wide
-  "app.name": { en: "A.Z Finance Hub", ar: "مركز A.Z المالي" },
+  "app.name": { en: "A.Z Finance Hub", ar: "A.Z Finance Hub" },
   "app.tagline": {
     en: "Sukuk & fixed-income command center",
     ar: "مركز قيادة الصكوك والدخل الثابت",
@@ -213,6 +213,24 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
 
   // Settings
   "settings.appearance": { en: "Appearance", ar: "المظهر" },
+  "settings.display": { en: "Display", ar: "العرض" },
+  "settings.dataAndSharing": { en: "Data & Sharing", ar: "البيانات والمشاركة" },
+  "settings.dataAndSharingDescription": {
+    en: "Share links for data entry and portfolio backups.",
+    ar: "روابط مشاركة الإدخال والنسخ الاحتياطية للمحفظة.",
+  },
+  "settings.openSnapshots": { en: "Manage backups", ar: "إدارة النسخ الاحتياطية" },
+  "settings.enabled": { en: "Enabled", ar: "مفعّل" },
+  "settings.alertsDescription": {
+    en: "Notify before upcoming cashflows.",
+    ar: "تنبيه قبل مواعيد التدفقات القادمة.",
+  },
+  "settings.themeDark": { en: "Dark", ar: "داكن" },
+  "settings.themeLight": { en: "Light", ar: "فاتح" },
+  "settings.themeSystem": { en: "System", ar: "النظام" },
+  "settings.fontSmall": { en: "Small", ar: "صغير" },
+  "settings.fontMedium": { en: "Medium", ar: "متوسط" },
+  "settings.fontLarge": { en: "Large", ar: "كبير" },
   "settings.goalsAndCurrency": { en: "Goals & Currency", ar: "الأهداف والعملة" },
   "settings.daysBefore": { en: "Days before", ar: "أيام قبل" },
   "settings.theme": { en: "Theme", ar: "الثيم" },
@@ -305,6 +323,11 @@ export const dictionary: Record<string, { en: string; ar: string }> = {
   "shareLinks.linkCreated": { en: "Link created", ar: "تم إنشاء الرابط" },
   "shareLinks.label": { en: "Label", ar: "التسمية" },
   "shareLinks.days": { en: "Days", ar: "الأيام" },
+  "shareLinks.active": { en: "Active", ar: "نشط" },
+  "shareLinks.expired": { en: "Expired", ar: "منتهي" },
+  "shareLinks.revoked": { en: "Revoked", ar: "ملغى" },
+  "shareLinks.usedCount": { en: "Used {count}×", ar: "استُخدم {count}×" },
+  "shareLinks.expiresOn": { en: "Expires {date}", ar: "ينتهي {date}" },
 
   // Pagination
   "pagination.previousPage": { en: "Previous page", ar: "الصفحة السابقة" },

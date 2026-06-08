@@ -49,20 +49,20 @@ const breakdownFixture = [
   },
 ];
 
-const { requireOwnerMock, getDashboardMetricsMock, getPlatformBreakdownMock } =
+const { requireOwnerMock, getCachedMetricsMock, getCachedBreakdownMock } =
   vi.hoisted(() => ({
     requireOwnerMock: vi.fn(async () => ({ id: "owner" })),
-    getDashboardMetricsMock: vi.fn(async () => metricsFixture),
-    getPlatformBreakdownMock: vi.fn(async () => breakdownFixture),
+    getCachedMetricsMock: vi.fn(async () => metricsFixture),
+    getCachedBreakdownMock: vi.fn(async () => breakdownFixture),
   }));
 
 vi.mock("@/lib/auth", () => ({
   requireOwner: requireOwnerMock,
 }));
 
-vi.mock("@/lib/finance/metrics", () => ({
-  getDashboardMetrics: getDashboardMetricsMock,
-  getPlatformBreakdown: getPlatformBreakdownMock,
+vi.mock("@/lib/server/dashboard-metrics-cache", () => ({
+  getCachedMetrics: getCachedMetricsMock,
+  getCachedBreakdown: getCachedBreakdownMock,
 }));
 
 import { GET } from "../dashboard/metrics/route";
@@ -103,7 +103,7 @@ describe("dashboard metrics route contract", () => {
 
     expect(response.status).toBe(200);
     expect(requireOwnerMock).toHaveBeenCalledTimes(1);
-    expect(getDashboardMetricsMock).toHaveBeenCalledWith({ platformId: undefined });
+    expect(getCachedMetricsMock).toHaveBeenCalledWith(undefined);
     expect(Object.keys(body).sort()).toEqual(["metrics"]);
     expect(Object.keys(body.metrics).sort()).toEqual(expectedMetricKeys);
     expect(body.metrics.nextPayment).toMatchObject({
@@ -120,8 +120,8 @@ describe("dashboard metrics route contract", () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(getDashboardMetricsMock).toHaveBeenCalledWith({ platformId: "platform-a" });
-    expect(getPlatformBreakdownMock).toHaveBeenCalledTimes(1);
+    expect(getCachedMetricsMock).toHaveBeenCalledWith("platform-a");
+    expect(getCachedBreakdownMock).toHaveBeenCalledTimes(1);
     expect(Object.keys(body).sort()).toEqual(["breakdown", "metrics"]);
     expect(body.breakdown).toEqual([
       {

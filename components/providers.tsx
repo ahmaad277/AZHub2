@@ -78,7 +78,16 @@ export function Providers({
     ...DEFAULT_SETTINGS,
     ...(initialSettings ?? {}),
   });
-  const [platformFilter, setPlatformFilter] = React.useState<string>("all");
+  const [platformFilter, setPlatformFilterRaw] = React.useState<string>("all");
+
+  const setPlatformFilter = React.useCallback(
+    (id: string) => {
+      React.startTransition(() => {
+        setPlatformFilterRaw(id);
+      });
+    },
+    [],
+  );
 
   const setSettings = React.useCallback(
     async (partial: Partial<SettingsShape>) => {

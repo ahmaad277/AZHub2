@@ -32,7 +32,7 @@ const ACCENT = {
   muted: "text-muted-foreground",
 };
 
-export function MetricTile({
+export const MetricTile = React.memo(function MetricTile({
   label,
   value,
   format = "money",
@@ -138,4 +138,20 @@ export function MetricTile({
       {content}
     </div>
   );
-}
+}, function metricTileComparator(prev: Props, next: Props) {
+  // Only compare value-affecting props. Skip ReactNode props (icon, sublabel,
+  // valueLabel, secondaryLabel) which are recreated every render.
+  return (
+    prev.value === next.value &&
+    prev.secondaryValue === next.secondaryValue &&
+    prev.format === next.format &&
+    prev.secondaryFormat === next.secondaryFormat &&
+    prev.accent === next.accent &&
+    prev.secondaryAccent === next.secondaryAccent &&
+    prev.label === next.label &&
+    prev.hidden === next.hidden &&
+    prev.maskable === next.maskable &&
+    prev.explanation === next.explanation &&
+    prev.className === next.className
+  );
+});

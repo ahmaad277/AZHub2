@@ -11,6 +11,7 @@ interface Props {
   description?: React.ReactNode;
   actions?: React.ReactNode;
   defaultOpen?: boolean;
+  compact?: boolean;
   children: React.ReactNode;
   className?: string;
 }
@@ -21,6 +22,7 @@ export function CollapsibleSection({
   description,
   actions,
   defaultOpen = true,
+  compact = false,
   children,
   className,
 }: Props) {
@@ -44,7 +46,9 @@ export function CollapsibleSection({
         className,
       )}
     >
-      <header className="flex items-center gap-3 p-5">
+      <header
+        className={cn("flex items-center gap-3", compact ? "px-4 py-3" : "p-5")}
+      >
         <button
           type="button"
           onClick={onToggle}
@@ -59,7 +63,14 @@ export function CollapsibleSection({
             )}
           />
           <div>
-            <h3 className="text-base font-semibold leading-none">{title}</h3>
+            <h3
+              className={cn(
+                "font-semibold leading-none",
+                compact ? "text-sm" : "text-base",
+              )}
+            >
+              {title}
+            </h3>
             {description ? (
               <p className="mt-1 text-xs text-muted-foreground">{description}</p>
             ) : null}
@@ -67,7 +78,9 @@ export function CollapsibleSection({
         </button>
         {actions ? <div className="shrink-0">{actions}</div> : null}
       </header>
-      {open ? <div className="px-5 pb-5">{children}</div> : null}
+      {open ? (
+        <div className={cn(compact ? "px-4 pb-3 pt-0" : "px-5 pb-5")}>{children}</div>
+      ) : null}
     </section>
   );
 }
