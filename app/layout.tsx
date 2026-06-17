@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { PwaRegister } from "@/components/pwa-register";
 import { getInitialSettings } from "@/lib/server-settings";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "A.Z Finance Hub",
@@ -32,6 +33,7 @@ export default async function RootLayout({
           {children}
           <PwaRegister />
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
